@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -41,15 +40,13 @@ public class Ticket extends Base {
     )
     private ShowTime showTime;
 
+    @Column(name = "price")
     private double price;
 
+    @Column(name = "issue_time")
     private LocalDateTime issueTime;
 
-    @OneToOne
-    @JoinColumn(
-            name = "manager_id",
-            foreignKey = @ForeignKey(name = "fk_ticket_manager")
-    )
-    private Manager manager;
+    @Column(name = "seat_label")
+    private String seatLabel;
 
 }

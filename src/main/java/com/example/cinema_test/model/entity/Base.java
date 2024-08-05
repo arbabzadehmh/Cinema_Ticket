@@ -1,6 +1,5 @@
 package com.example.cinema_test.model.entity;
 
-import com.google.gson.Gson;
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import lombok.Getter;

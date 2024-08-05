@@ -61,8 +61,8 @@ public class CustomerService implements Serializable {
     public List<Customer> findByNameAndFamily(String name, String family) throws Exception {
         return entityManager
                 .createQuery("select c from customerEntity c where c.name like :name and c.family like :family and c.deleted=false ", Customer.class)
-                .setParameter("name", name)
-                .setParameter("family", family)
+                .setParameter("name", name + "%")
+                .setParameter("family", family + "%")
                 .getResultList();
     }
 

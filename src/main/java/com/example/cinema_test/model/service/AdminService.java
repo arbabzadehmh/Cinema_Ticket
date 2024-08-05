@@ -59,8 +59,8 @@ public class AdminService implements Serializable {
     public List<Admin> findByNameAndFamily(String name, String family) throws Exception {
         return entityManager
                 .createQuery("select a from adminEntity a where a.name like :name and a.family like :family and a.deleted=false ", Admin.class)
-                .setParameter("name", name)
-                .setParameter("family", family)
+                .setParameter("name", name + "%")
+                .setParameter("family", family + "%")
                 .getResultList();
     }
 

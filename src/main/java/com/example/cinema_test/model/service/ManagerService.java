@@ -60,8 +60,8 @@ public class ManagerService implements Serializable {
     public List<Manager> findByNameAndFamily(String name, String family) throws Exception {
         return entityManager
                 .createQuery("select m from managerEntity m where m.name like :name and m.family like :family and m.deleted=false ", Manager.class)
-                .setParameter("name", name)
-                .setParameter("family", family)
+                .setParameter("name", name + "%")
+                .setParameter("family", family + "%")
                 .getResultList();
     }
 

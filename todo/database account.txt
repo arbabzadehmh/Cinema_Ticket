@@ -1,0 +1,14 @@
+create database account:
+user: mfs
+pass : java123
+
+codes in cmd : {
+
+  alter session set "_oracle_script" = true;
+
+  create user mfs identified by java123;
+
+  grant dba to mfs;
+
+  connect mfs/java123;
+                                          }

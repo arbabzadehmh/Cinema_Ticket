@@ -57,20 +57,6 @@ public class SaloonService implements Serializable {
     }
 
     @Transactional
-    public Saloon findByName(String name) throws Exception {
-        List<Saloon> saloonList =
-                entityManager
-                        .createQuery("select s from saloonEntity s where s.name =:name and s.deleted=false ", Saloon.class)
-                        .setParameter("name", name)
-                        .getResultList();
-        if (!saloonList.isEmpty()) {
-            return saloonList.get(0);
-        } else {
-            return null;
-        }
-    }
-
-    @Transactional
     public List<Saloon> findByStatus(boolean status) throws Exception {
         return entityManager
                 .createQuery("select s from saloonEntity s where s.status=:status and s.deleted=false", Saloon.class)

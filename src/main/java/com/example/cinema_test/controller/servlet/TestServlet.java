@@ -69,7 +69,6 @@ public class TestServlet extends HttpServlet {
             Saloon saloon1 =
                     Saloon
                             .builder()
-                            .name("Iran")
                             .capacity(30)
                             .seats(seats)
                             .status(true)

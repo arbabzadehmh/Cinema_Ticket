@@ -1,12 +1,12 @@
 package com.example.cinema_test.model.entity;
 
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-
 
 @NoArgsConstructor
 @Getter
@@ -15,13 +15,13 @@ import lombok.experimental.SuperBuilder;
 @ToString
 
 
-@Entity(name = "managerEntity")
-@Table(name = "manager_tbl")
-public class Manager extends Base {
+@Entity(name = "moderatorEntity")
+@Table(name = "moderator_tbl")
+public class Moderator extends Base{
 
     @Id
-    @SequenceGenerator(name = "managerSeq", sequenceName = "manager_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "managerSeq")
+    @SequenceGenerator(name = "managerSeq", sequenceName = "moderator_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "moderatorSeq")
     @Column(name = "id")
     private Long id;
 
@@ -46,15 +46,7 @@ public class Manager extends Base {
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(
             name = "username",
-            foreignKey = @ForeignKey(name = "fk_manager_user")
+            foreignKey = @ForeignKey(name = "fk_moderator_user")
     )
     private User user;
-
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(
-            name = "cinema_id",
-            foreignKey = @ForeignKey(name = "fk_manager_cinema")
-    )
-    private Cinema cinema;
-
 }

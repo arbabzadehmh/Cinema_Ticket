@@ -39,10 +39,16 @@ public class SeatVo extends Base {
     @Column(name = "price_ratio")
     private double priceRatio;
 
+    @Column(name = "seat_price")
+    private double seatPrice;
+
     @Column(name = "status")
     private boolean status;
 
-    @Column(name = "description")
+    @Column(name = "reserved")
+    private boolean reserved = false;
+
+    @Column(name = "description", length = 30)
     private String description;
 
 

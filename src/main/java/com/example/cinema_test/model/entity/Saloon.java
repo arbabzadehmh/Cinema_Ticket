@@ -27,8 +27,8 @@ public class Saloon extends Base {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", length =30 , nullable = false )
-    private String name;
+    @Column(name = "saloon_number", nullable = false )
+    private int saloonNumber;
 
     @Column(name = "capacity")
     private int capacity;
@@ -46,6 +46,6 @@ public class Saloon extends Base {
     @Column(name = "status")
     private boolean status;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 50)
     private String description;
 }

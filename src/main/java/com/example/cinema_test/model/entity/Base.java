@@ -31,6 +31,10 @@ public class Base implements Serializable {
     @Column(name = "deleted")
     private boolean deleted = false;
 
+    @JsonbTransient
+    @Column(name = "editing")
+    private boolean editing = false;
+
 
     public void addAttachment(Attachment attachment){
         if (this.attachmentList == null){

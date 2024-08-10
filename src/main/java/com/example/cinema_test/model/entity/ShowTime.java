@@ -43,6 +43,9 @@ public class ShowTime extends Base {
     )
     private Show show;
 
+    @Column(name = "remaining_capacity")
+    private int remainingCapacity;
+
     @Column(name = "start_time")
     private LocalDateTime startTime;
 
@@ -62,8 +65,15 @@ public class ShowTime extends Base {
     @Column(name = "status")
     private boolean status;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 50)
     private String description;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "cinema_id",
+            foreignKey = @ForeignKey(name = "fk_show_time_cinema")
+    )
+    private Cinema cinema;
 
 
     public void showSeatCreator(){

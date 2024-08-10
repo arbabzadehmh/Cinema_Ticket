@@ -37,6 +37,15 @@ public class Show extends Base {
     @Column(name = "director", length =30)
     private String director;
 
+    @Column(name = "producer", length =30)
+    private String producer;
+
+    @Column(name = "signer", length =30)
+    private String singer;
+
+    @Column(name = "speaker", length =30)
+    private String speaker;
+
     @Column(name = "released_date")
     private LocalDate releasedDate;
 
@@ -50,6 +59,6 @@ public class Show extends Base {
     @Column(name = "status")
     private boolean status;
 
-    @Column(name = "description")
+    @Column(name = "description", length =50)
     private String description;
 }

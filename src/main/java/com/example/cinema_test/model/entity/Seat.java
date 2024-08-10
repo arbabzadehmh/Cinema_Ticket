@@ -40,7 +40,7 @@ public class Seat extends Base {
     @Column(name = "status")
     private boolean status;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 30)
     private String description;
 
     public void seatLabelMaker(){

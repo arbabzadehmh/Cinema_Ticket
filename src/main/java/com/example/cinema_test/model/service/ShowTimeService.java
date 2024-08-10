@@ -68,4 +68,12 @@ public class ShowTimeService implements Serializable {
         return entityManager.find(ShowTime.class, id);
     }
 
+    @Transactional
+    public List<ShowTime> findByCinemaName(String name) throws Exception {
+        return entityManager
+                .createQuery("select s from showTimeEntity s where s.cinema.name =:name and s.deleted=false", ShowTime.class)
+                .setParameter("name", name)
+                .getResultList();
+    }
+
 }

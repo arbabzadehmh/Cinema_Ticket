@@ -27,6 +27,7 @@ public class ShowTimeService implements Serializable {
             SeatVo seatVo = new SeatVo(seat);
             if (showTime.getShow().getShowType().equals(ShowType.MOVIE)) {
                 seatVo.setPriceRatio(1);
+                seatVo.setSeatPrice(seatVo.getPriceRatio() * showTime.getShow().getBasePrice());
             }
             showTime.getShowSeats().add(seatVo);
         }

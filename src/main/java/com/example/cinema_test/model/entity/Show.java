@@ -40,7 +40,7 @@ public class Show extends Base {
     @Column(name = "producer", length =30)
     private String producer;
 
-    @Column(name = "signer", length =30)
+    @Column(name = "singer", length =30)
     private String singer;
 
     @Column(name = "speaker", length =30)

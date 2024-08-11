@@ -46,6 +46,6 @@ public class Seat extends Base {
     public void seatLabelMaker(){
         String LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-            this.label = String.valueOf(LETTERS.substring(rowNumber - 1, rowNumber + 1).charAt(0) + this.seatNumber);
+            this.label = String.valueOf(LETTERS.substring(rowNumber - 1, rowNumber + 1).charAt(0)) + this.seatNumber;
     }
 }

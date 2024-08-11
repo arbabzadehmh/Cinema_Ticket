@@ -1,6 +1,7 @@
 package com.example.cinema_test.model.entity;
 
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -68,6 +69,7 @@ public class ShowTime extends Base {
     @Column(name = "description", length = 50)
     private String description;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(
             name = "cinema_id",

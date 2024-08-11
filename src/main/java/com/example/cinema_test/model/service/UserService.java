@@ -1,8 +1,8 @@
 package com.example.cinema_test.model.service;
 
-import com.example.cinema_test.controller.exception.SupportNotFoundException;
+
 import com.example.cinema_test.controller.exception.UserNotFoundException;
-import com.example.cinema_test.model.entity.Support;
+
 import com.example.cinema_test.model.entity.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;

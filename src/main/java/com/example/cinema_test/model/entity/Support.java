@@ -56,7 +56,6 @@ public class Support extends Base{
             name = "manager_id",
             foreignKey = @ForeignKey(name = "fk_support_manager")
     )
-    @Column(name = "manager")
     private Manager manager ;
 
     @Column(name = "solved")

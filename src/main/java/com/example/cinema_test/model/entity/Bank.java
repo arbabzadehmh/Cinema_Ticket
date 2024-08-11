@@ -21,7 +21,7 @@ public class Bank extends Base{
 
 
     @Id
-    @SequenceGenerator(name = "bankSeq", sequenceName = "bank_seq")
+    @SequenceGenerator(name = "bankSeq", sequenceName = "bank_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bankSeq")
     @Column(name = "bank_id", length = 20)
     private Long  id;

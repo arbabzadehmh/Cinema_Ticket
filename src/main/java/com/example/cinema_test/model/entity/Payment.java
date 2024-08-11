@@ -5,26 +5,31 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@Setter
 @Getter
+@Setter
 @SuperBuilder
+@ToString
+
 
 @Entity(name = "paymentEntity")
 @Table(name = "payment_tbl")
-public class Payment extends Base{
+public class Payment extends Base {
+
+
     @Id
-    @SequenceGenerator(name = "paymentSeq", sequenceName = "payment_seq")
+    @SequenceGenerator(name = "paymentSeq", sequenceName = "payment_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "paymentSeq")
-    @Column(name = "id", length = 20)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "payment_price")
-    private float price;
+    private double price;
 
     @Column(name="payment_date")
     private LocalDateTime paymentDateTime;

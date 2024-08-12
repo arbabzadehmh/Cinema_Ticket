@@ -1,6 +1,7 @@
 package com.example.cinema_test.model.service;
 
 
+import com.example.cinema_test.controller.exception.AccessDeniedException;
 import com.example.cinema_test.controller.exception.UserNotFoundException;
 
 import com.example.cinema_test.model.entity.User;
@@ -51,19 +52,31 @@ public class UserService implements Serializable {
                 .getResultList();
     }
 
-    public List<User> findByUsername(String username) throws Exception {
-        return entityManager
-                .createQuery("select oo from userEntity oo where oo.username=:username", User.class)
-                .setParameter("username", username )
-                .getResultList();
+    public User findByUsername(String username) throws Exception {
+        List<User> userList =
+                entityManager
+                        .createQuery("select oo from userEntity oo where oo.username=:username", User.class)
+                        .setParameter("username", username)
+                        .getResultList();
+        if (!userList.isEmpty()) {
+            return userList.get(0);
+        } else {
+            throw new UserNotFoundException();
+        }
     }
 
-    public List<User> findByUsernameAndPassword(String username, String password) throws Exception {
-        return entityManager
-                .createQuery("select oo from userEntity oo where oo.username=:username and oo.password=:password", User.class)
-                .setParameter("username", username)
-                .setParameter("password", password)
-                .getResultList();
+    public User findByUsernameAndPassword(String username, String password) throws Exception {
+        List<User> userList =
+                entityManager
+                        .createQuery("select oo from userEntity oo where oo.username=:username and oo.password=:password", User.class)
+                        .setParameter("username", username)
+                        .setParameter("password", password)
+                        .getResultList();
+        if (!userList.isEmpty()) {
+            return userList.get(0);
+        } else {
+            throw new AccessDeniedException();
+        }
     }
 
 

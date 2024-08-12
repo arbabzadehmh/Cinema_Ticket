@@ -49,7 +49,7 @@ public class Cinema extends Base{
     )
     private List<Saloon> saloonList;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "cinema_show_tbl",
             joinColumns = @JoinColumn(name = "cinema_id"),

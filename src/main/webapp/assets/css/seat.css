@@ -1,0 +1,29 @@
+#seat{
+    padding: 100px;
+}
+
+
+#seatRow1 {
+    height: 60px;
+    width: 60px;
+    margin: 10px;
+    font-size: small;
+    background-color: #ffda6a;
+    display: inline;
+    float: right;
+}
+
+#seatRow2 {
+    height: 60px;
+    width: 60px;
+    margin: 10px;
+    font-size: small;
+    background-color: #6aff99;
+    display: inline;
+    float: right;
+
+}
+
+#seat :hover {
+    background-color: #b66d41;
+}

@@ -12,6 +12,9 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
@@ -74,6 +77,46 @@ public class ShowTimeService implements Serializable {
         return entityManager
                 .createQuery("select s from showTimeEntity s where s.cinema.name =:name and s.deleted=false", ShowTime.class)
                 .setParameter("name", name)
+                .getResultList();
+    }
+
+    @Transactional
+    public List<ShowTime> findActiveShows() throws Exception {
+        return entityManager
+                .createQuery("select s from showTimeEntity s where s.startTime between :startTime and :endTime and s.status = true and s.deleted = false ", ShowTime.class)
+                .setParameter("startTime", LocalDateTime.now())
+                .setParameter("endTime", LocalDateTime.now().plusDays(5))
+                .getResultList();
+    }
+
+    @Transactional
+    public List<ShowTime> findByShowId(Long showId) throws Exception {
+        return entityManager
+                .createQuery("select s from showTimeEntity s where s.startTime between :startTime and :endTime and s.show.id =:showId and s.status = true and s.deleted = false ", ShowTime.class)
+                .setParameter("startTime", LocalDateTime.now())
+                .setParameter("endTime", LocalDateTime.now().plusDays(5))
+                .setParameter("showId", showId)
+                .getResultList();
+    }
+
+    @Transactional
+    public List<ShowTime> findByShowIdAndDate(Long showId, LocalDate date) throws Exception {
+        return entityManager
+                .createQuery("select s from showTimeEntity s where s.startTime between :startTime and :endTime and s.show.id =:showId and s.status = true and s.deleted = false ", ShowTime.class)
+                .setParameter("startTime", date.atTime(1,0,0))
+                .setParameter("endTime", date.atTime(23, 59, 59))
+                .setParameter("showId", showId)
+                .getResultList();
+    }
+
+    @Transactional
+    public List<ShowTime> findByShowIdAndDateAndCinemaId(Long ShowId, LocalDate date, Long cinemaId) throws Exception {
+        return entityManager
+                .createQuery("select s from showTimeEntity s where s.startTime between :startTime and :endTime and s.show.id =:ShowId and s.cinema.id =:cinemaId and s.status = true and s.deleted = false ", ShowTime.class)
+                .setParameter("startTime", date.atTime(1,0,0))
+                .setParameter("endTime", date.atTime(23, 59, 59))
+                .setParameter("ShowId", ShowId)
+                .setParameter("cinemaId", cinemaId)
                 .getResultList();
     }
 

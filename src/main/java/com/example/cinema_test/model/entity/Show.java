@@ -9,6 +9,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @NoArgsConstructor
@@ -61,4 +62,5 @@ public class Show extends Base {
 
     @Column(name = "description", length =50)
     private String description;
+
 }

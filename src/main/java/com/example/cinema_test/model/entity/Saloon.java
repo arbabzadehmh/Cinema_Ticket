@@ -33,6 +33,12 @@ public class Saloon extends Base {
     @Column(name = "capacity")
     private int capacity;
 
+    @Column(name = "saloon_row")
+    private int saloonRow;
+
+    @Column(name = "saloon_column")
+    private int saloonColumn;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "saloon_seat_tbl",

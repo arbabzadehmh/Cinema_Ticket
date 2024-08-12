@@ -31,6 +31,11 @@ public class CinemaService implements Serializable {
         }
         throw new CinemaNotFoundException();
     }
+
+    @Transactional
+    public Cinema findById(Long id) throws Exception {
+        return entityManager.find(Cinema.class, id);
+    }
     
 
 }

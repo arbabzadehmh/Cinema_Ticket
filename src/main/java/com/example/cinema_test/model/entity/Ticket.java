@@ -26,7 +26,7 @@ public class Ticket extends Base {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(
             name = "customer_id",
             foreignKey = @ForeignKey(name = "fk_ticket_customer")

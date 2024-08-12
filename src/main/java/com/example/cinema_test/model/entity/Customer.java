@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -44,6 +45,16 @@ public class Customer extends Base {
             foreignKey = @ForeignKey(name = "fk_customer_user")
     )
     private User user;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @JoinTable(
+            name = "customer_ticket_tbl",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "ticket_id"),
+            foreignKey = @ForeignKey(name = "fk_customer_ticket"),
+            inverseForeignKey = @ForeignKey(name = "fk_inverse_customer_ticket")
+    )
+    private List<Ticket> ticketList;
 
     public void customerUsernameSet() {
         this.user.setUsername(this.phoneNumber);

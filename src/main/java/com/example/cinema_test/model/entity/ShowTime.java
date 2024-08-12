@@ -30,14 +30,14 @@ public class ShowTime extends Base {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(
             name = "saloon_id",
             foreignKey = @ForeignKey(name = "fk_show_time_saloon")
     )
     private Saloon saloon;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(
             name = "show_id",
             foreignKey = @ForeignKey(name = "fk_show_time_show")

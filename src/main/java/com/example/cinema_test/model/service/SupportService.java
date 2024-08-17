@@ -1,10 +1,7 @@
 package com.example.cinema_test.model.service;
 
 import com.example.cinema_test.controller.exception.SupportNotFoundException;
-import com.example.cinema_test.model.entity.Customer;
-import com.example.cinema_test.model.entity.Manager;
-import com.example.cinema_test.model.entity.Moderator;
-import com.example.cinema_test.model.entity.Support;
+import com.example.cinema_test.model.entity.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -60,7 +57,7 @@ public class SupportService implements Serializable {
     @Transactional
     public List<Support> findByModerator(Moderator moderator) throws Exception {
         return entityManager
-                .createQuery("select oo from supportEntity oo where oo.deleted=false and oo.manager.id=moderator.id", Support.class)
+                .createQuery("select oo from supportEntity oo where oo.deleted=false and oo.moderator.id=moderator.id", Support.class)
                 .getResultList();
     }
 
@@ -72,9 +69,9 @@ public class SupportService implements Serializable {
     }
 
     @Transactional
-    public List<Support> findByManager(Manager manager) throws Exception {
+    public List<Support> findByMessage(Message message) throws Exception {
         return entityManager
-                .createQuery("select oo from supportEntity oo where oo.deleted=false and oo.manager.id=manager.id", Support.class)
+                .createQuery("select oo from supportEntity oo where oo.deleted=false and oo.message.id=message.id", Support.class)
                 .getResultList();
     }
 

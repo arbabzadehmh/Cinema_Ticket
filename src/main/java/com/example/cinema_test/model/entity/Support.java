@@ -25,38 +25,31 @@ public class Support extends Base{
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "customer_description", length = 200)
-    private String customerDescription;
 
-    @Column(name = "manager_description", length = 200)
-    private String managerDescription;
-
-    @Column(name = "moderator_description", length = 200)
-    private String moderatorDescription;
-
-    @OneToOne
+    @OneToMany
     @JoinColumn(
-            name = "moderator_id",
-            foreignKey = @ForeignKey(name = "fk_support_moderator")
+            name = "message_id",
+            foreignKey = @ForeignKey(name = "fk_support_message")
     )
-    private Moderator moderator;
+    private Message message;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(
             name = "customer_id",
             foreignKey = @ForeignKey(name = "fk_support_customer")
     )
     private Customer customer;
 
+    @JoinColumn(
+            name = "moderator_id",
+            foreignKey = @ForeignKey(name = "fk_support_moderator")
+    )
+    @OneToOne
+    private Moderator moderator;
+
+
     @Column(name = "issue_time")
     private LocalDateTime issueTime;
-
-    @OneToOne
-    @JoinColumn(
-            name = "manager_id",
-            foreignKey = @ForeignKey(name = "fk_support_manager")
-    )
-    private Manager manager ;
 
     @Column(name = "solved")
     private boolean solved = false;

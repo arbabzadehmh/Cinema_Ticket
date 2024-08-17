@@ -1,7 +1,6 @@
 package com.example.cinema_test.controller.servlet;
 
-import com.example.cinema_test.model.entity.Cinema;
-import com.example.cinema_test.model.entity.Show;
+
 import com.example.cinema_test.model.entity.ShowTime;
 import com.example.cinema_test.model.service.CinemaService;
 import com.example.cinema_test.model.service.SaloonService;
@@ -15,9 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @WebServlet(urlPatterns = "/test3.do")
 public class TestServlet3 extends HttpServlet {

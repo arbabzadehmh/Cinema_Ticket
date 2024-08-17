@@ -1,5 +1,5 @@
-#seat{
-    padding: 100px;
+#seats {
+
 }
 
 
@@ -7,23 +7,46 @@
     height: 60px;
     width: 60px;
     margin: 10px;
-    font-size: small;
-    background-color: #ffda6a;
-    display: inline;
+    font-size: medium;
+    background-color: #1dd5dc;
+    display: inline-block;
     float: right;
+}
+
+#seatRow1:hover{
+    background-color: #e0b32d;
+
+}
+
+#seatRow1  h6{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 #seatRow2 {
+    margin-top: 150px;
     height: 60px;
     width: 60px;
-    margin: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
     font-size: small;
-    background-color: #6aff99;
+    background-color: #1dd5dc;
     display: inline;
     float: right;
-
 }
 
-#seat :hover {
-    background-color: #b66d41;
+#seatRow3 {
+    margin-top: 300px;
+    height: 60px;
+    width: 60px;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: small;
+    background-color: #1dd5dc;
+    display: inline;
+    float: right;
 }
+
+

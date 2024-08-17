@@ -26,8 +26,8 @@
 
         <div id="seatRow${seatVo.rowNumber}" onclick="selectSeat(${seatVo.id})">
             <h1 hidden="hidden">${seatVo.id}</h1>
-                ${seatVo.label}
-                ${seatVo.seatPrice}
+                <h6>${seatVo.label}</h6>
+                <h6>${seatVo.seatPrice}</h6>
         </div>
 
 

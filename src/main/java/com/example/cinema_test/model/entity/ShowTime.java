@@ -69,6 +69,7 @@ public class ShowTime extends Base {
     @Column(name = "description", length = 50)
     private String description;
 
+    @JsonbTransient
     @ToString.Exclude
     @ManyToOne
     @JoinColumn(

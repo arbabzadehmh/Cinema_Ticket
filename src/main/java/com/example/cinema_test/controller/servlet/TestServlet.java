@@ -660,7 +660,7 @@ public class TestServlet extends HttpServlet {
             req.getSession().setAttribute("saloons", managerService.findById(1L).getCinema().getSaloonList());
             req.getSession().setAttribute("shows", managerService.findById(1L).getCinema().getShowList());
             req.getSession().setAttribute("showTimes", managerService.findById(1L).getCinema().getShowTimeList());
-            req.getRequestDispatcher("/manager-panel.jsp").forward(req, resp);
+            req.getRequestDispatcher("/managers/managers-panel.jsp").forward(req, resp);
 
 
         } catch (Exception e) {

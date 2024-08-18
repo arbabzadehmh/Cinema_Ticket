@@ -11,7 +11,7 @@
 <h1>Select Show Time</h1>
 <h2>Show : ${sessionScope.selectedShow.name}</h2>
 <h2>Date : ${sessionScope.selectedDate}</h2>
-<h2>Cinema : ${sessionScope.selectedCinema.name}</h2>
+<h2>Cinema : ${sessionScope.selectedCinemaName}</h2>
 
 <div>
 
@@ -33,7 +33,7 @@
         <c:forEach var="showTime" items="${sessionScope.showTimes}">
             <tr>
                 <td hidden="hidden">${showTime.id}</td>
-                <td>${showTime.saloon.saloonNumber}</td>
+                <td>${showTime.saloonNumber}</td>
                 <td>${showTime.startTime.toLocalTime()}</td>
                 <td>${showTime.endTime.toLocalTime()}</td>
                 <td>${showTime.remainingCapacity}</td>

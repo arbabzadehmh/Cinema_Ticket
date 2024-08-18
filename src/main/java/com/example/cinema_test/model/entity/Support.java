@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -31,7 +32,7 @@ public class Support extends Base{
             name = "message_id",
             foreignKey = @ForeignKey(name = "fk_support_message")
     )
-    private Message message;
+    private List<Message> messageList;
 
     @ManyToOne
     @JoinColumn(

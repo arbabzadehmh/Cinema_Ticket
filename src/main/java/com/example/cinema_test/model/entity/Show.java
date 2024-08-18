@@ -9,7 +9,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.List;
+
 
 
 @NoArgsConstructor
@@ -56,6 +56,9 @@ public class Show extends Base {
     @Column(name = "show_type")
     @Enumerated(EnumType.ORDINAL)
     private ShowType showType;
+
+    @Column(name = "available")
+    private boolean available = false;
 
     @Column(name = "status")
     private boolean status;

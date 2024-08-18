@@ -53,15 +53,6 @@ public class ShowTime extends Base {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "show_seat_tbl",
-            joinColumns = @JoinColumn(name = "show_time_id"),
-            inverseJoinColumns = @JoinColumn(name = "seatvo_id"),
-            foreignKey = @ForeignKey(name = "fk_show_time_seat"),
-            inverseForeignKey = @ForeignKey(name = "fk_inverse_show_time_seat")
-    )
-    private List<SeatVo> showSeats;
 
     @Column(name = "status")
     private boolean status;
@@ -79,13 +70,6 @@ public class ShowTime extends Base {
     private Cinema cinema;
 
 
-    public void showSeatCreator(){
-
-        if (showSeats == null){
-            showSeats = new ArrayList<>();
-        }
-
-    }
 }
 
 

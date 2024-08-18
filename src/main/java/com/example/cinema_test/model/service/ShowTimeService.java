@@ -2,10 +2,7 @@ package com.example.cinema_test.model.service;
 
 
 import com.example.cinema_test.controller.exception.ShowTimeNotFoundException;
-import com.example.cinema_test.model.entity.Cinema;
-import com.example.cinema_test.model.entity.Seat;
-import com.example.cinema_test.model.entity.SeatVo;
-import com.example.cinema_test.model.entity.ShowTime;
+import com.example.cinema_test.model.entity.*;
 import com.example.cinema_test.model.entity.enums.ShowType;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
@@ -34,7 +31,7 @@ public class ShowTimeService implements Serializable {
                 seatVo.setPriceRatio(1);
                 seatVo.setSeatPrice(seatVo.getPriceRatio() * showTime.getShow().getBasePrice());
             }
-            showTime.getShowSeats().add(seatVo);
+//            showTime.getShowSeats().add(seatVo);
         }
 
         entityManager.persist(showTime);
@@ -83,11 +80,11 @@ public class ShowTimeService implements Serializable {
     }
 
     @Transactional
-    public List<ShowTime> findActiveShows() throws Exception {
+    public List<Show> findActiveShows() throws Exception {
         return entityManager
-                .createQuery("select s from showTimeEntity s where s.startTime between :startTime and :endTime and s.status = true and s.deleted = false ", ShowTime.class)
+                .createQuery("select distinct s.show from showTimeEntity s where s.startTime between :startTime and :endTime and s.status = true and s.deleted = false ", Show.class)
                 .setParameter("startTime", LocalDateTime.now())
-                .setParameter("endTime", LocalDateTime.now().plusDays(5))
+                .setParameter("endTime", LocalDateTime.now().plusDays(7))
                 .getResultList();
     }
 

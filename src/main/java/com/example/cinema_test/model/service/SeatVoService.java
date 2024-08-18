@@ -47,6 +47,8 @@ public class SeatVoService implements Serializable {
 
     @Transactional
     public List<SeatVo> findAll() throws Exception {
+
+        //comparing expireDte and createDate .
         return entityManager
                 .createQuery("select oo from seatVoEntity oo where oo.deleted=false order by id", SeatVo.class)
                 .getResultList();

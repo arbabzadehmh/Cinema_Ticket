@@ -54,5 +54,12 @@ public class ShowService implements Serializable {
     public Show findById(Long id) throws Exception {
         return entityManager.find(Show.class, id);
     }
+
+    @Transactional
+    public List<Show> findActiveShows() throws Exception {
+        return entityManager
+                .createQuery("select s from showEntity s where s.available=true and s.deleted=false ", Show.class)
+                .getResultList();
+    }
     
 }

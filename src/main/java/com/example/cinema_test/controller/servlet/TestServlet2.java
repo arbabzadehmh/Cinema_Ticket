@@ -1,8 +1,9 @@
 package com.example.cinema_test.controller.servlet;
 
 import com.example.cinema_test.model.entity.Cinema;
-import com.example.cinema_test.model.entity.Show;
+import com.example.cinema_test.model.entity.CinemaVO;
 import com.example.cinema_test.model.entity.ShowTime;
+import com.example.cinema_test.model.entity.ShowTimeVo;
 import com.example.cinema_test.model.service.*;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
@@ -40,11 +41,18 @@ public class TestServlet2 extends HttpServlet {
 
                 Long cinemaId = Long.parseLong(req.getParameter("selectCinema"));
                 System.out.println("selected cinema : " + cinemaId);
-                req.getSession().setAttribute("selectedCinema", cinemaService.findById(cinemaId));
+                req.getSession().setAttribute("selectedCinemaName", cinemaService.findById(cinemaId).getName());
                 Long showId = Long.parseLong(req.getSession().getAttribute("showId").toString());
                 LocalDate selectedDate = LocalDate.parse(req.getSession().getAttribute("selectedDate").toString());
+                List<ShowTime> showTimes = showTimeService.findByShowIdAndDateAndCinemaId(showId, selectedDate, cinemaId);
+                List<ShowTimeVo> showTimeVoList = new ArrayList<>();
+                for (ShowTime showTime : showTimes) {
+                    ShowTimeVo showTimeVo = new ShowTimeVo(showTime);
+                    showTimeVoList.add(showTimeVo);
+                }
 
-                req.getSession().setAttribute("showTimes", showTimeService.findByShowIdAndDateAndCinemaId(showId, selectedDate, cinemaId));
+
+                req.getSession().setAttribute("showTimes", showTimeVoList);
                 req.getRequestDispatcher("/show-time-select.jsp").forward(req, resp);
 
             } else if (req.getParameter("selectDate") != null) {
@@ -52,14 +60,14 @@ public class TestServlet2 extends HttpServlet {
                 LocalDate selectedDate = LocalDate.parse(req.getParameter("selectDate"));
                 req.getSession().setAttribute("selectedDate", selectedDate);
                 System.out.println(selectedDate);
-                List<Cinema> cinemaList = new ArrayList<>();
-                for (ShowTime showTime : showTimeService.findByShowIdAndDate(Long.parseLong(req.getSession().getAttribute("showId").toString()), selectedDate)) {
-                    if (!cinemaList.contains(showTime.getCinema())) {
-                        cinemaList.add(showTime.getCinema());
-                    }
+                List<Cinema> cinemaList = showTimeService.findDistinctCinemasByShowIdAndDate(Long.parseLong(req.getSession().getAttribute("showId").toString()),selectedDate);
+                List<CinemaVO> cinemaVOList = new ArrayList<>();
+                for (Cinema cinema : cinemaList) {
+                    CinemaVO cinemaVO = new CinemaVO(cinema);
+                    cinemaVOList.add(cinemaVO);
                 }
 
-                req.getSession().setAttribute("cinemas", cinemaList);
+                req.getSession().setAttribute("cinemas", cinemaVOList);
                 req.getRequestDispatcher("/cinema-select.jsp").forward(req, resp);
 
             } else if (req.getParameter("selectShow") != null) {
@@ -67,25 +75,15 @@ public class TestServlet2 extends HttpServlet {
                 req.getSession().setAttribute("showId", showId);
                 req.getSession().setAttribute("selectedShow", showService.findById(showId));
                 System.out.println("show ID : " + showId);
-                List<LocalDate> dateList = new ArrayList<>();
-                for (ShowTime showTime : showTimeService.findByShowId(showId)) {
-                    if (!dateList.contains(showTime.getStartTime().toLocalDate())) {
-                        dateList.add(showTime.getStartTime().toLocalDate());
-                    }
-                }
+                List<LocalDate> dateList = showTimeService.findDistinctDatesByShowId(showId);
+
                 System.out.println("Date : " + dateList);
                 req.getSession().setAttribute("showDates", dateList);
                 req.getRequestDispatcher("/show-date-select.jsp").forward(req, resp);
 
             } else {
 
-                List<Show> allActiveShows = new ArrayList<>();
-                for (ShowTime showTime : showTimeService.findActiveShows()) {
-                    if (!allActiveShows.contains(showTime.getShow())) {
-                        allActiveShows.add(showTime.getShow());
-                    }
-                }
-                req.getSession().setAttribute("allActiveShows", allActiveShows);
+                req.getSession().setAttribute("allActiveShows", showService.findActiveShows());
 
                 req.getRequestDispatcher("/show-select.jsp").forward(req, resp);
 

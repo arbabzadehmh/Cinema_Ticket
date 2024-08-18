@@ -2,6 +2,7 @@ package com.example.cinema_test.controller.servlet;
 
 
 import com.example.cinema_test.model.entity.Cinema;
+import com.example.cinema_test.model.entity.Show;
 import com.example.cinema_test.model.entity.ShowTime;
 import com.example.cinema_test.model.service.ShowTimeService;
 import jakarta.inject.Inject;
@@ -46,6 +47,7 @@ public class TestServlet4 extends HttpServlet {
             for (ShowTime showTime : showTimeList1){
                 System.out.println(showTime.getStartTime());
             }
+
 
 
 

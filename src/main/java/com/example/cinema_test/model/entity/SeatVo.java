@@ -47,6 +47,8 @@ public class SeatVo extends Base {
 
     @Column(name = "reserved")
     private boolean reserved = false;
+    //reservedTime
+    //expireDate =
 
     @Column(name = "description", length = 30)
     private String description;

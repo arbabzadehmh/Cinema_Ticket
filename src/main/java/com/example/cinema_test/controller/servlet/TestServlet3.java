@@ -2,6 +2,7 @@ package com.example.cinema_test.controller.servlet;
 
 
 import com.example.cinema_test.model.entity.ShowTime;
+import com.example.cinema_test.model.entity.ShowTimeVo;
 import com.example.cinema_test.model.service.CinemaService;
 import com.example.cinema_test.model.service.SaloonService;
 import com.example.cinema_test.model.service.ShowService;
@@ -37,8 +38,10 @@ public class TestServlet3 extends HttpServlet {
         try {
 
             ShowTime selectedShowTime = showTimeService.findById(Long.parseLong(req.getParameter("selectShowTimeId")));
-            req.getSession().setAttribute("showSeats", selectedShowTime.getShowSeats());
-            req.getSession().setAttribute("selectedShowTime", selectedShowTime);
+            ShowTimeVo selectedShowTimeVo = new ShowTimeVo(selectedShowTime);
+            req.getSession().setAttribute("saloonColum", selectedShowTime.getSaloon().getSaloonColumn());
+            req.getSession().setAttribute("showSeats", selectedShowTime.getSaloon().getSeats());
+            req.getSession().setAttribute("selectedShowTime", selectedShowTimeVo);
             req.getRequestDispatcher("/seat-select.jsp").forward(req, resp);
 
 

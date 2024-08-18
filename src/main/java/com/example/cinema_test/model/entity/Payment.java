@@ -9,6 +9,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -31,11 +32,23 @@ public class Payment extends Base {
     @Column(name = "payment_price")
     private double price;
 
-    @Column(name="payment_date")
+    @Column(name = "payment_date")
     private LocalDateTime paymentDateTime;
 
-    @Column(name="description" , length = 50)
+    @Column(name = "description", length = 50)
     @Pattern(regexp = "^[a-zA-Z\\s]{3,30}$")
     private String description;
+
+    @OneToOne
+    @JoinColumn(
+            name = "bank-id",
+            foreignKey = @ForeignKey(name = "fk-bank-payment")
+    )
+    private Bank bank;
+
+    @OneToMany
+    @JoinColumn(name = "ticket-id"
+            , foreignKey = @ForeignKey(name = "fk-payment-ticket"))
+    private List<Ticket> ticketList;
 
 }

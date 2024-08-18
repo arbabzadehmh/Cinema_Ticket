@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 @ToString
 
 
-@Entity(name="ticketEntity")
-@Table(name="ticket_tbl")
+@Entity(name = "ticketEntity")
+@Table(name = "ticket_tbl")
 public class Ticket extends Base {
 
     @Id
@@ -48,5 +48,10 @@ public class Ticket extends Base {
 
     @Column(name = "seat_label")
     private String seatLabel;
+
+    @ManyToOne
+    @JoinColumn(name = "payment-id"
+            , foreignKey = @ForeignKey(name = "fk-ticket-payment"))
+    private Payment payment;
 
 }

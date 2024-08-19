@@ -3,10 +3,7 @@ package com.example.cinema_test.controller.servlet;
 
 import com.example.cinema_test.model.entity.ShowTime;
 import com.example.cinema_test.model.entity.ShowTimeVo;
-import com.example.cinema_test.model.service.CinemaService;
-import com.example.cinema_test.model.service.SaloonService;
-import com.example.cinema_test.model.service.ShowService;
-import com.example.cinema_test.model.service.ShowTimeService;
+import com.example.cinema_test.model.service.*;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 
 @WebServlet(urlPatterns = "/test3.do")
@@ -32,6 +30,9 @@ public class TestServlet3 extends HttpServlet {
     @Inject
     private ShowTimeService showTimeService;
 
+    @Inject
+    private TicketService ticketService;
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,6 +43,8 @@ public class TestServlet3 extends HttpServlet {
             req.getSession().setAttribute("saloonColum", selectedShowTime.getSaloon().getSaloonColumn());
             req.getSession().setAttribute("showSeats", selectedShowTime.getSaloon().getSeats());
             req.getSession().setAttribute("selectedShowTime", selectedShowTimeVo);
+            req.getSession().setAttribute("soldSeatsId", ticketService.findSoldSeatsByShowId(selectedShowTime.getId()));
+            req.getSession().setAttribute("reservedSeatsId", ticketService.findReservedSeatsByShowId(selectedShowTime.getId()));
             req.getRequestDispatcher("/seat-select.jsp").forward(req, resp);
 
 

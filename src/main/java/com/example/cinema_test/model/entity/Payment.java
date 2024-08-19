@@ -41,14 +41,18 @@ public class Payment extends Base {
 
     @OneToOne
     @JoinColumn(
-            name = "bank-id",
-            foreignKey = @ForeignKey(name = "fk-bank-payment")
+            name = "bank_id",
+            foreignKey = @ForeignKey(name = "fk_bank_payment")
     )
     private Bank bank;
 
-    @OneToMany
-    @JoinColumn(name = "ticket-id"
-            , foreignKey = @ForeignKey(name = "fk-payment-ticket"))
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @JoinTable(name = "payment_ticket-tbl",
+            joinColumns = @JoinColumn(name = "payment_id"),
+            inverseJoinColumns = @JoinColumn(name = "ticket_id"),
+            foreignKey = @ForeignKey(name = "fk_payment_ticket"),
+            inverseForeignKey = @ForeignKey(name = "fk_inverse_payment_ticket")
+    )
     private List<Ticket> ticketList;
 
 }

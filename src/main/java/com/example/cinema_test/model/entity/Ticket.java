@@ -46,12 +46,16 @@ public class Ticket extends Base {
     @Column(name = "issue_time")
     private LocalDateTime issueTime;
 
-    @Column(name = "seat_label")
-    private String seatLabel;
+    @Column(name = "seat_id")
+    private Long seatId;
+
+    @Column(name = "reserved")
+    private boolean reserved;
 
     @ManyToOne
-    @JoinColumn(name = "payment-id"
-            , foreignKey = @ForeignKey(name = "fk-ticket-payment"))
+    @JoinColumn(name = "payment_id",
+            foreignKey = @ForeignKey(name = "fk_ticket_payment")
+    )
     private Payment payment;
 
 }

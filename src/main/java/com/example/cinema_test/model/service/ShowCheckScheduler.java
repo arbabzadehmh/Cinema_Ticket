@@ -6,6 +6,8 @@ import jakarta.ejb.Schedule;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
+import java.time.LocalTime;
+
 @Stateless
 public class ShowCheckScheduler {
 
@@ -15,10 +17,11 @@ public class ShowCheckScheduler {
     @Inject
     private ShowService showService;
 
-    @Schedule(hour="*", minute="*", second="*/20", persistent=false)
+    @Schedule(hour="*", minute="*/1", second="0", persistent=false)
     public void checkShows() {
         try {
             System.out.println("Checking active shows...");
+            System.out.println(LocalTime.now());
 
             for (Show show : showService.findAll()) {
                 show.setAvailable(false);

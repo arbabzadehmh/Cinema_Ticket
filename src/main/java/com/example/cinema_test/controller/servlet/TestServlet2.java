@@ -40,7 +40,6 @@ public class TestServlet2 extends HttpServlet {
             if (req.getParameter("selectCinema") != null) {
 
                 Long cinemaId = Long.parseLong(req.getParameter("selectCinema"));
-                System.out.println("selected cinema : " + cinemaId);
                 req.getSession().setAttribute("selectedCinemaName", cinemaService.findById(cinemaId).getName());
                 Long showId = Long.parseLong(req.getSession().getAttribute("showId").toString());
                 LocalDate selectedDate = LocalDate.parse(req.getSession().getAttribute("selectedDate").toString());
@@ -59,7 +58,6 @@ public class TestServlet2 extends HttpServlet {
 
                 LocalDate selectedDate = LocalDate.parse(req.getParameter("selectDate"));
                 req.getSession().setAttribute("selectedDate", selectedDate);
-                System.out.println(selectedDate);
                 List<Cinema> cinemaList = showTimeService.findDistinctCinemasByShowIdAndDate(Long.parseLong(req.getSession().getAttribute("showId").toString()),selectedDate);
                 List<CinemaVO> cinemaVOList = new ArrayList<>();
                 for (Cinema cinema : cinemaList) {
@@ -74,10 +72,8 @@ public class TestServlet2 extends HttpServlet {
                 Long showId = Long.parseLong(req.getParameter("selectShow"));
                 req.getSession().setAttribute("showId", showId);
                 req.getSession().setAttribute("selectedShow", showService.findById(showId));
-                System.out.println("show ID : " + showId);
                 List<LocalDate> dateList = showTimeService.findDistinctDatesByShowId(showId);
 
-                System.out.println("Date : " + dateList);
                 req.getSession().setAttribute("showDates", dateList);
                 req.getRequestDispatcher("/show-date-select.jsp").forward(req, resp);
 

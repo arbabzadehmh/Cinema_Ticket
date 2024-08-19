@@ -445,14 +445,13 @@ public class TestServlet extends HttpServlet {
 //                            .show(show1)
 //                            .startTime(LocalDateTime.of(2024, 8, 19, 18, 30))
 //                            .endTime(LocalDateTime.of(2024, 8, 19, 20, 30))
-//                            .showSeats(null)
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
 //                            .cinema(cinema1)
 //                            .build();
 //
-//            showTime1.showSeatCreator();
+//
 //            showTimes1.add(showTime1);
 //            showTimeService.save(showTime1);
 //
@@ -464,14 +463,13 @@ public class TestServlet extends HttpServlet {
 //                            .show(show1)
 //                            .startTime(LocalDateTime.of(2024, 8, 19, 21, 0))
 //                            .endTime(LocalDateTime.of(2024, 8, 19, 23, 0))
-//                            .showSeats(null)
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
 //                            .cinema(cinema1)
 //                            .build();
 //
-//            showTime2.showSeatCreator();
+//
 //            showTimes1.add(showTime2);
 //            showTimeService.save(showTime2);
 //
@@ -483,14 +481,12 @@ public class TestServlet extends HttpServlet {
 //                            .show(show2)
 //                            .startTime(LocalDateTime.of(2024, 8, 20, 17, 0))
 //                            .endTime(LocalDateTime.of(2024, 8, 20, 19, 0))
-//                            .showSeats(null)
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
 //                            .cinema(cinema1)
 //                            .build();
 //
-//            showTime3.showSeatCreator();
 //            showTimes1.add(showTime3);
 //            showTimeService.save(showTime3);
 //
@@ -502,14 +498,12 @@ public class TestServlet extends HttpServlet {
 //                            .show(show3)
 //                            .startTime(LocalDateTime.of(2024, 8, 20, 17, 0))
 //                            .endTime(LocalDateTime.of(2024, 8, 20, 19, 0))
-//                            .showSeats(null)
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
 //                            .cinema(cinema1)
 //                            .build();
 //
-//            showTime4.showSeatCreator();
 //            showTimes1.add(showTime4);
 //            showTimeService.save(showTime4);
 //
@@ -521,14 +515,12 @@ public class TestServlet extends HttpServlet {
 //                            .show(show4)
 //                            .startTime(LocalDateTime.of(2024, 8, 20, 20, 0))
 //                            .endTime(LocalDateTime.of(2024, 8, 20, 22, 0))
-//                            .showSeats(null)
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
 //                            .cinema(cinema1)
 //                            .build();
 //
-//            showTime5.showSeatCreator();
 //            showTimes1.add(showTime5);
 //            showTimeService.save(showTime5);
 //
@@ -550,14 +542,12 @@ public class TestServlet extends HttpServlet {
 //                            .show(show3)
 //                            .startTime(LocalDateTime.of(2024, 8, 19, 18, 30))
 //                            .endTime(LocalDateTime.of(2024, 8, 19, 20, 30))
-//                            .showSeats(null)
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
 //                            .cinema(cinema2)
 //                            .build();
 //
-//            showTime6.showSeatCreator();
 //            showTimes2.add(showTime6);
 //            showTimeService.save(showTime6);
 //
@@ -569,14 +559,12 @@ public class TestServlet extends HttpServlet {
 //                            .show(show3)
 //                            .startTime(LocalDateTime.of(2024, 8, 19, 21, 0))
 //                            .endTime(LocalDateTime.of(2024, 8, 19, 23, 0))
-//                            .showSeats(null)
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
 //                            .cinema(cinema2)
 //                            .build();
 //
-//            showTime7.showSeatCreator();
 //            showTimes2.add(showTime7);
 //            showTimeService.save(showTime7);
 //
@@ -588,14 +576,12 @@ public class TestServlet extends HttpServlet {
 //                            .show(show3)
 //                            .startTime(LocalDateTime.of(2024, 8, 20, 18, 30))
 //                            .endTime(LocalDateTime.of(2024, 8, 20, 20, 30))
-//                            .showSeats(null)
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
 //                            .cinema(cinema2)
 //                            .build();
 //
-//            showTime8.showSeatCreator();
 //            showTimes2.add(showTime8);
 //            showTimeService.save(showTime8);
 //
@@ -617,14 +603,12 @@ public class TestServlet extends HttpServlet {
 //                            .show(show4)
 //                            .startTime(LocalDateTime.of(2024, 8, 19, 18, 30))
 //                            .endTime(LocalDateTime.of(2024, 8, 19, 20, 30))
-//                            .showSeats(null)
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
 //                            .cinema(cinema3)
 //                            .build();
 //
-//            showTime9.showSeatCreator();
 //            showTimes3.add(showTime9);
 //            showTimeService.save(showTime9);
 //
@@ -636,14 +620,12 @@ public class TestServlet extends HttpServlet {
 //                            .show(show4)
 //                            .startTime(LocalDateTime.of(2024, 8, 20, 18, 0))
 //                            .endTime(LocalDateTime.of(2024, 8, 20, 20, 0))
-//                            .showSeats(null)
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
 //                            .cinema(cinema3)
 //                            .build();
 //
-//            showTime10.showSeatCreator();
 //            showTimes3.add(showTime10);
 //            showTimeService.save(showTime10);
 //

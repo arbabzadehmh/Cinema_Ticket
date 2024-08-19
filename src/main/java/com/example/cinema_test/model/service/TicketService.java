@@ -71,11 +71,27 @@ public class TicketService implements Serializable {
                         .createQuery("select t from ticketEntity t where t.customer.phoneNumber =:phoneNumber and t.deleted=false ", Ticket.class)
                         .setParameter("phoneNumber", phoneNumber)
                         .getResultList();
-        if (!ticketList.isEmpty()){
+        if (!ticketList.isEmpty()) {
             return ticketList.get(0);
         } else {
             return null;
         }
+    }
+
+    @Transactional
+    public List<Long> findSoldSeatsByShowId(Long showId) throws Exception {
+        return entityManager
+                .createQuery("select t.seatId from ticketEntity t where t.showTime.id =:showId and t.reserved=false and t.deleted=false ", Long.class)
+                .setParameter("showId", showId)
+                .getResultList();
+    }
+
+    @Transactional
+    public List<Long> findReservedSeatsByShowId(Long showId) throws Exception {
+        return entityManager
+                .createQuery("select t.seatId from ticketEntity t where t.showTime.id =:showId and t.reserved=true and t.deleted=false ", Long.class)
+                .setParameter("showId", showId)
+                .getResultList();
     }
 
 }

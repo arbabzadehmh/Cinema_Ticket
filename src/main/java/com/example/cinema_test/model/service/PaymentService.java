@@ -1,6 +1,7 @@
 package com.example.cinema_test.model.service;
 
 import com.example.cinema_test.model.entity.Payment;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -9,6 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@ApplicationScoped
 public class PaymentService implements Serializable {
 
     @PersistenceContext(unitName = "cinema")

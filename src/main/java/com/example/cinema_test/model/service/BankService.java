@@ -43,7 +43,7 @@ public class BankService implements Serializable {
 
     @Transactional
     public List<Bank> findAll() throws Exception {
-        return entityManager.createQuery("select b from bankEntity b where b.status=:status and b.deleted=false order by id", Bank.class)
+        return entityManager.createQuery("select b from bankEntity b where b.status=true and b.deleted=false order by id", Bank.class)
                 .getResultList();
     }
 

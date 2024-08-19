@@ -4,6 +4,7 @@ package com.example.cinema_test.controller.servlet;
 import com.example.cinema_test.model.entity.ShowTime;
 import com.example.cinema_test.model.entity.ShowTimeVo;
 import com.example.cinema_test.model.entity.Ticket;
+import com.example.cinema_test.model.service.BankService;
 import com.example.cinema_test.model.service.ShowTimeService;
 import com.example.cinema_test.model.service.TicketService;
 import jakarta.inject.Inject;
@@ -29,6 +30,9 @@ public class TicketServlet extends HttpServlet {
 
     @Inject
     private TicketService ticketService;
+
+    @Inject
+    private BankService bankService;
 
 
     @Override
@@ -78,12 +82,10 @@ public class TicketServlet extends HttpServlet {
                 }
 
                 req.getSession().setAttribute("ticketIds", ticketIds);
+                req.getSession().setAttribute("banks", bankService.findAll());
                 req.getRequestDispatcher("/payment.jsp").forward(req, resp);
 
             }
-
-
-
         }catch (Exception e) {
             resp.getWriter().write("<h1 style=\"background-color: green;\">" + e.getMessage() + "</h1>");
             e.printStackTrace();

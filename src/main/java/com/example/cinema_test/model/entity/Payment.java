@@ -47,7 +47,7 @@ public class Payment extends Base {
     private Bank bank;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
-    @JoinTable(name = "payment_ticket-tbl",
+    @JoinTable(name = "payment_ticket_tbl",
             joinColumns = @JoinColumn(name = "payment_id"),
             inverseJoinColumns = @JoinColumn(name = "ticket_id"),
             foreignKey = @ForeignKey(name = "fk_payment_ticket"),

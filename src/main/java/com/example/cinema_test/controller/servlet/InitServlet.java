@@ -23,10 +23,6 @@ public class InitServlet extends HttpServlet {
     @Inject
     private RoleService roleService;
 
-    @Inject
-    private ShowTimeService showTimeService;
-
-
     @Override
     public void init() throws ServletException {
         try {

@@ -6,7 +6,8 @@
 <head>
     <title>Show Time Select</title>
 
-    <link rel="stylesheet" href="assets/css/seat.css">
+    <jsp:include page="/css-import.jsp"/>
+
 
     <style>
         #seats {
@@ -36,20 +37,46 @@
         .reserved-seat {
             background-color: gray;
         }
+
+        .large-text {
+            font-size: 24px;
+        }
+
     </style>
 
 </head>
 <body>
 
-<h1>Select Seat</h1>
-<h2>Show : ${sessionScope.selectedShow.name}</h2>
-<h2>Date : ${sessionScope.selectedDate}</h2>
-<h2>Cinema : ${sessionScope.selectedCinemaName}</h2>
-<h2>Saloon : ${sessionScope.selectedShowTime.saloonNumber}</h2>
-<h2>Show Time : ${sessionScope.selectedShowTime.startTime.toLocalTime()}</h2>
-<h2>sold : ${sessionScope.soldSeatsId}</h2>
+<jsp:include page="/navbar.jsp"/>
 
-<img src="stage.png" alt="no image" class="justify-content-center" style="width: 100%">
+<div class="d-flex flex-row p-5 justify-content-center " style="background-color: #2a415a; color: white">
+
+    <div class="col">
+        <div class="item-icon mb-3 large-text"><i class="fa fa-camera-movie"></i></div>
+            <h2 class="row large-text">Show : ${sessionScope.selectedShow.name}</h2>
+    </div>
+
+    <div class="col">
+        <div class="row text-center mb-3">
+            <h2 class="large-text">Cinema : ${sessionScope.selectedCinemaName}</h2>
+        </div>
+        <div class="row text-center">
+            <h2 class="large-text">Saloon : ${sessionScope.selectedShowTime.saloonNumber}</h2>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="row text-center mb-3">
+            <h2 class="large-text">Date : ${sessionScope.selectedDate}</h2>
+        </div>
+        <div class="row text-center">
+            <h2 class="large-text">Show Time : ${sessionScope.selectedShowTime.startTime.toLocalTime()}</h2>
+        </div>
+    </div>
+
+</div>
+
+<img src="stage2.png" alt="no image" class="justify-content-center" style="width: 100%">
 
 <form id="seatForm" action="ticket.do" method="post">
     <input type="hidden" id="selectedSeats" name="selectedSeats" value="">
@@ -70,6 +97,10 @@
     <button type="submit">Submit Selected Seats</button>
 </form>
 
+
+<jsp:include page="/footer.jsp"/>
+
+
 <script>
     let selectedSeats = [];
 
@@ -89,6 +120,8 @@
         document.getElementById("selectedSeats").value = selectedSeats.join(",");
     }
 </script>
+
+<jsp:include page="/js-import.jsp"/>
 
 </body>
 </html>

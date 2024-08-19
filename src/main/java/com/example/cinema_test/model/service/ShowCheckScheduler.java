@@ -17,7 +17,7 @@ public class ShowCheckScheduler {
     @Inject
     private ShowService showService;
 
-    @Schedule(hour="*", minute="*/1", second="0", persistent=false)
+    @Schedule(hour="*", minute="*/2", second="0", persistent=false)
     public void checkShows() {
         try {
             System.out.println("Checking active shows...");

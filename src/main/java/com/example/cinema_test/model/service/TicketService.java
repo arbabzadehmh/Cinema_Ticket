@@ -8,6 +8,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
@@ -81,7 +82,7 @@ public class TicketService implements Serializable {
     @Transactional
     public List<Long> findSoldSeatsByShowId(Long showId) throws Exception {
         return entityManager
-                .createQuery("select t.seatId from ticketEntity t where t.showTime.id =:showId and t.reserved=false and t.deleted=false ", Long.class)
+                .createQuery("select t.seatId from ticketEntity t where t.showTime.id =:showId and t.reserved=false and t.payment is not null and t.deleted=false ", Long.class)
                 .setParameter("showId", showId)
                 .getResultList();
     }
@@ -91,6 +92,14 @@ public class TicketService implements Serializable {
         return entityManager
                 .createQuery("select t.seatId from ticketEntity t where t.showTime.id =:showId and t.reserved=true and t.deleted=false ", Long.class)
                 .setParameter("showId", showId)
+                .getResultList();
+    }
+
+    @Transactional
+    public List<Ticket> findFailedTickets() throws Exception {
+        return entityManager
+                .createQuery("select t from ticketEntity t where t.reserved=true and t.issueTime <: allowedTime and t.deleted=false ", Ticket.class)
+                .setParameter("allowedTime", LocalDateTime.now().minusMinutes(15))
                 .getResultList();
     }
 

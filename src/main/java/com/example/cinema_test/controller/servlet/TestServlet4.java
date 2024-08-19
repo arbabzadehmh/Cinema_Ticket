@@ -4,6 +4,7 @@ package com.example.cinema_test.controller.servlet;
 import com.example.cinema_test.model.entity.Cinema;
 import com.example.cinema_test.model.entity.Show;
 import com.example.cinema_test.model.entity.ShowTime;
+import com.example.cinema_test.model.entity.Ticket;
 import com.example.cinema_test.model.service.ShowTimeService;
 import com.example.cinema_test.model.service.TicketService;
 import jakarta.inject.Inject;
@@ -53,8 +54,12 @@ public class TestServlet4 extends HttpServlet {
 //            }
 
 
-            System.out.println(ticketService.findSoldSeatsByShowId(4L));
+//            System.out.println(ticketService.findSoldSeatsByShowId(4L));
 
+
+            for (Ticket ticket : ticketService.findFailedTickets()){
+                System.out.println(ticket.getId());
+            }
 
 
 

@@ -19,9 +19,9 @@
         <jsp:include page="/navbar.jsp"/>
 
 
-        <div class="content flex-grow-1">
+        <div class="content d-flex flex-column  align-items-center flex-grow-1">
 
-            <div class="d-flex justify-content-center p-5">
+            <div class="d-flex justify-content-center p-5 w-100">
 
                 <table id="resultTable" border="1" class="table-light w-100">
                     <thead>
@@ -64,7 +64,7 @@
             <%--            <button onclick="findManagerByPhone('${sessionScope.manager.phoneNumber}')"> phone</button>--%>
 
 
-            <button onclick="editManager(${sessionScope.manager.id})" class="d-flex mt-5 ml-5 btn btn-primary">Edit</button>
+            <button onclick="editManager(${sessionScope.manager.id})" class="btn btn-primary w-25 mt-4">Edit</button>
 
 
         </div>
@@ -91,7 +91,7 @@
 
 
     function editManager(id) {
-        window.location.replace("/manager.do?edit=" + id);
+        window.location.replace("/managers.do?edit=" + id);
     }
 
 

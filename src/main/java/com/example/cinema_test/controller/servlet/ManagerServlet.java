@@ -13,34 +13,23 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(urlPatterns = "/manager.do")
+@WebServlet(urlPatterns = "/managers.do")
 public class ManagerServlet extends HttpServlet {
 
     @Inject
-    private SeatService seatService;
-
-    @Inject
-    private SaloonService saloonService;
-
-    @Inject
-    private ShowService showService;
-
-    @Inject
-    private ShowTimeService showTimeService;
-
-    @Inject
     private ManagerService managerService;
-
-    @Inject
-    private CinemaService cinemaService;
-
-    @Inject
-    private RoleService roleService;
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+            if (req.getParameter("cancel") != null){
+                Manager editingManager = managerService.findById(Long.parseLong(req.getParameter("cancel")));
+                editingManager.setEditing(false);
+                managerService.edit(editingManager);
+                resp.sendRedirect("/managers.do");
+                return;
+            }
 
             if (req.getParameter("edit") != null) {
                 Manager editingManager = managerService.findById(Long.parseLong(req.getParameter("edit")));
@@ -77,19 +66,26 @@ public class ManagerServlet extends HttpServlet {
         ObjectMapper objectMapper = new ObjectMapper();
 
         // Parse the JSON request body into a Manager object
-        Manager manager;
+        Manager managerVo;
         try {
-            manager = objectMapper.readValue(req.getInputStream(), Manager.class);
-            System.out.println(manager);
+            managerVo = objectMapper.readValue(req.getInputStream(), Manager.class);
+            Manager editingManager = (Manager) req.getSession().getAttribute("editingManager");
+            editingManager.setName(managerVo.getName());
+            editingManager.setFamily(managerVo.getFamily());
+            editingManager.setPhoneNumber(managerVo.getPhoneNumber());
+            editingManager.setEmail(managerVo.getEmail());
+            editingManager.setNationalCode(managerVo.getNationalCode());
+            editingManager.setAddress(managerVo.getAddress());
+            editingManager.setEditing(false);
+            managerService.edit(editingManager);
 
-            // Perform your business logic here (e.g., update the manager in the database)
-            // For now, we assume the update is successful and return the same object
 
             // Send success response with updated manager
             resp.setStatus(HttpServletResponse.SC_OK);
             PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, manager); // Write manager object as JSON response
+            objectMapper.writeValue(out, managerVo); // Write manager object as JSON response
             out.flush();
+
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -100,31 +96,6 @@ public class ManagerServlet extends HttpServlet {
             out.flush();
         }
     }
-
-
-
-
-
-
-
-
-//    @Override
-//    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//
-//        try {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            Manager manager = objectMapper.readValue(req.getInputStream(), Manager.class);
-//            System.out.println(manager);
-//            manager.setEditing(false);
-//            managerService.edit(manager);
-//        } catch (Exception e){
-//            resp.getWriter().write("<h1 style=\"background-color: green;\">" + e.getMessage() + "</h1>");
-//        }
-//
-//        req.getRequestDispatcher("/manager.do").forward(req, resp);
-//    }
-
-
 
 
 }

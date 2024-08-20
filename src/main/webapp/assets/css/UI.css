@@ -1,11 +1,11 @@
 @font-face {
-    font-family:'tanha';
-    /*src: url('../font/Tanha.woff') format('woff')*/
+    font-family:'Font Awesome 6 Pro';
+    src: url('../fonts/terafikb.ttf') format('ttf')
   }
   *{
       font-family:inherit;
-      text-align: right;
-      direction: rtl;
+      text-align: center;
+      direction: ltr;
   }
   a{
       color: #333;

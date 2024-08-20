@@ -2,7 +2,9 @@ package com.example.cinema_test.model.service;
 
 import com.example.cinema_test.controller.exception.ManagerNotFoundException;
 import com.example.cinema_test.model.entity.Admin;
+import com.example.cinema_test.model.entity.Cinema;
 import com.example.cinema_test.model.entity.Manager;
+import com.example.cinema_test.model.entity.Show;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -72,7 +74,7 @@ public class ManagerService implements Serializable {
                         .createQuery("select m from managerEntity m where m.phoneNumber =:phoneNumber and m.deleted=false ", Manager.class)
                         .setParameter("phoneNumber", phoneNumber)
                         .getResultList();
-        if (!managerList.isEmpty()){
+        if (!managerList.isEmpty()) {
             return managerList.get(0);
         } else {
             return null;
@@ -86,11 +88,34 @@ public class ManagerService implements Serializable {
                         .createQuery("select m from managerEntity m where m.nationalCode =:nationalCode and m.deleted=false ", Manager.class)
                         .setParameter("nationalCode", nationalCode)
                         .getResultList();
-        if (!managerList.isEmpty()){
+        if (!managerList.isEmpty()) {
             return managerList.get(0);
         } else {
             return null;
         }
+    }
+
+    @Transactional
+    public Cinema findCinemaByManagerId(Long managerId) throws Exception {
+        List<Cinema> cinemaList =
+                entityManager
+                        .createQuery("select m.cinema from managerEntity m where m.id =:managerId and m.deleted=false ", Cinema.class)
+                        .setParameter("managerId", managerId)
+                        .getResultList();
+        if (!cinemaList.isEmpty()) {
+            return cinemaList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Transactional
+    public List<Show> findShowsByManagerId(Long managerId) throws Exception {
+        return entityManager
+                .createQuery("select m.cinema.showList from managerEntity m where m.id =:managerId and m.deleted=false ", Show.class)
+                .setParameter("managerId", managerId)
+                .getResultList();
+
     }
 
 }

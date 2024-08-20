@@ -9,13 +9,17 @@
         </div>
 
 
-        <a class="item d-flex justify-content-center align-items-center ps-lg-4" href=""
-           onclick="findManagerById(${sessionScope.manager.id})">
+        <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="/managers.do">
             <div class="item-icon w-25"><i class="fa fa-user-circle"></i></div>
             <div class="w-50 d-sm-none d-lg-flex">Profile</div>
         </a>
 
-        <a class="item d-flex justify-content-center align-items-center mb-auto ps-lg-4" href="#">
+        <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="#">
+            <div class="item-icon w-25"><i class="fa fa-user-check"></i></div>
+            <div class="w-50 d-sm-none d-lg-flex">Account</div>
+        </a>
+
+        <a class="item d-flex justify-content-center align-items-center mb-auto ps-lg-4" href="/managers/cinema.do">
             <div class="item-icon w-25"><i class="fa fa-camera-movie"></i></div>
             <div class="w-50 d-sm-none d-lg-flex">My Cinema</div>
         </a>

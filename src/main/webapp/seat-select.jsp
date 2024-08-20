@@ -10,11 +10,13 @@
 
 
     <style>
+
         #seats {
             display: grid;
             grid-template-columns: repeat(${sessionScope.saloonColum}, 1fr); /* Dynamic column count */
             gap: 10px;
             margin: 10%;
+            margin-bottom: 50px;
         }
 
         .seat {
@@ -51,10 +53,13 @@
 
 <div class="d-flex flex-row p-5 justify-content-center " style="background-color: #2a415a; color: white">
 
-    <div class="col">
-        <div class="item-icon mb-3 large-text"><i class="fa fa-camera-movie"></i></div>
-            <h2 class="row large-text">Show : ${sessionScope.selectedShow.name}</h2>
+    <div class="col align-content-end">
+        <div class="flex-column ">
+            <i class="fa fa-camera-movie mb-3 large-text"></i>
+            <h2 class="mb-0">Show : ${sessionScope.selectedShow.name}</h2>
+        </div>
     </div>
+
 
     <div class="col">
         <div class="row text-center mb-3">
@@ -89,12 +94,12 @@
                  onclick="selectSeat(${seat.id})">
                 <h1 hidden="hidden">${seat.id}</h1>
                 <h6>${seat.label}</h6>
-                <h6>${seat.priceRatio}</h6>
+                <h6>${seat.priceRatio*sessionScope.selectedShow.basePrice}</h6>
             </div>
         </c:forEach>
     </div>
 
-    <button type="submit">Submit Selected Seats</button>
+    <button class="btn btn-primary mb-5" type="submit" >Submit Selected Seats</button>
 </form>
 
 

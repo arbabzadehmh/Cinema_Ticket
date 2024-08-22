@@ -7,6 +7,9 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @NoArgsConstructor
 @Getter
@@ -57,5 +60,17 @@ public class Manager extends Base {
             foreignKey = @ForeignKey(name = "fk_manager_cinema")
     )
     private Cinema cinema;
+
+    @OneToMany(mappedBy = "manager", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private List<Attachment> attachments;
+
+
+    public void addAttachment(Attachment attachment) {
+        if (attachments == null) {
+            attachments = new ArrayList<>();
+        }
+        attachments.add(attachment);
+    }
+
 
 }

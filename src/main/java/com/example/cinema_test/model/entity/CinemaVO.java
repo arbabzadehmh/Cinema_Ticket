@@ -25,7 +25,7 @@ public class CinemaVO {
 
     private String description;
 
-    private List<Attachment> attachmentList;
+    private List<Attachment> attachments;
 
 
     public CinemaVO(Cinema cinema){
@@ -33,7 +33,7 @@ public class CinemaVO {
         this.name = cinema.getName();
         this.address = cinema.getAddress();
         this.description = cinema.getDescription();
-        this.attachmentList = cinema.getAttachmentList();
+        this.attachments = cinema.getAttachments();
     }
 
 }

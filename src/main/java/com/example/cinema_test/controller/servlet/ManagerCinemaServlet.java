@@ -95,7 +95,7 @@ public class ManagerCinemaServlet extends HttpServlet {
             // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             PrintWriter out = resp.getWriter();
-            out.write("{\"message\": \"Failed to update manager.\"}");
+            out.write("{\"message\": \"Failed to update cinema.\"}");
             out.flush();
         }
 

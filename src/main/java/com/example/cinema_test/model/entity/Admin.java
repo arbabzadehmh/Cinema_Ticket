@@ -7,6 +7,9 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -42,6 +45,17 @@ public class Admin extends Base {
             foreignKey = @ForeignKey(name = "fk_admin_user")
     )
     private User user;
+
+    @OneToMany(mappedBy = "admin", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private List<Attachment> attachments;
+
+
+    public void addAttachment(Attachment attachment) {
+        if (attachments == null) {
+            attachments = new ArrayList<>();
+        }
+        attachments.add(attachment);
+    }
 
 
 }

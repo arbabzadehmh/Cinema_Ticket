@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -54,4 +55,15 @@ public class Saloon extends Base {
 
     @Column(name = "description", length = 50)
     private String description;
+
+    @OneToMany(mappedBy = "saloon", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private List<Attachment> attachments;
+
+
+    public void addAttachment(Attachment attachment) {
+        if (attachments == null) {
+            attachments = new ArrayList<>();
+        }
+        attachments.add(attachment);
+    }
 }

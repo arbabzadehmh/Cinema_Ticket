@@ -1,6 +1,7 @@
 package com.example.cinema_test.controller.servlet;
 
 import com.example.cinema_test.model.entity.*;
+import com.example.cinema_test.model.entity.enums.Genre;
 import com.example.cinema_test.model.entity.enums.ShowType;
 import com.example.cinema_test.model.service.*;
 import jakarta.inject.Inject;
@@ -353,7 +354,7 @@ public class TestServlet extends HttpServlet {
 //                    Show
 //                            .builder()
 //                            .name("Others")
-//                            .genre("horror")
+//                            .genre(Genre.ACTION)
 //                            .director("cc")
 //                            .producer("dd")
 //                            .singer(null)
@@ -639,9 +640,9 @@ public class TestServlet extends HttpServlet {
 //            managerService.edit(manager3);
 
 
-            req.getSession().setAttribute("saloons", managerService.findById(1L).getCinema().getSaloonList());
-            req.getSession().setAttribute("shows", managerService.findById(1L).getCinema().getShowList());
-            req.getSession().setAttribute("showTimes", managerService.findById(1L).getCinema().getShowTimeList());
+//            req.getSession().setAttribute("saloons", managerService.findById(1L).getCinema().getSaloonList());
+//            req.getSession().setAttribute("shows", managerService.findById(1L).getCinema().getShowList());
+//            req.getSession().setAttribute("showTimes", managerService.findById(1L).getCinema().getShowTimeList());
             req.getRequestDispatcher("/managers/managers-panel.jsp").forward(req, resp);
 
 

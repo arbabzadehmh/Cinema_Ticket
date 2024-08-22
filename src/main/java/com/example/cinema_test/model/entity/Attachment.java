@@ -43,4 +43,43 @@ public class Attachment {
     @Column(name = "description", length = 50)
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "cinema_id", nullable = true)
+    private Cinema cinema;
+
+    @ManyToOne
+    @JoinColumn(name = "show_id", nullable = true)
+    private Show show;
+
+    @ManyToOne
+    @JoinColumn(name = "manager_id", nullable = true)
+    private Manager manager;
+
+    @ManyToOne
+    @JoinColumn(name = "moderator_id", nullable = true)
+    private Moderator moderator;
+
+    @ManyToOne
+    @JoinColumn(name = "saloon_id", nullable = true)
+    private Saloon saloon;
+
+    @ManyToOne
+    @JoinColumn(name = "ticket_id", nullable = true)
+    private Ticket ticket;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = true)
+    private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "admin_id", nullable = true)
+    private Admin admin;
+
+    @ManyToOne
+    @JoinColumn(name = "message_id", nullable = true)
+    private Message message;
+
+    @ManyToOne
+    @JoinColumn(name = "payment_id", nullable = true)
+    private Payment payment;
 }

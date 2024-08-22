@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -68,4 +69,37 @@ public class Cinema extends Base{
             inverseForeignKey = @ForeignKey(name = "fk_inverse_cinema_show_time")
     )
     private List<ShowTime> showTimeList;
+
+    @OneToMany(mappedBy = "cinema", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private List<Attachment> attachments;
+
+
+    public void addAttachment(Attachment attachment) {
+        if (attachments == null) {
+            attachments = new ArrayList<>();
+        }
+        attachments.add(attachment);
+    }
+
+    public void addSaloon(Saloon saloon) {
+        if (saloonList == null) {
+            saloonList = new ArrayList<>();
+        }
+        saloonList.add(saloon);
+    }
+
+    public void addShow(Show show) {
+        if (showList == null) {
+            showList = new ArrayList<>();
+        }
+        showList.add(show);
+    }
+
+    public void addShowTime(ShowTime showTime){
+        if (showTimeList == null){
+            showTimeList = new ArrayList<>();
+        }
+        showTimeList.add(showTime);
+    }
+
 }

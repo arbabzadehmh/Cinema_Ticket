@@ -22,10 +22,6 @@ import java.util.List;
 @MappedSuperclass
 public class Base implements Serializable {
 
-    @JsonbTransient
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "attach_id")
-    private List<Attachment> attachmentList;
 
     @JsonbTransient
     @Column(name = "deleted")
@@ -35,12 +31,5 @@ public class Base implements Serializable {
     @Column(name = "editing")
     private boolean editing = false;
 
-
-    public void addAttachment(Attachment attachment){
-        if (this.attachmentList == null){
-            this.attachmentList = new ArrayList<>();
-        }
-        attachmentList.add(attachment);
-    }
 
 }

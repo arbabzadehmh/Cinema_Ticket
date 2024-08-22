@@ -1,5 +1,6 @@
 package com.example.cinema_test.model.entity;
 
+import com.example.cinema_test.model.entity.enums.Genre;
 import com.example.cinema_test.model.entity.enums.ShowType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,7 +10,8 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 @NoArgsConstructor
@@ -32,8 +34,9 @@ public class Show extends Base {
     @Column(name = "name", length =30 , nullable = false )
     private String name;
 
-    @Column(name = "genre", length =30)
-    private String genre;
+    @Column(name = "genre")
+    @Enumerated(EnumType.ORDINAL)
+    private Genre genre;
 
     @Column(name = "director", length =30)
     private String director;
@@ -65,5 +68,17 @@ public class Show extends Base {
 
     @Column(name = "description", length =50)
     private String description;
+
+    @OneToMany(mappedBy = "show", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private List<Attachment> attachments;
+
+
+    public void addAttachment(Attachment attachment) {
+        if (attachments == null) {
+            attachments = new ArrayList<>();
+        }
+        attachments.add(attachment);
+        attachment.setShow(this);
+    }
 
 }

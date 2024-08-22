@@ -5,6 +5,8 @@ import com.example.cinema_test.model.entity.Cinema;
 import com.example.cinema_test.model.entity.Show;
 import com.example.cinema_test.model.entity.ShowTime;
 import com.example.cinema_test.model.entity.Ticket;
+import com.example.cinema_test.model.service.ManagerService;
+import com.example.cinema_test.model.service.ShowService;
 import com.example.cinema_test.model.service.ShowTimeService;
 import com.example.cinema_test.model.service.TicketService;
 import jakarta.inject.Inject;
@@ -28,6 +30,12 @@ public class TestServlet4 extends HttpServlet {
 
     @Inject
     private TicketService ticketService;
+
+    @Inject
+    private ManagerService managerService;
+
+    @Inject
+    private ShowService showService;
 
 
     @Override
@@ -57,9 +65,9 @@ public class TestServlet4 extends HttpServlet {
 //            System.out.println(ticketService.findSoldSeatsByShowId(4L));
 
 
-            for (Ticket ticket : ticketService.findFailedTickets()){
-                System.out.println(ticket.getId());
-            }
+//            for (Ticket ticket : ticketService.findFailedTickets()){
+//                System.out.println(ticket.getId());
+//            }
 
 
 

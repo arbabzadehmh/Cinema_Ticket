@@ -1,6 +1,7 @@
 package com.example.cinema_test.model.service;
 
 import com.example.cinema_test.controller.exception.ShowNotFoundException;
+import com.example.cinema_test.model.entity.Attachment;
 import com.example.cinema_test.model.entity.Show;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
@@ -61,5 +62,5 @@ public class ShowService implements Serializable {
                 .createQuery("select s from showEntity s where s.available=true and s.deleted=false ", Show.class)
                 .getResultList();
     }
-    
+
 }

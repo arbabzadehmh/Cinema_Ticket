@@ -55,6 +55,7 @@ public class Admin extends Base {
             attachments = new ArrayList<>();
         }
         attachments.add(attachment);
+        attachment.setAdmin(this);
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.cinema_test.controller.servlet;
 
 import com.example.cinema_test.model.entity.Manager;
+import com.example.cinema_test.model.entity.User;
 import com.example.cinema_test.model.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
@@ -39,17 +40,16 @@ public class ManagerServlet extends HttpServlet {
                     req.getSession().setAttribute("editingManager", editingManager);
                     req.getRequestDispatcher("/managers/manager-edit.jsp").forward(req, resp);
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: green;\">" + "Record is editing by another user !!!" + "</h1>");
+                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
 
                 }
             } else {
-                req.getSession().setAttribute("manager", managerService.findById(1L));
+                User user = (User) req.getSession().getAttribute("user");
+                req.getSession().setAttribute("manager", managerService.findByUsername(user.getUsername()));
                 req.getRequestDispatcher("/managers/manager-main-panel.jsp").forward(req, resp);
             }
-
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: green;\">" + e.getMessage() + "</h1>");
-            e.printStackTrace();
+            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
         }
     }
 

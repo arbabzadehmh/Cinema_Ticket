@@ -93,6 +93,20 @@ public class ManagerService implements Serializable {
     }
 
     @Transactional
+    public Manager findByUsername(String username) throws Exception {
+        List<Manager> managerList =
+                entityManager
+                        .createQuery("select m from managerEntity m where m.user.username =:username and m.deleted=false ", Manager.class)
+                        .setParameter("username", username)
+                        .getResultList();
+        if (!managerList.isEmpty()) {
+            return managerList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Transactional
     public Cinema findCinemaByManagerId(Long managerId) throws Exception {
         List<Cinema> cinemaList =
                 entityManager

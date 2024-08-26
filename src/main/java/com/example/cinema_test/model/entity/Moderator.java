@@ -62,5 +62,6 @@ public class Moderator extends Base{
             attachments = new ArrayList<>();
         }
         attachments.add(attachment);
+        attachment.setModerator(this);
     }
 }

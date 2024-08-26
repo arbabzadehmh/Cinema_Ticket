@@ -1,3 +1,4 @@
+<%@ page import="com.example.cinema_test.model.entity.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <div class="side-bar d-sm-none d-md-flex col-md-1 col-lg-2">
@@ -8,11 +9,26 @@
             <img class="rounded-circle bg-white" src="" alt="No Picture">
         </div>
 
+        <%
+            User loggedUser = (User) session.getAttribute("user");
+            if (loggedUser.getRole().getRole().equals("admin")) {
+        %>
 
-        <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="managers.do">
+        <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="admins.do">
             <div class="item-icon w-25"><i class="fa fa-user-circle"></i></div>
             <div class="w-50 d-sm-none d-lg-flex">Profile</div>
         </a>
+
+        <%
+            } else if (loggedUser.getRole().getRole().equals("moderator")) {
+        %>
+
+        <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="moderator.do">
+            <div class="item-icon w-25"><i class="fa fa-user-circle"></i></div>
+            <div class="w-50 d-sm-none d-lg-flex">Profile</div>
+        </a>
+
+        <% } %>
 
         <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="#">
             <div class="item-icon w-25"><i class="fa fa-user-check"></i></div>
@@ -21,7 +37,7 @@
 
         <a class="item d-flex justify-content-center align-items-center mb-auto ps-lg-4" href="cinema.do">
             <div class="item-icon w-25"><i class="fa fa-camera-movie"></i></div>
-            <div class="w-50 d-sm-none d-lg-flex">My Cinema</div>
+            <div class="w-50 d-sm-none d-lg-flex">Cinema</div>
         </a>
 
         <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="#">

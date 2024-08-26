@@ -2,6 +2,7 @@ package com.example.cinema_test.model.service;
 
 import com.example.cinema_test.controller.exception.CinemaNotFoundException;
 import com.example.cinema_test.model.entity.Cinema;
+import com.example.cinema_test.model.entity.Show;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -53,10 +54,15 @@ public class CinemaService implements Serializable {
     }
 
     @Transactional
+    public Cinema findById(Long id) throws Exception {
+        return entityManager.find(Cinema.class, id);
+    }
+
+    @Transactional
     public Cinema findByName(String name) throws Exception {
         List<Cinema> cinemaList = entityManager
                 .createQuery("select c from cinemaEntity c where c.name like :name and deleted=false ", Cinema.class)
-                .setParameter("name", name)
+                .setParameter("name", name.toUpperCase())
                 .getResultList();
         if (!cinemaList.isEmpty()) {
             return cinemaList.get(0);
@@ -78,10 +84,6 @@ public class CinemaService implements Serializable {
         }
     }
 
-    @Transactional
-    public Cinema findById(Long id) throws Exception {
-        return entityManager.find(Cinema.class, id);
-    }
 
 
 }

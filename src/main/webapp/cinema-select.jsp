@@ -49,7 +49,7 @@
 <script>
 
     function selectCinema(id){
-        window.location.replace("/test2.do?selectCinema=" + id);
+        window.location.replace("/cinemaHome.do?selectCinema=" + id);
     }
 
 </script>

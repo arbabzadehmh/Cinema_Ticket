@@ -13,7 +13,7 @@ a{
 }
 
 .nav a:hover{
-    color:white;
+    color: white;
     font-weight: bold;
     .item-icon{
         color:white;

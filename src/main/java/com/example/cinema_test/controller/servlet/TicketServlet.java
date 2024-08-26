@@ -1,10 +1,12 @@
 package com.example.cinema_test.controller.servlet;
 
 
+import com.example.cinema_test.model.entity.Seat;
 import com.example.cinema_test.model.entity.ShowTime;
 import com.example.cinema_test.model.entity.ShowTimeVo;
 import com.example.cinema_test.model.entity.Ticket;
 import com.example.cinema_test.model.service.BankService;
+import com.example.cinema_test.model.service.SeatService;
 import com.example.cinema_test.model.service.ShowTimeService;
 import com.example.cinema_test.model.service.TicketService;
 import jakarta.inject.Inject;
@@ -34,6 +36,9 @@ public class TicketServlet extends HttpServlet {
     @Inject
     private BankService bankService;
 
+    @Inject
+    private SeatService seatService;
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,7 +47,7 @@ public class TicketServlet extends HttpServlet {
 
 
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: green;\">" + e.getMessage() + "</h1>");
+            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
             e.printStackTrace();
         }
     }
@@ -64,14 +69,16 @@ public class TicketServlet extends HttpServlet {
                 List<String> selectedSeatIds = Arrays.asList(selectedSeatsParam.split(","));
                 for (String seatId : selectedSeatIds) {
 
+                    Seat seat = seatService.findById(Long.parseLong(seatId));
+
                     Ticket ticket =
                             Ticket
                                     .builder()
                                     .customer(null)
                                     .showTime(showTime)
-                                    .price(showTime.getShow().getBasePrice())
+                                    .price(showTime.getShow().getBasePrice() * seat.getPriceRatio())
                                     .issueTime(LocalDateTime.now())
-                                    .seatId(Long.parseLong(seatId))
+                                    .seatId(seat.getId())
                                     .reserved(true)
                                     .payment(null)
                                     .build();
@@ -87,7 +94,7 @@ public class TicketServlet extends HttpServlet {
 
             }
         }catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: green;\">" + e.getMessage() + "</h1>");
+            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
             e.printStackTrace();
         }
     }

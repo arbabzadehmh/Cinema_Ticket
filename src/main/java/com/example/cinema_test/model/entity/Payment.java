@@ -65,6 +65,7 @@ public class Payment extends Base {
             attachments = new ArrayList<>();
         }
         attachments.add(attachment);
+        attachment.setPayment(this);
     }
 
 }

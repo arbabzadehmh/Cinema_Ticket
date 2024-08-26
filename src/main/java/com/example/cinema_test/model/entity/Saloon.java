@@ -65,5 +65,6 @@ public class Saloon extends Base {
             attachments = new ArrayList<>();
         }
         attachments.add(attachment);
+        attachment.setSaloon(this);
     }
 }

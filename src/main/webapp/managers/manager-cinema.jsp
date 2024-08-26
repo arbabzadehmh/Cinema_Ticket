@@ -69,7 +69,7 @@
 
             <div class="d-flex justify-content-between mt-5 w-75">
                 <a class="btn btn-secondary w-25" href="../index.jsp">Saloons</a>
-                <a class="btn btn-secondary w-25" href="/managers/show.do">Shows</a>
+                <a class="btn btn-secondary w-25" href="show.do">Shows</a>
                 <a class="btn btn-secondary w-25" href="../index.jsp">Show Times</a>
             </div>
 
@@ -92,7 +92,7 @@
 
 
     function editCinema(id) {
-        window.location.replace("/managers/cinema.do?edit=" + id);
+        window.location.replace("cinema.do?edit=" + id);
     }
 
 

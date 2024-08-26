@@ -30,17 +30,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+import java.util.List;
 
 
 @Slf4j
-@WebServlet(urlPatterns = "/managers/show.do")
+@WebServlet(urlPatterns = "/show.do")
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
         maxFileSize = 1024 * 1024 * 10,      // 10 MB
         maxRequestSize = 1024 * 1024 * 100   // 100 MB
 )
-public class ManagerShowServlet extends HttpServlet {
+public class ShowServlet extends HttpServlet {
 
     @Inject
     private ManagerService managerService;
@@ -58,31 +58,75 @@ public class ManagerShowServlet extends HttpServlet {
 
         try {
 
-            if (req.getParameter("cancel") != null){
+            Manager manager = (Manager) req.getSession().getAttribute("manager");
+            List<Show> cinemaShows = manager.getCinema().getShowList();
+
+
+            if (req.getParameter("cancel") != null) {
                 Show editingShow = showService.findById(Long.parseLong(req.getParameter("cancel")));
                 editingShow.setEditing(false);
                 showService.edit(editingShow);
-                resp.sendRedirect("/managers/show.do");
+                resp.sendRedirect("/show.do");
+                return;
+            }
+
+            if (req.getParameter("removeFromList") != null) {
+                Show showToRemove = showService.findById(Long.parseLong(req.getParameter("removeFromList")));
+                if (showToRemove.isAvailable()){
+                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "The available show can not be removed  !!!" + "</h1>");
+                } else {
+                    // Remove the show and update the cinema
+                    cinemaShows.removeIf(show -> show.getId().equals(showToRemove.getId()));
+                    cinemaService.edit(manager.getCinema());
+                    resp.sendRedirect("/show.do");
+                }
+                return;
+            }
+
+
+//            if (req.getParameter("removeFromList") != null){
+//                System.out.println(cinemaShows.size());
+//                cinemaShows.remove(showService.findById(Long.parseLong(req.getParameter("removeFromList"))));
+//                System.out.println(cinemaShows.size());
+//                cinemaService.edit(manager.getCinema());
+//                resp.sendRedirect("/show.do");
+//                return;
+//            }
+
+            if (req.getParameter("add") != null) {
+                Show addingShow = showService.findById(Long.parseLong(req.getParameter("add")));
+
+                // Check if the show already exists in the list
+                boolean showExists = cinemaShows.stream().anyMatch(show -> show.getId().equals(addingShow.getId()));
+
+                if (showExists) {
+                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "The show is already exist in your list !!!" + "</h1>");
+                } else {
+                    // Add the show to the cinema's list and update the database
+                    cinemaShows.add(addingShow);
+                    cinemaService.edit(manager.getCinema());
+                    resp.sendRedirect("/show.do");
+                }
                 return;
             }
 
             if (req.getParameter("edit") != null) {
                 Show editingShow = showService.findById(Long.parseLong(req.getParameter("edit")));
-                if (!editingShow.isEditing()){
+                if (!editingShow.isEditing()) {
                     editingShow.setEditing(true);
                     showService.edit(editingShow);
                     req.getSession().setAttribute("editingShow", editingShow);
                     req.getRequestDispatcher("/managers/manager-show-edit.jsp").forward(req, resp);
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: green;\">" + "Record is editing by another user !!!" + "</h1>");
+                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
                 }
             } else {
-                Manager manager = (Manager) req.getSession().getAttribute("manager");
+                req.getSession().setAttribute("allShows", showService.findAll());
                 req.getSession().setAttribute("shows", managerService.findShowsByManagerId(manager.getId()));
                 req.getRequestDispatcher("/managers/manager-show.jsp").forward(req, resp);
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: green;\">" + e.getMessage() + "</h1>");
+            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
             log.error(ExceptionWrapper.getMessage(e).toString());
         }
     }
@@ -95,12 +139,12 @@ public class ManagerShowServlet extends HttpServlet {
             Show show =
                     Show
                             .builder()
-                            .name(req.getParameter("name"))
+                            .name(req.getParameter("name").toUpperCase())
                             .genre(Genre.valueOf(req.getParameter("genre")))
-                            .director(req.getParameter("director"))
+                            .director(req.getParameter("director").toUpperCase())
                             .producer(req.getParameter("producer"))
-                            .singer(req.getParameter("singer"))
-                            .speaker(req.getParameter("speaker"))
+                            .singer(req.getParameter("singer").toUpperCase())
+                            .speaker(req.getParameter("speaker").toUpperCase())
                             .basePrice(Double.parseDouble(req.getParameter("basePrice")))
                             .deleted(false)
                             .available(false)
@@ -148,18 +192,18 @@ public class ManagerShowServlet extends HttpServlet {
             BeanValidator<Show> showValidator = new BeanValidator<>();
 
             if (showValidator.validate(show).isEmpty()) {
-                showService.save(show);
-                Cinema cinema = (Cinema) req.getSession().getAttribute("cinema");
-                cinema.addShow(show);
-                cinemaService.edit(cinema);
-                req.getSession().setAttribute("cinema", cinema);
-                resp.sendRedirect("/managers/show.do");
-                log.info("Show saved successfully-ID : " + show.getId());
+                    showService.save(show);
+                    Cinema cinema = (Cinema) req.getSession().getAttribute("cinema");
+                    cinema.addShow(show);
+                    cinemaService.edit(cinema);
+                    req.getSession().setAttribute("cinema", cinema);
+                    resp.sendRedirect("/show.do");
+                    log.info("Show saved successfully-ID : " + show.getId());
             } else {
-                throw new Exception("Invalid Show Data !!!");
+                resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Show Data !!!" + "</h1>");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
             log.error(ExceptionWrapper.getMessage(e).toString());
         }
     }
@@ -178,11 +222,11 @@ public class ManagerShowServlet extends HttpServlet {
         try {
             showVo = objectMapper.readValue(req.getInputStream(), Show.class);
             Show editingShow = (Show) req.getSession().getAttribute("editingShow");
-            editingShow.setName(showVo.getName());
-            editingShow.setDirector(showVo.getDirector());
+            editingShow.setName(showVo.getName().toUpperCase());
+            editingShow.setDirector(showVo.getDirector().toUpperCase());
             editingShow.setProducer(showVo.getProducer());
-            editingShow.setSinger(showVo.getSinger());
-            editingShow.setSpeaker(showVo.getSpeaker());
+            editingShow.setSinger(showVo.getSinger().toUpperCase());
+            editingShow.setSpeaker(showVo.getSpeaker().toUpperCase());
             editingShow.setReleasedDate(showVo.getReleasedDate());
             editingShow.setStatus(showVo.isStatus());
             editingShow.setShowType(showVo.getShowType());
@@ -210,7 +254,6 @@ public class ManagerShowServlet extends HttpServlet {
         }
 
     }
-
 
 
 }

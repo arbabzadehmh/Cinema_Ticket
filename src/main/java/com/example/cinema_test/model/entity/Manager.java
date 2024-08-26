@@ -46,9 +46,9 @@ public class Manager extends Base {
     @Column(name = "address", length = 100)
     private String address;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(
-            name = "username_id",
+            name = "username",
 
             foreignKey = @ForeignKey(name = "fk_manager_user")
     )
@@ -70,6 +70,7 @@ public class Manager extends Base {
             attachments = new ArrayList<>();
         }
         attachments.add(attachment);
+        attachment.setManager(this);
     }
 
 

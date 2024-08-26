@@ -43,7 +43,7 @@
 <script>
 
     function selectDate(date){
-        window.location.replace("/test2.do?selectDate=" + date);
+        window.location.replace("/cinemaHome.do?selectDate=" + date);
     }
 
 </script>

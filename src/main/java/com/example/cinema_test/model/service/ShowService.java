@@ -1,5 +1,7 @@
 package com.example.cinema_test.model.service;
 
+import com.example.cinema_test.controller.exception.DuplicateShowException;
+import com.example.cinema_test.controller.exception.ShowIsPlayingException;
 import com.example.cinema_test.controller.exception.ShowNotFoundException;
 import com.example.cinema_test.model.entity.Attachment;
 import com.example.cinema_test.model.entity.Show;
@@ -19,6 +21,14 @@ public class ShowService implements Serializable {
 
     @Transactional
     public Show save(Show show) throws Exception {
+        List<Show> existingShows = entityManager
+                .createQuery("select s from showEntity s where s.name = :name and s.deleted = false", Show.class)
+                .setParameter("name", show.getName())
+                .getResultList();
+
+        if (!existingShows.isEmpty()) {
+            throw new DuplicateShowException();
+        }
         entityManager.persist(show);
         return show;
     }
@@ -37,6 +47,9 @@ public class ShowService implements Serializable {
     public Show remove(Long id) throws Exception {
         Show show = entityManager.find(Show.class, id);
         if (show != null) {
+            if (!show.isAvailable()) {
+                throw new ShowIsPlayingException();
+            }
             show.setDeleted(true);
             entityManager.merge(show);
             return show;
@@ -61,6 +74,20 @@ public class ShowService implements Serializable {
         return entityManager
                 .createQuery("select s from showEntity s where s.available=true and s.deleted=false ", Show.class)
                 .getResultList();
+    }
+
+    @Transactional
+    public Show findByName(String name) throws Exception {
+        List<Show> showList =
+                entityManager
+                        .createQuery("select s from showEntity s where s.name =:name and s.deleted=false", Show.class)
+                        .setParameter("name", name.toUpperCase())
+                        .getResultList();
+        if (!showList.isEmpty()) {
+            return showList.get(0);
+        } else {
+            return null;
+        }
     }
 
 }

@@ -12,11 +12,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.List;
 
 
-@WebServlet(urlPatterns = "/test3.do")
-public class TestServlet3 extends HttpServlet {
+@WebServlet(urlPatterns = "/seatSelect.do")
+public class SeatSelectServlet extends HttpServlet {
 
     @Inject
     private CinemaService cinemaService;
@@ -49,7 +48,7 @@ public class TestServlet3 extends HttpServlet {
 
 
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: green;\">" + e.getMessage() + "</h1>");
+            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
             e.printStackTrace();
         }
     }

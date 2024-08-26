@@ -17,8 +17,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(urlPatterns = "/test2.do")
-public class TestServlet2 extends HttpServlet {
+@WebServlet(urlPatterns = "/cinemaHome.do")
+public class HomePageServlet extends HttpServlet {
 
     @Inject
     private CinemaService cinemaService;
@@ -87,7 +87,7 @@ public class TestServlet2 extends HttpServlet {
 
 
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: green;\">" + e.getMessage() + "</h1>");
+            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
             e.printStackTrace();
         }
     }

@@ -66,6 +66,7 @@ public class Customer extends Base {
             attachments = new ArrayList<>();
         }
         attachments.add(attachment);
+        attachment.setCustomer(this);
     }
 
     public void customerUsernameSet() {

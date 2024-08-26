@@ -41,6 +41,9 @@ public class TestServlet extends HttpServlet {
     @Inject
     private RoleService roleService;
 
+    @Inject
+    private UserService userService;
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -78,6 +81,10 @@ public class TestServlet extends HttpServlet {
 //                            .locked(false)
 //                            .deleted(false)
 //                            .build();
+//
+//            userService.save(user1);
+//            userService.save(user2);
+//            userService.save(user3);
 //
 //
 //            Manager manager1 =
@@ -444,8 +451,8 @@ public class TestServlet extends HttpServlet {
 //                            .builder()
 //                            .saloon(saloon1)
 //                            .show(show1)
-//                            .startTime(LocalDateTime.of(2024, 8, 19, 18, 30))
-//                            .endTime(LocalDateTime.of(2024, 8, 19, 20, 30))
+//                            .startTime(LocalDateTime.of(2024, 8, 28, 18, 30))
+//                            .endTime(LocalDateTime.of(2024, 8, 28, 20, 30))
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
@@ -462,8 +469,8 @@ public class TestServlet extends HttpServlet {
 //                            .builder()
 //                            .saloon(saloon1)
 //                            .show(show1)
-//                            .startTime(LocalDateTime.of(2024, 8, 19, 21, 0))
-//                            .endTime(LocalDateTime.of(2024, 8, 19, 23, 0))
+//                            .startTime(LocalDateTime.of(2024, 8, 28, 21, 0))
+//                            .endTime(LocalDateTime.of(2024, 8, 28, 23, 0))
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
@@ -480,8 +487,8 @@ public class TestServlet extends HttpServlet {
 //                            .builder()
 //                            .saloon(saloon2)
 //                            .show(show2)
-//                            .startTime(LocalDateTime.of(2024, 8, 20, 17, 0))
-//                            .endTime(LocalDateTime.of(2024, 8, 20, 19, 0))
+//                            .startTime(LocalDateTime.of(2024, 8, 29, 17, 0))
+//                            .endTime(LocalDateTime.of(2024, 8, 29, 19, 0))
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
@@ -497,8 +504,8 @@ public class TestServlet extends HttpServlet {
 //                            .builder()
 //                            .saloon(saloon1)
 //                            .show(show3)
-//                            .startTime(LocalDateTime.of(2024, 8, 20, 17, 0))
-//                            .endTime(LocalDateTime.of(2024, 8, 20, 19, 0))
+//                            .startTime(LocalDateTime.of(2024, 8, 29, 17, 0))
+//                            .endTime(LocalDateTime.of(2024, 8, 29, 19, 0))
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
@@ -514,8 +521,8 @@ public class TestServlet extends HttpServlet {
 //                            .builder()
 //                            .saloon(saloon2)
 //                            .show(show4)
-//                            .startTime(LocalDateTime.of(2024, 8, 20, 20, 0))
-//                            .endTime(LocalDateTime.of(2024, 8, 20, 22, 0))
+//                            .startTime(LocalDateTime.of(2024, 8, 29, 20, 0))
+//                            .endTime(LocalDateTime.of(2024, 8, 29, 22, 0))
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
@@ -541,8 +548,8 @@ public class TestServlet extends HttpServlet {
 //                            .builder()
 //                            .saloon(saloon3)
 //                            .show(show3)
-//                            .startTime(LocalDateTime.of(2024, 8, 19, 18, 30))
-//                            .endTime(LocalDateTime.of(2024, 8, 19, 20, 30))
+//                            .startTime(LocalDateTime.of(2024, 8, 28, 18, 30))
+//                            .endTime(LocalDateTime.of(2024, 8, 28, 20, 30))
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
@@ -558,8 +565,8 @@ public class TestServlet extends HttpServlet {
 //                            .builder()
 //                            .saloon(saloon3)
 //                            .show(show3)
-//                            .startTime(LocalDateTime.of(2024, 8, 19, 21, 0))
-//                            .endTime(LocalDateTime.of(2024, 8, 19, 23, 0))
+//                            .startTime(LocalDateTime.of(2024, 8, 28, 21, 0))
+//                            .endTime(LocalDateTime.of(2024, 8, 28, 23, 0))
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
@@ -575,8 +582,8 @@ public class TestServlet extends HttpServlet {
 //                            .builder()
 //                            .saloon(saloon3)
 //                            .show(show3)
-//                            .startTime(LocalDateTime.of(2024, 8, 20, 18, 30))
-//                            .endTime(LocalDateTime.of(2024, 8, 20, 20, 30))
+//                            .startTime(LocalDateTime.of(2024, 8, 29, 18, 30))
+//                            .endTime(LocalDateTime.of(2024, 8, 29, 20, 30))
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
@@ -602,8 +609,8 @@ public class TestServlet extends HttpServlet {
 //                            .builder()
 //                            .saloon(saloon4)
 //                            .show(show4)
-//                            .startTime(LocalDateTime.of(2024, 8, 19, 18, 30))
-//                            .endTime(LocalDateTime.of(2024, 8, 19, 20, 30))
+//                            .startTime(LocalDateTime.of(2024, 8, 28, 18, 30))
+//                            .endTime(LocalDateTime.of(2024, 8, 28, 20, 30))
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")
@@ -619,8 +626,8 @@ public class TestServlet extends HttpServlet {
 //                            .builder()
 //                            .saloon(saloon4)
 //                            .show(show4)
-//                            .startTime(LocalDateTime.of(2024, 8, 20, 18, 0))
-//                            .endTime(LocalDateTime.of(2024, 8, 20, 20, 0))
+//                            .startTime(LocalDateTime.of(2024, 8, 29, 18, 0))
+//                            .endTime(LocalDateTime.of(2024, 8, 29, 20, 0))
 //                            .status(true)
 //                            .deleted(false)
 //                            .description("test")

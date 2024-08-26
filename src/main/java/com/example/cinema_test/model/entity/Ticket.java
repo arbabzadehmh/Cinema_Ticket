@@ -69,6 +69,7 @@ public class Ticket extends Base {
             attachments = new ArrayList<>();
         }
         attachments.add(attachment);
+        attachment.setTicket(this);
     }
 
 

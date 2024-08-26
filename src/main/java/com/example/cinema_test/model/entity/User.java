@@ -20,13 +20,7 @@ import lombok.experimental.SuperBuilder;
 public class User extends Base{
 
     @Id
-    @SequenceGenerator(name = "userSeq", sequenceName = "user_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSeq")
-    @Column(name = "id")
-    private Long id;
-
-
-    @Column(name = "username", length = 30, unique = true, nullable = false)
+    @Column(name = "username", length = 30)
     private String username;
 
     @Column(name = "password", length = 15, nullable = false)

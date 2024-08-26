@@ -27,7 +27,7 @@ public class PaymentServlet extends HttpServlet {
 
 
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: green;\">" + e.getMessage() + "</h1>");
+            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
             e.printStackTrace();
         }
     }
@@ -45,7 +45,7 @@ public class PaymentServlet extends HttpServlet {
 
 
         }catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: green;\">" + e.getMessage() + "</h1>");
+            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
             e.printStackTrace();
         }
     }

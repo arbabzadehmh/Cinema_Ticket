@@ -52,5 +52,6 @@ public class Message extends Base {
             attachments = new ArrayList<>();
         }
         attachments.add(attachment);
+        attachment.setMessage(this);
     }
 }

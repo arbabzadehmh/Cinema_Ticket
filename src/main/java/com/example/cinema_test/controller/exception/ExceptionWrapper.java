@@ -21,9 +21,9 @@ public class ExceptionWrapper {
                         e instanceof ManagerNotFoundException ||
                         e instanceof SaloonNotFoundException ||
                         e instanceof SeatNotFoundException ||
-                        e instanceof SeatVoNotFoundException ||
                         e instanceof ShowNotFoundException ||
                         e instanceof ShowTimeNotFoundException ||
+                        e instanceof ShowIsPlayingException ||
                         e instanceof TicketNotFoundException
         ) {
             error.put(204, e.getMessage());

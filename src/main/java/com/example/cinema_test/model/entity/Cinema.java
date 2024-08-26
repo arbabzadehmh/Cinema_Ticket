@@ -79,6 +79,7 @@ public class Cinema extends Base{
             attachments = new ArrayList<>();
         }
         attachments.add(attachment);
+        attachment.setCinema(this);
     }
 
     public void addSaloon(Saloon saloon) {

@@ -1,10 +1,10 @@
 package com.example.cinema_test.controller.servlet;
 
 
-
 import com.example.cinema_test.model.entity.Cinema;
 import com.example.cinema_test.model.entity.Manager;
 
+import com.example.cinema_test.model.entity.User;
 import com.example.cinema_test.model.service.CinemaService;
 import com.example.cinema_test.model.service.ManagerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,12 +14,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
 
-@WebServlet(urlPatterns = "/managers/cinema.do")
-public class ManagerCinemaServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/cinema.do")
+public class CinemaServlet extends HttpServlet {
 
     @Inject
     private ManagerService managerService;
@@ -31,33 +32,40 @@ public class ManagerCinemaServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+            User user = (User) req.getSession().getAttribute("user");
+            String redirectPath = "";
+            if (user.getRole().getRole().equals("manager")) {
+                Manager manager = (Manager) req.getSession().getAttribute("manager");
+                req.getSession().setAttribute("cinema", managerService.findCinemaByManagerId(manager.getId()));
+                redirectPath = "/managers/manager-cinema.jsp";
+            } else if (user.getRole().getRole().equals("admin") || user.getRole().getRole().equals("moderator")) {
+                req.getSession().setAttribute("allCinemas", cinemaService.findAll());
+                redirectPath = "/cinemas/cinema.jsp";
+            }
 
-            if (req.getParameter("cancel") != null){
+            if (req.getParameter("cancel") != null) {
                 Cinema editingCinema = cinemaService.findById(Long.parseLong(req.getParameter("cancel")));
                 editingCinema.setEditing(false);
                 cinemaService.edit(editingCinema);
-                resp.sendRedirect("/managers/cinema.do");
+                resp.sendRedirect("/cinema.do");
                 return;
             }
 
             if (req.getParameter("edit") != null) {
                 Cinema editingCinema = cinemaService.findById(Long.parseLong(req.getParameter("edit")));
-                if (!editingCinema.isEditing()){
+                if (!editingCinema.isEditing()) {
                     editingCinema.setEditing(true);
                     cinemaService.edit(editingCinema);
                     req.getSession().setAttribute("editingCinema", editingCinema);
                     req.getRequestDispatcher("/managers/manager-cinema-edit.jsp").forward(req, resp);
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: green;\">" + "Record is editing by another user !!!" + "</h1>");
+                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
                 }
             } else {
-                Manager manager = (Manager) req.getSession().getAttribute("manager");
-                req.getSession().setAttribute("cinema", managerService.findCinemaByManagerId(manager.getId()));
-                req.getRequestDispatcher("/managers/manager-cinema.jsp").forward(req, resp);
+                req.getRequestDispatcher(redirectPath).forward(req, resp);
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: green;\">" + e.getMessage() + "</h1>");
-            e.printStackTrace();
+            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
         }
     }
 
@@ -75,7 +83,7 @@ public class ManagerCinemaServlet extends HttpServlet {
         try {
             cinemaVo = objectMapper.readValue(req.getInputStream(), Cinema.class);
             Cinema editingCinema = (Cinema) req.getSession().getAttribute("editingCinema");
-            editingCinema.setName(cinemaVo.getName());
+            editingCinema.setName(cinemaVo.getName().toUpperCase());
             editingCinema.setStatus(cinemaVo.isStatus());
             editingCinema.setDescription(cinemaVo.getDescription());
             editingCinema.setAddress(cinemaVo.getAddress());
@@ -100,7 +108,6 @@ public class ManagerCinemaServlet extends HttpServlet {
         }
 
     }
-
 
 
 }

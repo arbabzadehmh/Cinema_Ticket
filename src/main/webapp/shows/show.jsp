@@ -20,7 +20,7 @@
 
 <div class="container-fluid d-flex flex-row vh-100 p-0">
 
-    <jsp:include page="/managers/manager-sidebar.jsp"/>
+    <jsp:include page="/admins/admin-moderator-sidebar.jsp"/>
 
 
     <div class="content d-flex flex-column flex-grow-1">
@@ -42,8 +42,7 @@
 
                         <div class="d-flex mb-4">
 
-                            <input class="m-1" type="text" name="name" placeholder="Name type to search" oninput="findShowByName(this.value)">
-
+                            <input class="m-1" type="text" name="name" placeholder="Name type to search">
 
                             <select name="showType" class="m-1">
                                 <option value="MOVIE">Movie</option>
@@ -114,71 +113,6 @@
             </div>
 
             <div>
-                <h4 class="mb-0">My Shows</h4>
-            </div>
-
-            <div class="d-flex justify-content-center p-4 w-100">
-
-
-
-                <table id="resultTable" border="1" class="table-light w-100">
-                    <thead>
-                    <tr>
-                        <th hidden="hidden">ID</th>
-                        <th>Name</th>
-                        <th>Genre</th>
-                        <th>Director</th>
-                        <th>Producer</th>
-                        <th>Singer</th>
-                        <th>Speaker</th>
-                        <th>Released Date</th>
-                        <th>Base Price</th>
-                        <th>Type</th>
-                        <th>Available</th>
-                        <th>Status</th>
-                        <th>Description</th>
-                        <th>Operation</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-
-                    <c:forEach var="show" items="${sessionScope.shows}">
-
-                        <tr>
-                            <td hidden="hidden">${show.id}</td>
-                            <td>${show.name}</td>
-                            <td>${show.genre}</td>
-                            <td>${show.director}</td>
-                            <td>${show.producer}</td>
-                            <td>${show.singer}</td>
-                            <td>${show.speaker}</td>
-                            <td>${show.releasedDate}</td>
-                            <td>${show.basePrice}</td>
-                            <td>${show.showType}</td>
-                            <td>${show.available}</td>
-                            <td>${show.status}</td>
-                            <td>${show.description}</td>
-                            <td>
-                                <div class="d-flex">
-                                    <button onclick="removeShowFromList(${show.id})" class="btn btn-danger w-100">Remove</button>
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-
-                    </c:forEach>
-
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-            <div>
                 <h4 class="mb-0 mt-3">All Shows</h4>
             </div>
 
@@ -225,7 +159,8 @@
                             <td>${show.description}</td>
                             <td>
                                 <div class="d-flex">
-                                    <button onclick="addShow(${show.id})" class="btn btn-dark w-100">Add</button>
+                                    <button onclick="editShow(${show.id})" class="btn btn-primary w-50">Edit</button>
+                                    <button onclick="removeShow(${show.id})" class="btn btn-danger w-50">Remove</button>
                                 </div>
 
                             </td>
@@ -255,85 +190,18 @@
 </div>
 
 
-
 <script>
 
-    function addShow(id) {
-        window.location.replace("/show.do?add=" + id);
+    function editShow(id) {
+        window.location.replace("/show.do?edit=" + id);
     }
 
-    function removeShowFromList(id){
-        window.location.replace("/show.do?removeFromList=" + id);
-    }
-
-
-    // Function to call the API and display the result in a table
-    function findShowByName(name) {
-
-        // AJAX call to fetch data from the API
-        $.ajax({
-            url: "/rest/show/findByName/" + name,
-            method: "GET",
-            dataType: "json", // Expect JSON response
-            success: function(response) {
-                // Clear previous results
-                $("#resultTable tbody").empty();
-
-                $("#allResultTable tbody").empty();
-
-                // Check if response is an array
-                if (Array.isArray(response) && response.length > 0) {
-                    // Loop through the array and create table rows
-                    response.forEach(function(show) {
-                        var row = "<tr>" +
-                            "<td hidden='hidden'>" + show.id + "</td>" +
-                            "<td>" + show.name + "</td>" +
-                            "<td>" + show.genre + "</td>" +
-                            "<td>" + show.director + "</td>" +
-                            "<td>" + show.producer + "</td>" +
-                            "<td>" + show.singer + "</td>" +
-                            "<td>" + show.speaker + "</td>" +
-                            "<td>" + show.releasedDate + "</td>" +
-                            "<td>" + show.basePrice + "</td>" +
-                            "<td>" + show.showType + "</td>" +
-                            "<td>" + show.available + "</td>" +
-                            "<td>" + show.status + "</td>" +
-                            "<td>" + show.description + "</td>" +
-                            "</tr>";
-                        $("#resultTable tbody").append(row);
-                        $("#allResultTable tbody").append(row);
-                    });
-                } else if (typeof response === 'object' && response !== null) {
-                    // Handle a single object response
-                    var row = "<tr>" +
-                        "<td hidden='hidden'>" + response.id + "</td>" +
-                        "<td>" + response.name + "</td>" +
-                        "<td>" + response.genre + "</td>" +
-                        "<td>" + response.director + "</td>" +
-                        "<td>" + response.producer + "</td>" +
-                        "<td>" + response.singer + "</td>" +
-                        "<td>" + response.speaker + "</td>" +
-                        "<td>" + response.releasedDate + "</td>" +
-                        "<td>" + response.basePrice + "</td>" +
-                        "<td>" + response.showType + "</td>" +
-                        "<td>" + response.available + "</td>" +
-                        "<td>" + response.status + "</td>" +
-                        "<td>" + response.description + "</td>" +
-                        "</tr>";
-                    $("#resultTable tbody").append(row);
-                    $("#allResultTable tbody").append(row);
-                } else {
-                    // If no data, show "No records found" message
-                    var noDataRow = "<tr><td colspan='3'>No records found</td></tr>";
-                    $("#resultTable tbody").append(noDataRow);
-                    $("#allResultTable tbody").append(noDataRow);
-                }
-            },
-
-            error: function(xhr, status, error) {
-                // alert("Error fetching data: " + error);
-            }
-        });
+    function removeShow(id){
+        fetch("/rest/show/" + id, {
+            method: "DELETE"
+        }).then(() => {
+            window.location = "/show.do"
+        })
     }
 
 </script>

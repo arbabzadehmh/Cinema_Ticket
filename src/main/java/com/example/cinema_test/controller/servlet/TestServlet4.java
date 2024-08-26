@@ -1,14 +1,8 @@
 package com.example.cinema_test.controller.servlet;
 
 
-import com.example.cinema_test.model.entity.Cinema;
-import com.example.cinema_test.model.entity.Show;
-import com.example.cinema_test.model.entity.ShowTime;
-import com.example.cinema_test.model.entity.Ticket;
-import com.example.cinema_test.model.service.ManagerService;
-import com.example.cinema_test.model.service.ShowService;
-import com.example.cinema_test.model.service.ShowTimeService;
-import com.example.cinema_test.model.service.TicketService;
+import com.example.cinema_test.model.entity.*;
+import com.example.cinema_test.model.service.*;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -36,6 +30,12 @@ public class TestServlet4 extends HttpServlet {
 
     @Inject
     private ShowService showService;
+
+    @Inject
+    private UserService userService;
+
+    @Inject
+    CinemaService cinemaService;
 
 
     @Override
@@ -68,6 +68,16 @@ public class TestServlet4 extends HttpServlet {
 //            for (Ticket ticket : ticketService.findFailedTickets()){
 //                System.out.println(ticket.getId());
 //            }
+
+
+//            String username = req.getRemoteUser();
+//            User user = userService.findByUsername(username);
+//            req.getSession().setAttribute("user", user);
+
+
+
+
+
 
 
 

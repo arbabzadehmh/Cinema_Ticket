@@ -78,4 +78,17 @@ public class AdminService implements Serializable {
         }
     }
 
+    @Transactional
+    public Admin findByUsername(String username) {
+        List<Admin> adminList =
+                entityManager
+                        .createQuery("select a from adminEntity a where a.user.username =:username and a.deleted=false ", Admin.class)
+                        .setParameter("username", username)
+                        .getResultList();
+        if (!adminList.isEmpty()){
+            return adminList.get(0);
+        } else {
+            return null;
+        }
+    }
 }

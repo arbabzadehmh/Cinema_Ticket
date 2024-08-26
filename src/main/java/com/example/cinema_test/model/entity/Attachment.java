@@ -44,42 +44,42 @@ public class Attachment {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "cinema_id", nullable = true)
+    @JoinColumn(name = "cinema_id", nullable = true, foreignKey = @ForeignKey(name = "fk_attachment_cinema"))
     private Cinema cinema;
 
     @ManyToOne
-    @JoinColumn(name = "show_id", nullable = true)
+    @JoinColumn(name = "show_id", nullable = true, foreignKey = @ForeignKey(name = "fk_attachment_show"))
     private Show show;
 
     @ManyToOne
-    @JoinColumn(name = "manager_id", nullable = true)
+    @JoinColumn(name = "manager_id", nullable = true, foreignKey = @ForeignKey(name = "fk_attachment_manager"))
     private Manager manager;
 
     @ManyToOne
-    @JoinColumn(name = "moderator_id", nullable = true)
+    @JoinColumn(name = "moderator_id", nullable = true, foreignKey = @ForeignKey(name = "fk_attachment_moderator"))
     private Moderator moderator;
 
     @ManyToOne
-    @JoinColumn(name = "saloon_id", nullable = true)
+    @JoinColumn(name = "saloon_id", nullable = true, foreignKey = @ForeignKey(name = "fk_attachment_saloon"))
     private Saloon saloon;
 
     @ManyToOne
-    @JoinColumn(name = "ticket_id", nullable = true)
+    @JoinColumn(name = "ticket_id", nullable = true, foreignKey = @ForeignKey(name = "fk_attachment_ticket"))
     private Ticket ticket;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = true)
+    @JoinColumn(name = "customer_id", nullable = true, foreignKey = @ForeignKey(name = "fk_attachment_customer"))
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "admin_id", nullable = true)
+    @JoinColumn(name = "admin_id", nullable = true, foreignKey = @ForeignKey(name = "fk_attachment_admin"))
     private Admin admin;
 
     @ManyToOne
-    @JoinColumn(name = "message_id", nullable = true)
+    @JoinColumn(name = "message_id", nullable = true, foreignKey = @ForeignKey(name = "fk_attachment_message"))
     private Message message;
 
     @ManyToOne
-    @JoinColumn(name = "payment_id", nullable = true)
+    @JoinColumn(name = "payment_id", nullable = true, foreignKey = @ForeignKey(name = "fk_attachment_payment"))
     private Payment payment;
 }

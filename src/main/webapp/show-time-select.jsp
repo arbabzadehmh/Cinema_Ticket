@@ -54,7 +54,7 @@
 <script>
 
     function selectShowTime(id){
-        window.location.replace("/test3.do?selectShowTimeId=" + id);
+        window.location.replace("/seatSelect.do?selectShowTimeId=" + id);
     }
 
 </script>

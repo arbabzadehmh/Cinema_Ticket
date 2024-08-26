@@ -118,7 +118,7 @@
 
         try {
             // Make the PUT request with JSON data
-            const response = await fetch("/managers/cinema.do", {
+            const response = await fetch("/cinema.do", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -134,7 +134,7 @@
                 // Display success feedback to the user
                 alert("Cinema updated successfully!");
 
-                window.location.href = '/managers/cinema.do';
+                window.location.href = '/cinema.do';
 
             } else {
                 // Handle errors
@@ -142,12 +142,12 @@
                 console.error("Error:", errorData);
                 alert("Error updating cinema: " + errorData.message);
 
-                window.location.href = '/managers/cinema.do';
+                window.location.href = '/cinema.do';
             }
         } catch (error) {
             console.error("Request failed:", error);
             alert("An error occurred while updating the cinema.");
-            window.location.href = '/managers/cinema.do';
+            window.location.href = '/cinema.do';
         }
 
     }
@@ -155,7 +155,7 @@
 
     async function cancelEditingManager(id) {
 
-        window.location.replace("/managers/cinema.do?cancel=" + id)
+        window.location.replace("/cinema.do?cancel=" + id)
     }
 
 

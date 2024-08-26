@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: arbab
@@ -17,7 +18,7 @@
 
 <div class="container-fluid d-flex flex-row vh-100 p-0">
 
-    <jsp:include page="/managers/manager-sidebar.jsp"/>
+    <jsp:include page="/admins/admin-moderator-sidebar.jsp"/>
 
 
     <div class="content d-flex flex-column flex-grow-1">
@@ -26,6 +27,51 @@
 
 
         <div class="content d-flex flex-column  align-items-center flex-grow-1">
+
+
+            <div class="d-flex p-4 w-100">
+
+                <div class="p-5">
+                    <i class="fa fa-camera-movie mb-3" style="font-size: xxx-large"></i>
+                    <h1>Cinema</h1>
+                </div>
+
+                <div style="margin-left: 5%">
+                    <form action="cinema.do" method="post" enctype="multipart/form-data">
+
+                        <div class="d-flex mb-4">
+
+                            <input class="m-1" type="text" name="name" placeholder="Name type to search">
+
+                            <select name="status" class="m-1">
+                                <option value="true">active</option>
+                                <option value="false">not active</option>
+                            </select>
+
+                        </div>
+
+
+                        <div class="d-flex mb-4">
+
+                            <input class="m-1 w-75" type="text" name="description" placeholder="Description">
+
+                            <input type="file" name="image" class="m-1">
+
+                        </div>
+
+                        <div class="d-flex mb-4">
+                            <input class="m-1 w-75" type="text" name="address" placeholder="Address">
+                            <input class="btn btn-dark m-1 w-25" type="submit" value="Save">
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+            </div>
+
+
 
             <div class="d-flex justify-content-center p-5 w-100">
 
@@ -37,23 +83,29 @@
                         <th>Status</th>
                         <th>Description</th>
                         <th>Address</th>
+                        <th>Image</th>
+                        <th>Operation</th>
                     </tr>
                     </thead>
 
                     <tbody>
 
-                    <tr>
-                        <td>${sessionScope.cinemas.id}</td>
-<%--                        <td>${sessionScope.cinemas.name}</td>--%>
-<%--                        <td>${sessionScope.manager.family}</td>--%>
-<%--                        <td>${sessionScope.manager.user.username}</td>--%>
-<%--                        <td>${sessionScope.manager.user.password}</td>--%>
-                        <td>${sessionScope.manager.nationalCode}</td>
-                        <td>${sessionScope.manager.phoneNumber}</td>
-                        <td>${sessionScope.manager.email}</td>
-                        <td>${sessionScope.manager.address}</td>
+                   <c:forEach var="cinema" items="${sessionScope.allCinemas}">
+                       <tr>
+                           <td>${cinema.id}</td>
+                           <td>${cinema.name}</td>
+                           <td>${cinema.status}</td>
+                           <td>${cinema.description}</td>
+                           <td>${cinema.address}</td>
+                           <td>
+<%--                               <img src="${cinema.attachments.get(0).fileName}" alt="No Image" width="80" height="80" style="border-radius: 20px">--%>
+                           </td>
+                           <td>
+                               <button onclick="editCinema(${sessionScope.cinema.id})" class="btn btn-primary w-25 mt-4">Edit</button>
+                           </td>
 
-                    </tr>
+                       </tr>
+                   </c:forEach>
 
                     </tbody>
 
@@ -66,7 +118,7 @@
             <%--            <button onclick="findManagerByPhone('${sessionScope.manager.phoneNumber}')"> phone</button>--%>
 
 
-            <button onclick="editCinema(${sessionScope.manager.id})" class="btn btn-primary w-25 mt-4">Edit</button>
+
 
 
         </div>

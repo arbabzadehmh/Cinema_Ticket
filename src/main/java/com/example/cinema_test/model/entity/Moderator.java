@@ -53,7 +53,7 @@ public class Moderator extends Base{
     )
     private User user;
 
-    @OneToMany(mappedBy = "moderator", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "moderator", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Attachment> attachments;
 
 

@@ -42,6 +42,7 @@
                         <th>Status</th>
                         <th>Description</th>
                         <th>Address</th>
+                        <th>Image</th>
                     </tr>
                     </thead>
 
@@ -54,6 +55,17 @@
                         <td>${sessionScope.cinema.description}</td>
                         <td>${sessionScope.cinema.address}</td>
 
+                        <td>
+                            <c:choose>
+                                <c:when test="${not empty sessionScope.cinema.attachments}">
+                                    <img src="${sessionScope.cinema.attachments.get(0).fileName}" alt="Cinema Image" height="80px" width="80px">
+                                </c:when>
+                                <c:otherwise>
+                                    No Image
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+
                     </tr>
 
                     </tbody>
@@ -63,12 +75,12 @@
             </div>
 
 
-            <button onclick="editCinema(${sessionScope.manager.id})" class="btn btn-primary w-25 mb-5 mt-4">Edit</button>
+            <button onclick="editCinema(${sessionScope.cinema.id})" class="btn btn-primary w-25 mb-5 mt-4">Edit</button>
 
 
 
             <div class="d-flex justify-content-between mt-5 w-75">
-                <a class="btn btn-secondary w-25" href="../index.jsp">Saloons</a>
+                <a class="btn btn-secondary w-25" href="saloon.do">Saloons</a>
                 <a class="btn btn-secondary w-25" href="show.do">Shows</a>
                 <a class="btn btn-secondary w-25" href="../index.jsp">Show Times</a>
             </div>

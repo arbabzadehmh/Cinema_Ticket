@@ -56,7 +56,7 @@ public class Saloon extends Base {
     @Column(name = "description", length = 50)
     private String description;
 
-    @OneToMany(mappedBy = "saloon", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "saloon", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Attachment> attachments;
 
 

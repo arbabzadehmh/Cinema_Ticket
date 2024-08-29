@@ -47,6 +47,7 @@ public class PostLoginServlet extends HttpServlet {
                 resp.sendRedirect("login.jsp");
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

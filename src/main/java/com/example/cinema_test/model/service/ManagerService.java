@@ -121,12 +121,32 @@ public class ManagerService implements Serializable {
     }
 
     @Transactional
+    public Manager findManagerByCinemaId(Long cinemaId) throws Exception {
+        List<Manager> managerList =
+                entityManager
+                        .createQuery("select m from managerEntity m where m.cinema.id =:cinemaId and m.deleted=false ", Manager.class)
+                        .setParameter("cinemaId", cinemaId)
+                        .getResultList();
+        if (!managerList.isEmpty()) {
+            return managerList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Transactional
     public List<Show> findShowsByManagerId(Long managerId) throws Exception {
         return entityManager
                 .createQuery("select m.cinema.showList from managerEntity m where m.id =:managerId and m.deleted=false ", Show.class)
                 .setParameter("managerId", managerId)
                 .getResultList();
+    }
 
+    @Transactional
+    public List<Manager> findManagersWantingCinema() throws Exception {
+        return entityManager
+                .createQuery("select m from managerEntity m where m.cinema =null and m.deleted=false ", Manager.class)
+                .getResultList();
     }
 
 

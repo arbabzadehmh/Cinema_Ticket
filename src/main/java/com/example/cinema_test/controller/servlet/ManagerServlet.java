@@ -1,30 +1,48 @@
 package com.example.cinema_test.controller.servlet;
 
-import com.example.cinema_test.model.entity.Manager;
-import com.example.cinema_test.model.entity.User;
+import com.example.cinema_test.controller.validation.BeanValidator;
+import com.example.cinema_test.model.entity.*;
+import com.example.cinema_test.model.entity.enums.FileType;
 import com.example.cinema_test.model.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 
+@Slf4j
 @WebServlet(urlPatterns = "/managers.do")
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
+        maxFileSize = 1024 * 1024 * 10,      // 10 MB
+        maxRequestSize = 1024 * 1024 * 100   // 100 MB
+)
 public class ManagerServlet extends HttpServlet {
 
     @Inject
     private ManagerService managerService;
 
+    @Inject
+    private AttachmentService attachmentService;
+
+    @Inject
+    private RoleService roleService;
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            if (req.getParameter("cancel") != null){
+            if (req.getParameter("cancel") != null) {
                 Manager editingManager = managerService.findById(Long.parseLong(req.getParameter("cancel")));
                 editingManager.setEditing(false);
                 managerService.edit(editingManager);
@@ -34,7 +52,7 @@ public class ManagerServlet extends HttpServlet {
 
             if (req.getParameter("edit") != null) {
                 Manager editingManager = managerService.findById(Long.parseLong(req.getParameter("edit")));
-                if (!editingManager.isEditing()){
+                if (!editingManager.isEditing()) {
                     editingManager.setEditing(true);
                     managerService.edit(editingManager);
                     req.getSession().setAttribute("editingManager", editingManager);
@@ -45,15 +63,133 @@ public class ManagerServlet extends HttpServlet {
                 }
             } else {
                 User user = (User) req.getSession().getAttribute("user");
-                req.getSession().setAttribute("manager", managerService.findByUsername(user.getUsername()));
+                ManagerVO managerVO = new ManagerVO(managerService.findByUsername(user.getUsername()));
+                req.getSession().setAttribute("manager", managerVO);
                 req.getRequestDispatcher("/managers/manager-main-panel.jsp").forward(req, resp);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
         }
     }
 
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        try {
+
+            if (req.getPart("newImage") != null) {
+                Manager editingManager = (Manager) req.getSession().getAttribute("editingManager");
+
+                for (Attachment attachment : editingManager.getAttachments()) {
+                    attachmentService.remove(attachment.getId());
+                }
+                editingManager.getAttachments().clear();
+
+
+                Part filePart = req.getPart("newImage");
+
+                String applicationPath = req.getServletContext().getRealPath("");
+
+                String uploadDirectory = applicationPath + "uploads";
+                File uploadDir = new File(uploadDirectory);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdir();
+                }
+
+                String fileName = filePart.getSubmittedFileName();
+                String filePath = uploadDirectory + File.separator + fileName;
+                String relativePath = "/uploads/" + fileName;
+
+                filePart.write(filePath);
+
+
+                Attachment attachment = Attachment.builder()
+                        .attachTime(LocalDateTime.now())
+                        .fileName(relativePath)
+                        .fileType(FileType.JPG)
+                        .fileSize(filePart.getSize())
+                        .build();
+
+                editingManager.addAttachment(attachment);
+                editingManager.setEditing(false);
+                managerService.edit(editingManager);
+                resp.sendRedirect("/managers.do");
+                log.info("Manager image changed successfully-ID : " + editingManager.getId());
+
+
+            } else {
+
+
+                Role role = roleService.findByRole("manager");
+
+                User user =
+                        User
+                                .builder()
+                                .username(req.getParameter("username"))
+                                .password(req.getParameter("password"))
+                                .role(role)
+                                .locked(false)
+                                .deleted(false)
+                                .build();
+
+
+                Manager manager =
+                        Manager
+                                .builder()
+                                .name(req.getParameter("name"))
+                                .family(req.getParameter("family"))
+                                .phoneNumber(req.getParameter("phoneNumber"))
+                                .email(req.getParameter("email"))
+                                .nationalCode(req.getParameter("nationalCode"))
+                                .address(req.getParameter("address"))
+                                .user(user)
+                                .deleted(false)
+                                .build();
+
+                Part filePart = req.getPart("image");
+
+                if (filePart != null && filePart.getSize() > 0) {
+                    String applicationPath = req.getServletContext().getRealPath("");
+
+                    String uploadDirectory = applicationPath + "uploads";
+                    File uploadDir = new File(uploadDirectory);
+                    if (!uploadDir.exists()) {
+                        uploadDir.mkdir();
+                    }
+
+                    String fileName = filePart.getSubmittedFileName();
+                    String filePath = uploadDirectory + File.separator + fileName;
+                    String relativePath = "/uploads/" + fileName;
+
+                    filePart.write(filePath);
+
+                    Attachment attachment = Attachment.builder()
+                            .attachTime(LocalDateTime.now())
+                            .fileName(relativePath)
+                            .fileType(FileType.JPG)
+                            .fileSize(filePart.getSize())
+                            .build();
+
+                    manager.addAttachment(attachment);
+                }
+
+                BeanValidator<Manager> managerValidator = new BeanValidator<>();
+                if (managerValidator.validate(manager).isEmpty()) {
+                    managerService.save(manager);
+                    resp.sendRedirect("/managers.do");
+                    log.info("Manager saved successfully : " + manager.getFamily());
+                } else {
+                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Manager Data !!!" + "</h1>");
+                }
+            }
+        } catch (Exception e) {
+            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+
+        }
+
+    }
 
 
     @Override
@@ -66,16 +202,17 @@ public class ManagerServlet extends HttpServlet {
         ObjectMapper objectMapper = new ObjectMapper();
 
         // Parse the JSON request body into a Manager object
-        Manager managerVo;
+        Manager managerAb;
         try {
-            managerVo = objectMapper.readValue(req.getInputStream(), Manager.class);
+
+            managerAb = objectMapper.readValue(req.getInputStream(), Manager.class);
             Manager editingManager = (Manager) req.getSession().getAttribute("editingManager");
-            editingManager.setName(managerVo.getName());
-            editingManager.setFamily(managerVo.getFamily());
-            editingManager.setPhoneNumber(managerVo.getPhoneNumber());
-            editingManager.setEmail(managerVo.getEmail());
-            editingManager.setNationalCode(managerVo.getNationalCode());
-            editingManager.setAddress(managerVo.getAddress());
+            editingManager.setName(managerAb.getName());
+            editingManager.setFamily(managerAb.getFamily());
+            editingManager.setPhoneNumber(managerAb.getPhoneNumber());
+            editingManager.setEmail(managerAb.getEmail());
+            editingManager.setNationalCode(managerAb.getNationalCode());
+            editingManager.setAddress(managerAb.getAddress());
             editingManager.setEditing(false);
             managerService.edit(editingManager);
 
@@ -83,7 +220,7 @@ public class ManagerServlet extends HttpServlet {
             // Send success response with updated manager
             resp.setStatus(HttpServletResponse.SC_OK);
             PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, managerVo); // Write manager object as JSON response
+            objectMapper.writeValue(out, managerAb); // Write manager object as JSON response
             out.flush();
 
         } catch (Exception e) {

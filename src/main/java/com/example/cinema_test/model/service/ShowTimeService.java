@@ -150,4 +150,14 @@ public class ShowTimeService implements Serializable {
                 .getResultList();
     }
 
+    @Transactional
+    public List<ShowTime> findActiveShowsBySaloonId(Long saloonId) throws Exception {
+        return entityManager
+                .createQuery("select s from showTimeEntity s where s.startTime between :startTime and :endTime and s.status = true and s.saloon.id =:saloonId and s.deleted = false ", ShowTime.class)
+                .setParameter("startTime", LocalDateTime.now())
+                .setParameter("endTime", LocalDateTime.now().plusDays(7))
+                .setParameter("saloonId", saloonId)
+                .getResultList();
+    }
+
 }

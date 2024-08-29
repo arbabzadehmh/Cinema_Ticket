@@ -52,7 +52,7 @@ public class RoleService implements Serializable {
     }
 
     @Transactional
-    public Role FindByRole(String name) throws Exception {
+    public Role findByRole(String name) throws Exception {
         List<Role> roleList =
                 entityManager
                         .createQuery("select oo from roleEntity oo where oo.role =:name and oo.deleted=false ", Role.class)

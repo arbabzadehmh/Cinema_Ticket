@@ -69,7 +69,7 @@ public class Show extends Base {
     @Column(name = "description", length =50)
     private String description;
 
-    @OneToMany(mappedBy = "show", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "show", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Attachment> attachments;
 
 

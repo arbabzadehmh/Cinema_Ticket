@@ -25,15 +25,20 @@ public class CinemaVO {
 
     private String description;
 
-    private List<Attachment> attachments;
+    private String imageUrl;
 
 
-    public CinemaVO(Cinema cinema){
+    public CinemaVO(Cinema cinema) {
         this.id = cinema.getId();
         this.name = cinema.getName();
         this.address = cinema.getAddress();
         this.description = cinema.getDescription();
-        this.attachments = cinema.getAttachments();
+
+        if (cinema.getAttachments().isEmpty()) {
+            this.imageUrl = "";
+        } else {
+            this.imageUrl = cinema.getAttachments().get(0).getFileName();
+        }
     }
 
 }

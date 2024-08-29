@@ -18,15 +18,6 @@ import java.io.IOException;
 public class SeatSelectServlet extends HttpServlet {
 
     @Inject
-    private CinemaService cinemaService;
-
-    @Inject
-    private SaloonService saloonService;
-
-    @Inject
-    private ShowService showService;
-
-    @Inject
     private ShowTimeService showTimeService;
 
     @Inject

@@ -5,7 +5,10 @@
     <div class="items d-flex flex-column w-100 pt-5 justify-content-around ">
 
         <div class="d-flex w-100 mb-5 justify-content-center">
-            <img class="rounded-circle bg-white" src="" alt="No Picture">
+            <div class="d-flex w-100 mb-5 justify-content-center">
+                <img class="rounded-circle bg-white" src="${sessionScope.manager.imageUrl}" alt="Manager Image"
+                     height="80px" width="80px">
+            </div>
         </div>
 
 

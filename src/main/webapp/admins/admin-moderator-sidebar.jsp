@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.example.cinema_test.model.entity.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -5,14 +6,22 @@
 
     <div class="items d-flex flex-column w-100 pt-5 justify-content-around ">
 
-        <div class="d-flex w-100 mb-5 justify-content-center">
-            <img class="rounded-circle bg-white" src="" alt="No Picture">
-        </div>
 
         <%
             User loggedUser = (User) session.getAttribute("user");
             if (loggedUser.getRole().getRole().equals("admin")) {
         %>
+
+        <div class="d-flex w-100 mb-5 justify-content-center">
+            <c:choose>
+                <c:when test="${not empty sessionScope.loggedAdmin.attachments}">
+                    <img class="rounded-circle bg-white" src="${sessionScope.loggedAdmin.attachments.get(0).fileName}" alt="Admin Image" height="80px" width="80px">
+                </c:when>
+                <c:otherwise>
+                    No Image
+                </c:otherwise>
+            </c:choose>
+        </div>
 
         <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="admins.do">
             <div class="item-icon w-25"><i class="fa fa-user-circle"></i></div>
@@ -22,6 +31,17 @@
         <%
             } else if (loggedUser.getRole().getRole().equals("moderator")) {
         %>
+
+        <div class="d-flex w-100 mb-5 justify-content-center">
+            <c:choose>
+                <c:when test="${not empty sessionScope.loggedModerator.attachments}">
+                    <img class="rounded-circle bg-white" src="${sessionScope.loggedModerator.attachments.get(0).fileName}" alt="Moderator Image" height="80px" width="80px">
+                </c:when>
+                <c:otherwise>
+                    No Image
+                </c:otherwise>
+            </c:choose>
+        </div>
 
         <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="moderator.do">
             <div class="item-icon w-25"><i class="fa fa-user-circle"></i></div>

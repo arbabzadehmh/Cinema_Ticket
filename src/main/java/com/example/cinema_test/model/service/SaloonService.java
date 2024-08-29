@@ -3,6 +3,7 @@ package com.example.cinema_test.model.service;
 
 import com.example.cinema_test.controller.exception.SaloonNotFoundException;
 import com.example.cinema_test.model.entity.Saloon;
+import com.example.cinema_test.model.entity.Seat;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -37,6 +38,11 @@ public class SaloonService implements Serializable {
     public Saloon remove(Long id) throws Exception {
         Saloon saloon = entityManager.find(Saloon.class, id);
         if (saloon != null) {
+            for (Seat seat : saloon.getSeats()) {
+                seat.setDeleted(true);
+                entityManager.merge(seat);
+            }
+
             saloon.setDeleted(true);
             entityManager.merge(saloon);
             return saloon;

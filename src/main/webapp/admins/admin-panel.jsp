@@ -19,51 +19,121 @@
         <jsp:include page="/navbar.jsp"/>
 
 
-        <div class="content d-flex flex-column  align-items-center flex-grow-1">
+        <div class="content d-flex flex-column align-items-center flex-grow-1">
+
+            <div class="d-flex p-4 w-100">
+
+                <div class="p-5">
+                    <i class="fa fa-person mb-3" style="font-size: xxx-large"></i>
+                    <h1>Admin</h1>
+                </div>
+
+                <div style="margin-left: 5%">
+                    <form action="admins.do" method="post" enctype="multipart/form-data">
+
+                        <div class="d-flex mb-4">
+
+
+
+                            <input class="m-1" type="text" name="name" placeholder="Name">
+
+                            <input class="m-1" type="text" name="family" placeholder="Family">
+
+                        </div>
+
+                        <div class="d-flex mb-4">
+
+                            <input class="m-1" type="text" name="username" placeholder="Username">
+
+                            <input class="m-1" type="text" name="password" placeholder="Password">
+
+
+                        </div>
+
+                        <div class="d-flex mb-4">
+
+                            <input class="m-1" type="text" name="phoneNumber" placeholder="Phone Number">
+
+                            <input class="m-1" type="text" name="email" placeholder="Email">
+
+                            <input type="file" name="image" class="m-1">
+
+
+                        </div>
+
+
+                        <div class="d-flex mb-4">
+                            <input class="btn btn-dark m-1 w-25" type="submit" value="Save">
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+            </div>
+
+
+            <div>
+                <h4 class="mb-0">All Admins</h4>
+            </div>
+
 
             <div class="d-flex justify-content-center p-5 w-100">
 
                 <table id="resultTable" border="1" class="table-light w-100">
                     <thead>
                     <tr>
-                        <th hidden="hidden">ID</th>
+                        <th>ID</th>
                         <th>Name</th>
                         <th>Family</th>
                         <th>Username</th>
                         <th>Password</th>
                         <th>Phone Number</th>
                         <th>Email</th>
+                        <th>Image</th>
                         <th>Operation</th>
                     </tr>
                     </thead>
 
                     <tbody>
 
-                    <tr>
-                        <td hidden="hidden">${sessionScope.admin.id}</td>
-                        <td>${sessionScope.admin.name}</td>
-                        <td>${sessionScope.admin.family}</td>
-                        <td>${sessionScope.admin.user.username}</td>
-                        <td>${sessionScope.admin.user.password}</td>
-                        <td>${sessionScope.admin.phoneNumber}</td>
-                        <td>${sessionScope.admin.email}</td>
-                        <td>
-                            <button onclick="editAdmin(${sessionScope.admin.id})" class="btn btn-primary w-25 mt-4">Edit</button>
-                            <button onclick="removeAdmin(${sessionScope.admin.id})" class="btn btn-danger w-25 mt-4">Remove</button>
-                        </td>
-                    </tr>
+                    <c:forEach var="admin" items="${sessionScope.allAdmins}">
+
+                        <tr>
+                            <td>${admin.id}</td>
+                            <td>${admin.name}</td>
+                            <td>${admin.family}</td>
+                            <td>${admin.user.username}</td>
+                            <td>${admin.user.password}</td>
+                            <td>${admin.phoneNumber}</td>
+                            <td>${admin.email}</td>
+
+                            <td>
+                                <c:choose>
+                                    <c:when test="${not empty admin.attachments}">
+                                        <img src="${admin.attachments.get(0).fileName}" alt="Admin Image" height="80px" width="80px">
+                                    </c:when>
+                                    <c:otherwise>
+                                        No Image
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+
+
+                            <td>
+                                <button onclick="editAdmin(${admin.id})" class="btn btn-primary w-25 mt-4">Edit</button>
+                                <button onclick="removeAdmin(${admin.id})" class="btn btn-danger w-50 mt-4">Remove</button>
+                            </td>
+                        </tr>
+
+                    </c:forEach>
 
                     </tbody>
 
                 </table>
 
             </div>
-
-
-            <%--            <button onclick="findManagerByName('${sessionScope.manager.name}')"> name</button>--%>
-            <%--            <button onclick="findManagerByPhone('${sessionScope.manager.phoneNumber}')"> phone</button>--%>
-
-
 
 
         </div>
@@ -85,51 +155,31 @@
         window.location.replace("/admins.do?edit=" + id);
     }
 
+    function removeAdmin(id) {
+        fetch("/rest/admins/" + id, {
+            method: "DELETE"
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Redirect if deletion was successful
+                    window.location = "/admins.do";
+                } else {
+                    // If the response is not successful, read the error message
+                    return response.text().then(errorMessage => {
+                        // Alert the error message returned from the API
+                        alert(errorMessage);
+                    });
+                }
+            })
+            .catch(error => {
+                // Handle any other errors that may occur
+                console.error('Error:', error);
+                alert("An error occurred: " + error.message);
+            });
+    }
 
-    // // Function to call the API and display the result in a table
-    // function findManagerByName(name) {
-    //
-    //     // AJAX call to fetch data from the API
-    //     $.ajax({
-    //         url: "/rest/manager/findByName/" + name,
-    //         method: "GET",
-    //         dataType: "json", // Expect JSON response
-    //         success: function(response) {
-    //             // Clear previous results
-    //             $("#resultTable tbody").empty();
-    //
-    //             // Check if there is any data in the response
-    //             if (response && response.length > 0) {
-    //                 // Loop through the response and create table rows
-    //                 response.forEach(function(manager) {
-    //                     var row = "<tr>" +
-    //                         "<td hidden='hidden'>" + manager.id + "</td>" +
-    //                         "<td>" + manager.name + "</td>" +
-    //                         "<td>" + manager.family + "</td>" +
-    //                         "<td>" + manager.user.username + "</td>" +
-    //                         "<td>" + manager.user.password + "</td>" +
-    //                         "<td>" + manager.nationalCode + "</td>" +
-    //                         "<td>" + manager.phoneNumber + "</td>" +
-    //                         "<td>" + manager.email + "</td>" +
-    //                         "<td>" + manager.address + "</td>" +
-    //                         "</tr>";
-    //                     $("#resultTable tbody").append(row); // Add row to the table
-    //                 });
-    //             } else {
-    //                 // If no data, show "No records found" message
-    //                 var noDataRow = "<tr><td colspan='3'>No records found</td></tr>";
-    //                 $("#resultTable tbody").append(noDataRow);
-    //             }
-    //         },
-    //         error: function(xhr, status, error) {
-    //             // Handle error case
-    //             alert("Error fetching data: " + error);
-    //         }
-    //     });
-    // }
+
 </script>
-
-
 
 
 <jsp:include page="../js-import.jsp"/>

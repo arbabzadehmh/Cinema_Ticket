@@ -27,6 +27,29 @@ public class ManagerApi {
 //    }
 
 
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/findAll")
+    public Response findAll() {
+        try {
+            Object result = managerService.findAll();
+
+            if (result != null) {
+                return Response.ok(result).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("No records found for manager")
+                        .build();
+            }
+        }catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred: " + e.getMessage())
+                    .build();
+        }
+    }
+
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/findByName/{name}")
@@ -61,6 +84,27 @@ public class ManagerApi {
             } else {
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for phone: " + phone)
+                        .build();
+            }
+        }catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred: " + e.getMessage())
+                    .build();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/manager-for-cinema")
+    public Response findManagersWantingCinema() {
+        try {
+            Object result = managerService.findManagersWantingCinema();
+
+            if (result != null) {
+                return Response.ok(result).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("No records found for manager")
                         .build();
             }
         }catch (Exception e) {

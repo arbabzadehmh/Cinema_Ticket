@@ -46,7 +46,7 @@ public class Admin extends Base {
     )
     private User user;
 
-    @OneToMany(mappedBy = "admin", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "admin", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Attachment> attachments;
 
 

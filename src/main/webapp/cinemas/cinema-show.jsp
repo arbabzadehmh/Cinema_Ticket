@@ -20,7 +20,7 @@
 
 <div class="container-fluid d-flex flex-row vh-100 p-0">
 
-    <jsp:include page="/managers/manager-sidebar.jsp"/>
+    <jsp:include page="/admins/admin-moderator-sidebar.jsp"/>
 
 
     <div class="content d-flex flex-column flex-grow-1">
@@ -32,89 +32,24 @@
 
             <div class="d-flex p-4 w-100">
 
-                <div class="p-5">
-                    <i class="fa fa-theater-masks mb-3" style="font-size: xxx-large"></i>
-                    <h1>Show</h1>
+                <div class="p-4 d-flex w-100 align-items-center justify-content-between">
+                    <div>
+                        <i class="fa fa-theater-masks mb-3" style="font-size: xxx-large"></i>
+                        <h1>Show</h1>
+                    </div>
+                    <div class="ml-auto d-flex flex-column align-items-center">
+                        <h4>Show Search</h4>
+                        <label style="font-size: large">The Name Of Show</label>
+                        <input type="text" name="name" oninput="findShowByName(this.value)">
+                    </div>
                 </div>
 
-                <div style="margin-left: 5%">
-                    <form action="show.do" method="post" enctype="multipart/form-data">
-
-                        <div class="d-flex mb-4">
-
-                            <input class="m-1" type="text" name="name" placeholder="Name type to search" oninput="findShowByName(this.value)">
-
-
-                            <select name="showType" class="m-1">
-                                <option value="MOVIE">Movie</option>
-                                <option value="THEATER">Theater</option>
-                                <option value="EVENT">Event</option>
-                                <option value="CONCERT">Concert</option>
-                            </select>
-
-                            <select name="status" class="m-1">
-                                <option value="true">active</option>
-                                <option value="false">not active</option>
-                            </select>
-
-
-                            <select name="genre" class="m-1">
-                                <option value="ACTION">ACTION</option>
-                                <option value="HORROR">HORROR</option>
-                                <option value="ROMANCE">ROMANCE</option>
-                                <option value="DRAMA">DRAMA</option>
-                                <option value="WESTERN">WESTERN</option>
-                                <option value="COMEDY">COMEDY</option>
-                                <option value="FANTASY">FANTASY</option>
-                                <option value="CRIME">CRIME</option>
-                                <option value="MUSICAL">MUSICAL</option>
-                                <option value="SHORT">SHORT</option>
-                                <option value="STORY">STORY</option>
-                                <option value="ANIMATION">ANIMATION</option>
-                                <option value="HISTORY">HISTORY</option>
-                                <option value="SCIENCE">SCIENCE</option>
-                                <option value="BUSINESS">BUSINESS</option>
-                                <option value="OTHER">OTHER</option>
-                            </select>
-
-                            <input class="m-1 w-100" type="number" name="basePrice" placeholder="Base Price">
-
-                        </div>
-
-                        <div class="d-flex mb-4">
-
-                            <input class="m-1" type="text" name="producer" placeholder="Producer">
-
-                            <input class="m-1" type="text" name="singer" placeholder="Singer">
-
-                            <input class="m-1" type="text" name="speaker" placeholder="Speaker">
-
-                            <input class="m-1" type="text" name="director" placeholder="Director">
-
-                        </div>
-
-                        <div class="d-flex mb-4">
-
-                            <input class="m-1" type="date" name="releasedDate" placeholder="ReleasedDate">
-
-                            <input type="file" name="image" class="m-1">
-
-                        </div>
-
-                        <div class="d-flex mb-4">
-                            <input class="m-1 w-75" type="text" name="description" placeholder="Description">
-                            <input class="btn btn-dark m-1 w-25" type="submit" value="Save">
-                        </div>
-
-                    </form>
-
-                </div>
 
 
             </div>
 
             <div>
-                <h4 class="mb-0">My Shows</h4>
+                <h4 class="mb-0">${sessionScope.manager.cinemaName} CINEMA SHOWS</h4>
             </div>
 
             <div class="d-flex justify-content-center p-4 w-100">

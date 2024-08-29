@@ -2,7 +2,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Manager Editing</title>
+    <title>Admin Editing</title>
+
+
+
+<%--    <link rel="stylesheet" href="../assets/css/index.css">--%>
+<%--    <link rel="stylesheet" href="../assets/css/all.css">--%>
+<%--    <link rel="stylesheet" href="../assets/css/UI.css">--%>
+<%--    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">--%>
+<%--    <link rel="stylesheet" href="../assets/css/fonts.min.css">--%>
+<%--    <link rel="stylesheet" href="../assets/css/animate.min.css">--%>
+<%--    <link rel="stylesheet" href="../assets/css/fontawesome/all.css">--%>
+
+
+
 
     <jsp:include page="../css-import.jsp"/>
 
@@ -19,16 +32,16 @@
 
             <div class="d-flex align-items-center h-100">
 
-                <div class="bg-secondary p-5 w-25" style="margin-left: 12%">
+                <div class="bg-secondary h-100 p-5 w-25" style="margin-left: 12%">
 
                     <div class="mb-5">
-
                         <form id="edit-form">
 
                             <div class="form-row">
                                 <div class="form-group col-md-3">
                                     <label for="id">ID</label>
-                                    <input type="number" class="form-control" id="id" name="id" value="${sessionScope.editingManager.id}" disabled>
+                                    <input type="number" class="form-control" id="id" name="id"
+                                           value="${sessionScope.editingAdmin.id}" disabled>
                                 </div>
                             </div>
 
@@ -36,11 +49,11 @@
                             <div class="form-row">
                                 <div class="form-group col-md-8">
                                     <label for="name">Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="${sessionScope.editingManager.name}">
+                                    <input type="text" class="form-control" id="name" name="name" value="${sessionScope.editingAdmin.name}">
                                 </div>
                                 <div class="form-group col-md-8">
                                     <label for="family">Family</label>
-                                    <input type="text" class="form-control" id="family" name="family" value="${sessionScope.editingManager.family}">
+                                    <input type="text" class="form-control" id="family" name="family" value="${sessionScope.editingAdmin.family}">
                                 </div>
                             </div>
 
@@ -48,44 +61,32 @@
                             <div class="form-row">
                                 <div class="form-group col-md-8">
                                     <label for="phoneNumber">Phone Number</label>
-                                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" value="${sessionScope.editingManager.phoneNumber}">
+                                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" value="${sessionScope.editingAdmin.phoneNumber}">
                                 </div>
                                 <div class="form-group col-md-8">
                                     <label for="email">Email</label>
-                                    <input type="text" class="form-control" id="email" name="email" value="${sessionScope.editingManager.email}">
+                                    <input type="text" class="form-control" id="email" name="email" value="${sessionScope.editingAdmin.email}">
                                 </div>
-                                <div class="form-group col-md-8">
-                                    <label for="nationalCode">National Code</label>
-                                    <input type="text" class="form-control" id="nationalCode" name="nationalCode" value="${sessionScope.editingManager.nationalCode}">
-                                </div>
+
                             </div>
 
-
-                            <div class="form-row">
-                                <div class="form-group col-md-12">
-                                    <label for="address">Address</label>
-                                    <input type="text" class="form-control" id="address" name="address" value="${sessionScope.editingManager.address}">
-                                </div>
-                            </div>
                         </form>
-
                     </div>
 
-
-                    <div>
-                        <button onclick="editingManager()" class="btn btn-primary w-50">Edit</button>
-                        <button onclick="cancelEditingManager(${sessionScope.editingManager.id})" class="btn btn-light w-25">Back</button>
+                    <div class="mt-5">
+                        <button onclick="editingAdmin()" class="btn btn-primary w-50">Edit</button>
+                        <button onclick="cancelEditingAdmin(${sessionScope.editingAdmin.id})"
+                                class="btn btn-light w-25">Back
+                        </button>
                     </div>
-
 
                 </div>
 
-                <div class="d-inline p-5 w-25 h-100 d-flex flex-column justify-content-between" style="margin-left: 10%">
-
-                    <div class="d-flex w-100 mb-5 bg-body-secondary justify-content-center">
+                <div class="d-inline p-3 w-25 h-75 d-flex flex-column justify-content-between" style="margin-left: 10%">
+                    <div class="d-flex w-100 mb-5 justify-content-center">
                         <c:choose>
-                            <c:when test="${not empty sessionScope.editingManager.attachments}">
-                                <img src="${sessionScope.editingManager.attachments.get(0).fileName}" alt="Saloon Image" height="200px" width="200px">
+                            <c:when test="${not empty sessionScope.editingAdmin.attachments}">
+                                <img src="${sessionScope.editingAdmin.attachments.get(0).fileName}" alt="Admin Image" height="80px" width="80px">
                             </c:when>
                             <c:otherwise>
                                 No Image
@@ -94,13 +95,15 @@
                     </div>
 
                     <div class="d-flex justify-content-center mb-5">
-                        <form action="managers.do" method="post" enctype="multipart/form-data">
+                        <form action="admins.do" method="post" enctype="multipart/form-data">
                             <input type="file" name="newImage" class="input-group mb-5">
                             <input type="submit" value="Change Image" class="btn btn-dark">
                         </form>
                     </div>
 
                 </div>
+
+
 
             </div>
 
@@ -114,7 +117,7 @@
 
 <script>
 
-    async function editingManager() {
+    async function editingAdmin() {
         let form = document.getElementById("edit-form");
 
         // Convert form data to a plain object
@@ -125,7 +128,7 @@
 
         try {
             // Make the PUT request with JSON data
-            const response = await fetch("/managers.do", {
+            const response = await fetch("/admins.do", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -139,30 +142,30 @@
                 console.log("Success:", data);
 
                 // Display success feedback to the user
-                alert("Manager updated successfully!");
+                alert("Admin updated successfully!");
 
-                window.location.href = '/managers.do';
+                window.location.href = '/admins.do';
 
             } else {
                 // Handle errors
                 const errorData = await response.json();
                 console.error("Error:", errorData);
-                alert("Error updating manager: " + errorData.message);
+                alert("Error updating admin: " + errorData.message);
 
-                window.location.href = '/managers.do';
+                window.location.href = '/admins.do';
             }
         } catch (error) {
             console.error("Request failed:", error);
-            alert("An error occurred while updating the manager.");
-            window.location.href = '/manager.do';
+            alert("An error occurred while updating the admin.");
+            window.location.href = '/admins.do';
         }
 
     }
 
 
-    async function cancelEditingManager(id) {
+    async function cancelEditingAdmin(id) {
 
-        window.location.replace("/managers.do?cancel=" + id)
+        window.location.replace("/admins.do?cancel=" + id)
     }
 
 

@@ -35,6 +35,7 @@
                         <th>Phone Number</th>
                         <th>Email</th>
                         <th>Address</th>
+                        <th>Image</th>
                     </tr>
                     </thead>
 
@@ -50,6 +51,12 @@
                         <td>${sessionScope.manager.phoneNumber}</td>
                         <td>${sessionScope.manager.email}</td>
                         <td>${sessionScope.manager.address}</td>
+
+                        <td>
+
+                            <img src="${sessionScope.manager.imageUrl}" alt="Manager Image" height="80px" width="80px">
+
+                        </td>
 
                     </tr>
 

@@ -57,7 +57,7 @@ public class Customer extends Base {
     )
     private List<Ticket> ticketList;
 
-    @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Attachment> attachments;
 
 

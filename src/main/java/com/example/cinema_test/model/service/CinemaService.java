@@ -2,7 +2,9 @@ package com.example.cinema_test.model.service;
 
 import com.example.cinema_test.controller.exception.CinemaNotFoundException;
 import com.example.cinema_test.model.entity.Cinema;
+import com.example.cinema_test.model.entity.Saloon;
 import com.example.cinema_test.model.entity.Show;
+import com.example.cinema_test.model.entity.ShowTime;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -39,6 +41,17 @@ public class CinemaService implements Serializable {
     public Cinema remove(Long id) throws Exception {
         Cinema cinema = entityManager.find(Cinema.class, id);
         if (cinema != null) {
+
+            for (ShowTime showTime : cinema.getShowTimeList()){
+                showTime.setDeleted(true);
+                entityManager.merge(showTime);
+            }
+
+            for (Saloon saloon :cinema.getSaloonList()){
+                saloon.setDeleted(true);
+                entityManager.merge(saloon);
+            }
+
             cinema.setDeleted(true);
             entityManager.merge(cinema);
             return cinema;
@@ -76,6 +89,19 @@ public class CinemaService implements Serializable {
         List<Cinema> cinemaList = entityManager
                 .createQuery("select c from cinemaEntity c where c.address like :address and c.deleted=false ", Cinema.class)
                 .setParameter("address", address)
+                .getResultList();
+        if (!cinemaList.isEmpty()) {
+            return cinemaList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Transactional
+    public Cinema findCinemaBySaloonId(Long saloonId) {
+        List<Cinema> cinemaList = entityManager
+                .createQuery("select c from cinemaEntity c join c.saloonList s where s.id = :saloonId", Cinema.class)
+                .setParameter("saloonId", saloonId)
                 .getResultList();
         if (!cinemaList.isEmpty()) {
             return cinemaList.get(0);

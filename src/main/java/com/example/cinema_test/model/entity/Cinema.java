@@ -1,6 +1,7 @@
 package com.example.cinema_test.model.entity;
 
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,7 +41,8 @@ public class Cinema extends Base{
     @Column(name = "description", length = 50)
     private String description;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @JsonbTransient
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "cinema_saloon_tbl",
             joinColumns = @JoinColumn(name = "cinema_id"),
@@ -50,7 +52,8 @@ public class Cinema extends Base{
     )
     private List<Saloon> saloonList;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @JsonbTransient
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "cinema_show_tbl",
             joinColumns = @JoinColumn(name = "cinema_id"),
@@ -60,7 +63,8 @@ public class Cinema extends Base{
     )
     private List<Show> showList;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @JsonbTransient
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "cinema_show_time_tbl",
             joinColumns = @JoinColumn(name = "cinema_id"),
@@ -70,7 +74,8 @@ public class Cinema extends Base{
     )
     private List<ShowTime> showTimeList;
 
-    @OneToMany(mappedBy = "cinema", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JsonbTransient
+    @OneToMany(mappedBy = "cinema", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Attachment> attachments;
 
 

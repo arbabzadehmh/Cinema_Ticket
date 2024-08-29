@@ -2,6 +2,7 @@ package com.example.cinema_test.model.service;
 
 
 import com.example.cinema_test.controller.exception.AccessDeniedException;
+import com.example.cinema_test.controller.exception.DuplicateUserException;
 import com.example.cinema_test.controller.exception.UserNotFoundException;
 
 import com.example.cinema_test.model.entity.User;
@@ -20,6 +21,13 @@ public class UserService implements Serializable {
 
     @Transactional
     public User save(User user) throws Exception {
+        List<User> userList =entityManager
+                .createQuery("select u from userEntity u where u.username =:username and u.deleted=false", User.class)
+                        .setParameter("username", user.getUsername())
+                                .getResultList();
+        if (!userList.isEmpty()) {
+            throw new DuplicateUserException();
+        }
         entityManager.persist(user);
         return user;
     }

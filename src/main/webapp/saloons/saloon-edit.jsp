@@ -2,20 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Cinema Editing</title>
-
-
-
-    <link rel="stylesheet" href="../assets/css/index.css">
-    <link rel="stylesheet" href="../assets/css/all.css">
-    <link rel="stylesheet" href="../assets/css/UI.css">
-    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/css/fonts.min.css">
-    <link rel="stylesheet" href="../assets/css/animate.min.css">
-    <link rel="stylesheet" href="../assets/css/fontawesome/all.css">
-
-
-
+    <title>Saloon Edit</title>
 
     <jsp:include page="../css-import.jsp"/>
 
@@ -30,27 +17,27 @@
 
         <div class="content flex-grow-1 ">
 
-            <div class="d-flex align-items-center h-100">
+            <div class="d-flex h-100">
 
-                <div class="bg-secondary h-100 p-5 w-25" style="margin-left: 12%">
+                <div class="bg-secondary items d-flex flex-column w-25 pt-5 justify-content-around" style="margin-left: 12%">
 
-                    <div class="mb-5">
-                        <form id="edit-form">
+                    <div class="mb-auto d-flex w-100 justify-content-center">
+                        <form id="edit-form" class="w-75">
 
                             <div class="form-row">
                                 <div class="form-group col-md-3">
                                     <label for="id">ID</label>
                                     <input type="number" class="form-control" id="id" name="id"
-                                           value="${sessionScope.editingCinema.id}" disabled>
+                                           value="${sessionScope.editingSaloon.id}" disabled>
                                 </div>
                             </div>
 
 
                             <div class="form-row">
                                 <div class="form-group col-md-8">
-                                    <label for="name">Name</label>
-                                    <input type="text" class="form-control" id="name" name="name"
-                                           value="${sessionScope.editingCinema.name}">
+                                    <label for="saloonNumber">Saloon Number</label>
+                                    <input type="number" class="form-control" id="saloonNumber" name="saloonNumber"
+                                           value="${sessionScope.editingSaloon.saloonNumber}">
                                 </div>
                             </div>
 
@@ -70,35 +57,31 @@
                                 <div class="form-group col-md-8">
                                     <label for="description">Description</label>
                                     <input type="text" class="form-control" id="description" name="description"
-                                           value="${sessionScope.editingCinema.description}">
+                                           value="${sessionScope.editingSaloon.description}">
                                 </div>
                             </div>
 
-
-                            <div class="form-row">
-                                <div class="form-group col-md-12">
-                                    <label for="address">Address</label>
-                                    <input type="text" class="form-control" id="address" name="address"
-                                           value="${sessionScope.editingCinema.address}">
-                                </div>
-                            </div>
                         </form>
                     </div>
 
-                    <div class="mt-5">
-                        <button onclick="editingCinema()" class="btn btn-primary w-50">Edit</button>
-                        <button onclick="cancelEditingCinema(${sessionScope.editingCinema.id})"
+                    <div class="mb-4">
+                        <button onclick="editingSaloon()" class="btn btn-primary w-50">Edit</button>
+                        <button onclick="cancelEditingSaloon(${sessionScope.editingSaloon.id})"
                                 class="btn btn-light w-25">Back
                         </button>
                     </div>
 
                 </div>
 
-                <div class="d-inline p-3 w-25 h-75 d-flex flex-column justify-content-between" style="margin-left: 10%">
-                    <div class="d-flex w-100 mb-5 justify-content-center">
+
+
+
+                <div class="d-inline p-5 w-25 h-75 d-flex flex-column justify-content-between" style="margin-left: 10%">
+
+                    <div class="d-flex w-100 mb-5 bg-body-secondary justify-content-center">
                         <c:choose>
-                            <c:when test="${not empty sessionScope.editingCinema.attachments}">
-                                <img src="${sessionScope.editingCinema.attachments.get(0).fileName}" alt="Cinema Image" height="80px" width="80px">
+                            <c:when test="${not empty sessionScope.editingSaloon.attachments}">
+                                <img src="${sessionScope.editingSaloon.attachments.get(0).fileName}" alt="Saloon Image" height="200px" width="200px">
                             </c:when>
                             <c:otherwise>
                                 No Image
@@ -107,11 +90,13 @@
                     </div>
 
                     <div class="d-flex justify-content-center mb-5">
-                        <form action="cinema.do" method="post" enctype="multipart/form-data">
+                        <form action="saloon.do" method="post" enctype="multipart/form-data">
                             <input type="file" name="newImage" class="input-group mb-5">
                             <input type="submit" value="Change Image" class="btn btn-dark">
                         </form>
                     </div>
+
+
 
                 </div>
 
@@ -127,9 +112,12 @@
 </div>
 
 
+
+
+
 <script>
 
-    async function editingCinema() {
+    async function editingSaloon() {
         let form = document.getElementById("edit-form");
 
         // Convert form data to a plain object
@@ -140,7 +128,7 @@
 
         try {
             // Make the PUT request with JSON data
-            const response = await fetch("/cinema.do", {
+            const response = await fetch("/saloon.do", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -154,30 +142,30 @@
                 console.log("Success:", data);
 
                 // Display success feedback to the user
-                alert("Cinema updated successfully!");
+                alert("Saloon updated successfully!");
 
-                window.location.href = '/cinema.do';
+                window.location.href = '/saloon.do';
 
             } else {
                 // Handle errors
                 const errorData = await response.json();
                 console.error("Error:", errorData);
-                alert("Error updating cinema: " + errorData.message);
+                alert("Error updating saloon: " + errorData.message);
 
-                window.location.href = '/cinema.do';
+                window.location.href = '/saloon.do';
             }
         } catch (error) {
             console.error("Request failed:", error);
-            alert("An error occurred while updating the cinema.");
-            window.location.href = '/cinema.do';
+            alert("An error occurred while updating the saloon.");
+            window.location.href = '/saloon.do';
         }
 
     }
 
 
-    async function cancelEditingCinema(id) {
+    async function cancelEditingSaloon(id) {
 
-        window.location.replace("/cinema.do?cancel=" + id)
+        window.location.replace("/saloon.do?cancel=" + id)
     }
 
 

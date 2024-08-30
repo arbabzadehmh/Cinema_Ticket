@@ -3,7 +3,9 @@ package com.example.cinema_test.controller.servlet;
 import com.example.cinema_test.controller.validation.BeanValidator;
 import com.example.cinema_test.model.entity.*;
 import com.example.cinema_test.model.entity.enums.FileType;
-import com.example.cinema_test.model.service.*;
+import com.example.cinema_test.model.service.AttachmentService;
+import com.example.cinema_test.model.service.ModeratorService;
+import com.example.cinema_test.model.service.RoleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
@@ -19,87 +21,74 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
 
 @Slf4j
-@WebServlet(urlPatterns = "/managers.do")
+@WebServlet(urlPatterns = "/moderator.do")
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
         maxFileSize = 1024 * 1024 * 10,      // 10 MB
         maxRequestSize = 1024 * 1024 * 100   // 100 MB
 )
-public class ManagerServlet extends HttpServlet {
+public class ModeratorServlet extends HttpServlet {
 
     @Inject
-    private ManagerService managerService;
-
-    @Inject
-    private AttachmentService attachmentService;
+    private ModeratorService moderatorService;
 
     @Inject
     private RoleService roleService;
 
+    @Inject
+    private AttachmentService attachmentService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         try {
 
             Enumeration<String> attributeNames = req.getSession().getAttributeNames();
-            System.out.println("managers.do");
+            System.out.println("moderator.do");
             while (attributeNames.hasMoreElements()) {
                 String attributeName = attributeNames.nextElement();
                 System.out.println("Attribute Name: " + attributeName);
             }
-            System.out.println("managers.do\n\n\n\n");
+            System.out.println("moderator.do\n\n\n\n");
 
 
             User user = (User) req.getSession().getAttribute("user");
-            String redirectPath = "";
 
-            if (user.getRole().getRole().equals("manager")) {
-                ManagerVO managerVO = new ManagerVO(managerService.findByUsername(user.getUsername()));
-                req.getSession().setAttribute("manager", managerVO);
-                redirectPath = "/managers/manager-main-panel.jsp";
-            } else if (user.getRole().getRole().equals("admin") || user.getRole().getRole().equals("moderator")) {
-                List<Manager> managerList = managerService.findAll();
-                List<ManagerVO> managerVOList = new ArrayList<>();
-                for (Manager manager : managerList) {
-                    ManagerVO managerVO = new ManagerVO(manager);
-                    managerVOList.add(managerVO);
-                }
-                req.getSession().setAttribute("allManagers", managerVOList);
-                redirectPath = "/admins/managers.jsp";
+            if (user.getRole().getRole().equals("moderator")) {
+                Moderator loggedModerator = moderatorService.findByUsername(user.getUsername());
+                req.getSession().setAttribute("loggedModerator", loggedModerator);
             }
 
 
             if (req.getParameter("cancel") != null) {
-                Manager editingManager = managerService.findById(Long.parseLong(req.getParameter("cancel")));
-                editingManager.setEditing(false);
-                managerService.edit(editingManager);
-                resp.sendRedirect("/managers.do");
+                Moderator editingModerator = moderatorService.findById(Long.parseLong(req.getParameter("cancel")));
+                editingModerator.setEditing(false);
+                moderatorService.edit(editingModerator);
+                resp.sendRedirect("/moderator.do");
                 return;
             }
 
             if (req.getParameter("edit") != null) {
-                Manager editingManager = managerService.findById(Long.parseLong(req.getParameter("edit")));
-                if (!editingManager.isEditing()) {
-                    editingManager.setEditing(true);
-                    managerService.edit(editingManager);
-                    req.getSession().setAttribute("editingManager", editingManager);
-                    req.getRequestDispatcher("/managers/manager-edit.jsp").forward(req, resp);
+                Moderator editingModerator = moderatorService.findById(Long.parseLong(req.getParameter("edit")));
+                if (!editingModerator.isEditing()) {
+                    editingModerator.setEditing(true);
+                    moderatorService.edit(editingModerator);
+                    req.getSession().setAttribute("editingModerator", editingModerator);
+                    req.getRequestDispatcher("/moderators/moderator-edit.jsp").forward(req, resp);
                 } else {
                     resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
                 }
             } else {
-
-                req.getRequestDispatcher(redirectPath).forward(req, resp);
+                req.getSession().setAttribute("allModerators", moderatorService.findAll());
+                req.getRequestDispatcher("/moderators/moderator-panel.jsp").forward(req, resp);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
         }
+
     }
 
 
@@ -109,12 +98,12 @@ public class ManagerServlet extends HttpServlet {
         try {
 
             if (req.getPart("newImage") != null) {
-                Manager editingManager = (Manager) req.getSession().getAttribute("editingManager");
+                Moderator editingModerator = (Moderator) req.getSession().getAttribute("editingModerator");
 
-                for (Attachment attachment : editingManager.getAttachments()) {
+                for (Attachment attachment : editingModerator.getAttachments()) {
                     attachmentService.remove(attachment.getId());
                 }
-                editingManager.getAttachments().clear();
+                editingModerator.getAttachments().clear();
 
 
                 Part filePart = req.getPart("newImage");
@@ -141,17 +130,17 @@ public class ManagerServlet extends HttpServlet {
                         .fileSize(filePart.getSize())
                         .build();
 
-                editingManager.addAttachment(attachment);
-                editingManager.setEditing(false);
-                managerService.edit(editingManager);
-                resp.sendRedirect("/managers.do");
-                log.info("Manager image changed successfully-ID : " + editingManager.getId());
+                editingModerator.addAttachment(attachment);
+                editingModerator.setEditing(false);
+                moderatorService.edit(editingModerator);
+                resp.sendRedirect("/admins.do");
+                log.info("Moderator image changed successfully-ID : " + editingModerator.getId());
 
 
             } else {
 
 
-                Role role = roleService.findByRole("manager");
+                Role role = roleService.findByRole("moderator");
 
                 User user =
                         User
@@ -164,8 +153,8 @@ public class ManagerServlet extends HttpServlet {
                                 .build();
 
 
-                Manager manager =
-                        Manager
+                Moderator moderator =
+                        Moderator
                                 .builder()
                                 .name(req.getParameter("name"))
                                 .family(req.getParameter("family"))
@@ -201,16 +190,16 @@ public class ManagerServlet extends HttpServlet {
                             .fileSize(filePart.getSize())
                             .build();
 
-                    manager.addAttachment(attachment);
+                    moderator.addAttachment(attachment);
                 }
 
-                BeanValidator<Manager> managerValidator = new BeanValidator<>();
-                if (managerValidator.validate(manager).isEmpty()) {
-                    managerService.save(manager);
-                    resp.sendRedirect("/managers.do");
-                    log.info("Manager saved successfully : " + manager.getFamily());
+                BeanValidator<Moderator> moderatorValidator = new BeanValidator<>();
+                if (moderatorValidator.validate(moderator).isEmpty()) {
+                    moderatorService.save(moderator);
+                    resp.sendRedirect("/moderator.do");
+                    log.info("Moderator saved successfully : " + moderator.getFamily());
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Manager Data !!!" + "</h1>");
+                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Moderator Data !!!" + "</h1>");
                 }
             }
         } catch (Exception e) {
@@ -231,34 +220,33 @@ public class ManagerServlet extends HttpServlet {
         ObjectMapper objectMapper = new ObjectMapper();
 
         // Parse the JSON request body into a Manager object
-        Manager managerAb;
+        Moderator moderatorAb;
         try {
 
-            managerAb = objectMapper.readValue(req.getInputStream(), Manager.class);
-            Manager editingManager = (Manager) req.getSession().getAttribute("editingManager");
-            editingManager.setName(managerAb.getName());
-            editingManager.setFamily(managerAb.getFamily());
-            editingManager.setPhoneNumber(managerAb.getPhoneNumber());
-            editingManager.setEmail(managerAb.getEmail());
-            editingManager.setNationalCode(managerAb.getNationalCode());
-            editingManager.setAddress(managerAb.getAddress());
-            editingManager.setEditing(false);
-            managerService.edit(editingManager);
+            moderatorAb = objectMapper.readValue(req.getInputStream(), Moderator.class);
+            Moderator editingModerator = (Moderator) req.getSession().getAttribute("editingModerator");
+            editingModerator.setName(moderatorAb.getName());
+            editingModerator.setFamily(moderatorAb.getFamily());
+            editingModerator.setNationalCode(moderatorAb.getNationalCode());
+            editingModerator.setPhoneNumber(moderatorAb.getPhoneNumber());
+            editingModerator.setEmail(moderatorAb.getEmail());
+            editingModerator.setAddress(moderatorAb.getAddress());
+            editingModerator.setEditing(false);
+            moderatorService.edit(editingModerator);
 
 
             // Send success response with updated manager
             resp.setStatus(HttpServletResponse.SC_OK);
             PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, managerAb); // Write manager object as JSON response
+            objectMapper.writeValue(out, moderatorAb); // Write manager object as JSON response
             out.flush();
 
         } catch (Exception e) {
-            e.printStackTrace();
 
             // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             PrintWriter out = resp.getWriter();
-            out.write("{\"message\": \"Failed to update manager.\"}");
+            out.write("{\"message\": \"Failed to update admin.\"}");
             out.flush();
         }
     }

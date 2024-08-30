@@ -1,31 +1,44 @@
 package com.example.cinema_test.controller.api;
 
+import com.example.cinema_test.controller.exception.ExceptionWrapper;
+import com.example.cinema_test.model.entity.Manager;
 import com.example.cinema_test.model.service.ManagerService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Path("/manager")
 public class ManagerApi {
 
     @Inject
     private ManagerService managerService;
 
-//    @GET
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response findById(Long id) throws Exception {
-//        try {
-//            System.out.println("manager api id : " + id);
-//            return Response.ok(managerService.findById(id)).build();
-//
-//        }catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+    @DELETE
+    @Path("/{id}")
+    public Response delete(@PathParam("id") Long id) {
+        try {
 
+            Manager manager = managerService.findById(id);
+
+            if (manager.getCinema() == null){
+                managerService.remove(id);
+                log.info("Manager removed successfully-ID : " + id);
+                return Response.accepted().build();
+            } else {
+                return Response.status(Response.Status.NOT_ACCEPTABLE)
+                        .entity("This manager is belong to a cinema !!!")
+                        .build();
+            }
+        }catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred: " + e.getMessage())
+                    .build();
+        }
+    }
 
 
     @GET

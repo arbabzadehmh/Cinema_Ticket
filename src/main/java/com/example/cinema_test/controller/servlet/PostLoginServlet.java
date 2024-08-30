@@ -42,13 +42,13 @@ public class PostLoginServlet extends HttpServlet {
                         resp.sendRedirect("/admins.do");
                         break;
                     case "moderator":
-                        resp.sendRedirect("moderator-panel.jsp");
+                        resp.sendRedirect("/moderator.do");
                         break;
                     case "manager":
                         resp.sendRedirect("/managers.do");
                         break;
                     case "customer":
-                        resp.sendRedirect("customer-panel.jsp");
+                        resp.sendRedirect("/customer.do");
                         break;
                 }
 

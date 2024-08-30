@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Admin Panel</title>
+    <title>All Managers</title>
 
     <jsp:include page="../css-import.jsp"/>
 
@@ -24,12 +24,12 @@
             <div class="d-flex p-4 w-100">
 
                 <div class="p-5">
-                    <i class="fa fa-user mb-3" style="font-size: xxx-large"></i>
-                    <h1>Admin</h1>
+                    <i class="fa fa-vcard mb-3" style="font-size: xxx-large"></i>
+                    <h1>Manager</h1>
                 </div>
 
                 <div style="margin-left: 5%">
-                    <form action="admins.do" method="post" enctype="multipart/form-data">
+                    <form action="managers.do" method="post" enctype="multipart/form-data">
 
                         <div class="d-flex mb-4">
 
@@ -47,14 +47,17 @@
 
                             <input class="m-1" type="text" name="password" placeholder="Password">
 
+                            <input class="m-1" type="text" name="email" placeholder="Email">
 
                         </div>
 
                         <div class="d-flex mb-4">
 
+                            <input class="m-1" type="text" name="nationalCode" placeholder="National Code">
+
                             <input class="m-1" type="text" name="phoneNumber" placeholder="Phone Number">
 
-                            <input class="m-1" type="text" name="email" placeholder="Email">
+                            <input class="m-1" type="text" name="address" placeholder="Address">
 
                             <input type="file" name="image" class="m-1">
 
@@ -75,7 +78,7 @@
 
 
             <div>
-                <h4 class="mb-0">All Admins</h4>
+                <h4 class="mb-0">All Managers</h4>
             </div>
 
 
@@ -89,8 +92,11 @@
                         <th>Family</th>
                         <th>Username</th>
                         <th>Password</th>
+                        <th>Cinema</th>
+                        <th>National Code</th>
                         <th>Phone Number</th>
                         <th>Email</th>
+                        <th>Address</th>
                         <th>Image</th>
                         <th>Operation</th>
                     </tr>
@@ -98,32 +104,37 @@
 
                     <tbody>
 
-                    <c:forEach var="admin" items="${sessionScope.allAdmins}">
+                    <c:forEach var="manager" items="${sessionScope.allManagers}">
 
                         <tr>
-                            <td>${admin.id}</td>
-                            <td>${admin.name}</td>
-                            <td>${admin.family}</td>
-                            <td>${admin.user.username}</td>
-                            <td>${admin.user.password}</td>
-                            <td>${admin.phoneNumber}</td>
-                            <td>${admin.email}</td>
+                            <td>${manager.id}</td>
+                            <td>${manager.name}</td>
+                            <td>${manager.family}</td>
+                            <td>${manager.user.username}</td>
+                            <td>${manager.user.password}</td>
+                            <td>${manager.cinemaName}</td>
+                            <td>${manager.nationalCode}</td>
+                            <td>${manager.phoneNumber}</td>
+                            <td>${manager.email}</td>
+                            <td>${manager.address}</td>
 
                             <td>
+
                                 <c:choose>
-                                    <c:when test="${not empty admin.attachments}">
-                                        <img src="${admin.attachments.get(0).fileName}" alt="Admin Image" height="80px" width="80px">
+                                    <c:when test="${manager.imageUrl != ''}">
+                                        <img src="${manager.imageUrl}" alt="Manager Image" height="80px" width="80px">
                                     </c:when>
                                     <c:otherwise>
                                         No Image
                                     </c:otherwise>
                                 </c:choose>
+
                             </td>
 
 
                             <td>
-                                <button onclick="editAdmin(${admin.id})" class="btn btn-primary w-25 mt-4">Edit</button>
-                                <button onclick="removeAdmin(${admin.id})" class="btn btn-danger w-50 mt-4">Remove</button>
+                                <button onclick="editManager(${manager.id})" class="btn btn-primary w-25 mt-4">Edit</button>
+                                <button onclick="removeManager(${manager.id})" class="btn btn-danger w-50 mt-4">Remove</button>
                             </td>
                         </tr>
 
@@ -151,18 +162,18 @@
 <script>
 
 
-    function editAdmin(id) {
-        window.location.replace("/admins.do?edit=" + id);
+    function editManager(id) {
+        window.location.replace("/managers.do?edit=" + id);
     }
 
-    function removeAdmin(id) {
-        fetch("/rest/admins/" + id, {
+    function removeManager(id) {
+        fetch("/rest/manager/" + id, {
             method: "DELETE"
         })
             .then(response => {
                 if (response.ok) {
                     // Redirect if deletion was successful
-                    window.location = "/admins.do";
+                    window.location = "/managers.do";
                 } else {
                     // If the response is not successful, read the error message
                     return response.text().then(errorMessage => {

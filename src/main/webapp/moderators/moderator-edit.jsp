@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Manager Editing</title>
+    <title>Moderator Editing</title>
 
     <jsp:include page="../css-import.jsp"/>
 
@@ -28,7 +28,7 @@
                             <div class="form-row">
                                 <div class="form-group col-md-3">
                                     <label for="id">ID</label>
-                                    <input type="number" class="form-control" id="id" name="id" value="${sessionScope.editingManager.id}" disabled>
+                                    <input type="number" class="form-control" id="id" name="id" value="${sessionScope.editingModerator.id}" disabled>
                                 </div>
                             </div>
 
@@ -36,11 +36,11 @@
                             <div class="form-row">
                                 <div class="form-group col-md-8">
                                     <label for="name">Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="${sessionScope.editingManager.name}">
+                                    <input type="text" class="form-control" id="name" name="name" value="${sessionScope.editingModerator.name}">
                                 </div>
                                 <div class="form-group col-md-8">
                                     <label for="family">Family</label>
-                                    <input type="text" class="form-control" id="family" name="family" value="${sessionScope.editingManager.family}">
+                                    <input type="text" class="form-control" id="family" name="family" value="${sessionScope.editingModerator.family}">
                                 </div>
                             </div>
 
@@ -48,15 +48,15 @@
                             <div class="form-row">
                                 <div class="form-group col-md-8">
                                     <label for="phoneNumber">Phone Number</label>
-                                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" value="${sessionScope.editingManager.phoneNumber}">
+                                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" value="${sessionScope.editingModerator.phoneNumber}">
                                 </div>
                                 <div class="form-group col-md-8">
                                     <label for="email">Email</label>
-                                    <input type="text" class="form-control" id="email" name="email" value="${sessionScope.editingManager.email}">
+                                    <input type="text" class="form-control" id="email" name="email" value="${sessionScope.editingModerator.email}">
                                 </div>
                                 <div class="form-group col-md-8">
                                     <label for="nationalCode">National Code</label>
-                                    <input type="text" class="form-control" id="nationalCode" name="nationalCode" value="${sessionScope.editingManager.nationalCode}">
+                                    <input type="text" class="form-control" id="nationalCode" name="nationalCode" value="${sessionScope.editingModerator.nationalCode}">
                                 </div>
                             </div>
 
@@ -64,7 +64,7 @@
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <label for="address">Address</label>
-                                    <input type="text" class="form-control" id="address" name="address" value="${sessionScope.editingManager.address}">
+                                    <input type="text" class="form-control" id="address" name="address" value="${sessionScope.editingModerator.address}">
                                 </div>
                             </div>
                         </form>
@@ -73,8 +73,8 @@
 
 
                     <div>
-                        <button onclick="editingManager()" class="btn btn-primary w-50">Edit</button>
-                        <button onclick="cancelEditingManager(${sessionScope.editingManager.id})" class="btn btn-light w-25">Back</button>
+                        <button onclick="editingModerator()" class="btn btn-primary w-50">Edit</button>
+                        <button onclick="cancelEditingModerator(${sessionScope.editingModerator.id})" class="btn btn-light w-25">Back</button>
                     </div>
 
 
@@ -84,8 +84,8 @@
 
                     <div class="d-flex w-100 mb-5 bg-body-secondary justify-content-center">
                         <c:choose>
-                            <c:when test="${not empty sessionScope.editingManager.attachments}">
-                                <img src="${sessionScope.editingManager.attachments.get(0).fileName}" alt="Manager Image" height="200px" width="200px">
+                            <c:when test="${not empty sessionScope.editingModerator.attachments}">
+                                <img src="${sessionScope.editingModerator.attachments.get(0).fileName}" alt="Moderator Image" height="200px" width="200px">
                             </c:when>
                             <c:otherwise>
                                 No Image
@@ -94,7 +94,7 @@
                     </div>
 
                     <div class="d-flex justify-content-center mb-5">
-                        <form action="managers.do" method="post" enctype="multipart/form-data">
+                        <form action="moderator.do" method="post" enctype="multipart/form-data">
                             <input type="file" name="newImage" class="input-group mb-5">
                             <input type="submit" value="Change Image" class="btn btn-dark">
                         </form>
@@ -114,7 +114,7 @@
 
 <script>
 
-    async function editingManager() {
+    async function editingModerator() {
         let form = document.getElementById("edit-form");
 
         // Convert form data to a plain object
@@ -125,7 +125,7 @@
 
         try {
             // Make the PUT request with JSON data
-            const response = await fetch("/managers.do", {
+            const response = await fetch("/moderator.do", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -139,30 +139,30 @@
                 console.log("Success:", data);
 
                 // Display success feedback to the user
-                alert("Manager updated successfully!");
+                alert("Moderator updated successfully!");
 
-                window.location.href = '/managers.do';
+                window.location.href = '/moderator.do';
 
             } else {
                 // Handle errors
                 const errorData = await response.json();
                 console.error("Error:", errorData);
-                alert("Error updating manager: " + errorData.message);
+                alert("Error updating moderator: " + errorData.message);
 
-                window.location.href = '/managers.do';
+                window.location.href = '/moderator.do';
             }
         } catch (error) {
             console.error("Request failed:", error);
-            alert("An error occurred while updating the manager.");
-            window.location.href = '/manager.do';
+            alert("An error occurred while updating the moderator.");
+            window.location.href = '/moderator.do';
         }
 
     }
 
 
-    async function cancelEditingManager(id) {
+    async function cancelEditingModerator(id) {
 
-        window.location.replace("/managers.do?cancel=" + id)
+        window.location.replace("/moderator.do?cancel=" + id)
     }
 
 

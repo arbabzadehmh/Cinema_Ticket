@@ -46,7 +46,7 @@ public class Manager extends Base {
     @Column(name = "address", length = 100)
     private String address;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(
             name = "username",
 

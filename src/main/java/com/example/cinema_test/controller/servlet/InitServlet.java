@@ -28,6 +28,15 @@ public class InitServlet extends HttpServlet {
             Role role = Role.builder().role("admin").build();
             roleService.save(role);
 
+            Role role1 = Role.builder().role("moderator").build();
+            roleService.save(role1);
+
+            Role role2 = Role.builder().role("manager").build();
+            roleService.save(role2);
+
+            Role role3 = Role.builder().role("customer").build();
+            roleService.save(role3);
+
             User user =
                     User
                             .builder()

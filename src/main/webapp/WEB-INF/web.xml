@@ -13,8 +13,8 @@
         </web-resource-collection>
         <auth-constraint>
             <role-name>admin</role-name>
-            <role-name>manager</role-name>
             <role-name>moderator</role-name>
+            <role-name>manager</role-name>
             <role-name>customer</role-name>
         </auth-constraint>
     </security-constraint>
@@ -37,6 +37,8 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Cinema and Show Servlets Access</web-resource-name>
+            <url-pattern>/managers/*</url-pattern>
+            <url-pattern>/managers.do</url-pattern>
             <url-pattern>/cinema.do</url-pattern> <!-- Protect cinema.do servlet -->
             <url-pattern>/show.do</url-pattern> <!-- Protect show.do servlet -->
             <http-method>GET</http-method>
@@ -69,23 +71,6 @@
 
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>Manager</web-resource-name>
-            <url-pattern>/managers/*</url-pattern>
-            <url-pattern>/managers.do</url-pattern>
-            <http-method>GET</http-method>
-            <http-method>POST</http-method>
-            <http-method>PUT</http-method>
-            <http-method>DELETE</http-method>
-        </web-resource-collection>
-
-        <auth-constraint>
-            <role-name>manager</role-name>
-        </auth-constraint>
-    </security-constraint>
-
-
-    <security-constraint>
-        <web-resource-collection>
             <web-resource-name>Moderator</web-resource-name>
             <url-pattern>/moderator/*</url-pattern>
             <url-pattern>/moderator.do</url-pattern>
@@ -96,6 +81,7 @@
         </web-resource-collection>
 
         <auth-constraint>
+            <role-name>admin</role-name>
             <role-name>moderator</role-name>
         </auth-constraint>
     </security-constraint>

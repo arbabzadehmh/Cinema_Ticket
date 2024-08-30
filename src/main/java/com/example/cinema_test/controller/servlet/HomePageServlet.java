@@ -25,9 +25,6 @@ public class HomePageServlet extends HttpServlet {
     private CinemaService cinemaService;
 
     @Inject
-    private SaloonService saloonService;
-
-    @Inject
     private ShowService showService;
 
     @Inject

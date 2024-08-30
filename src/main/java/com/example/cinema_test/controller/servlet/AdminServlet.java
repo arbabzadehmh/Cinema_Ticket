@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.util.Enumeration;
 
 @Slf4j
 @WebServlet(urlPatterns = "/admins.do")
@@ -44,6 +45,14 @@ public class AdminServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
+
+            Enumeration<String> attributeNames = req.getSession().getAttributeNames();
+            System.out.println("admins.do");
+            while (attributeNames.hasMoreElements()) {
+                String attributeName = attributeNames.nextElement();
+                System.out.println("Attribute Name: " + attributeName);
+            }
+            System.out.println("admins.do\n\n\n\n");
 
             User user = (User) req.getSession().getAttribute("user");
             Admin loggedAdmin = adminService.findByUsername(user.getUsername());

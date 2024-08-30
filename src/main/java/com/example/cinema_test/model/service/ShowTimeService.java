@@ -24,16 +24,6 @@ public class ShowTimeService implements Serializable {
 
     @Transactional
     public ShowTime save(ShowTime showTime) throws Exception {
-
-        for (Seat seat : showTime.getSaloon().getSeats()) {
-            SeatVo seatVo = new SeatVo(seat);
-            if (showTime.getShow().getShowType().equals(ShowType.MOVIE)) {
-                seatVo.setPriceRatio(1);
-                seatVo.setSeatPrice(seatVo.getPriceRatio() * showTime.getShow().getBasePrice());
-            }
-//            showTime.getShowSeats().add(seatVo);
-        }
-
         entityManager.persist(showTime);
         return showTime;
     }
@@ -82,7 +72,7 @@ public class ShowTimeService implements Serializable {
     @Transactional
     public List<Show> findActiveShows() throws Exception {
         return entityManager
-                .createQuery("select distinct s.show from showTimeEntity s where s.startTime between :startTime and :endTime and s.status = true and s.deleted = false ", Show.class)
+                .createQuery("select distinct s.show from showTimeEntity s where s.startTime between :startTime and :endTime and  s.deleted = false ", Show.class)
                 .setParameter("startTime", LocalDateTime.now())
                 .setParameter("endTime", LocalDateTime.now().plusDays(7))
                 .getResultList();
@@ -93,7 +83,7 @@ public class ShowTimeService implements Serializable {
         return entityManager
                 .createQuery("select s from showTimeEntity s where s.startTime between :startTime and :endTime and s.show.id =:showId and s.status = true and s.deleted = false ", ShowTime.class)
                 .setParameter("startTime", LocalDateTime.now())
-                .setParameter("endTime", LocalDateTime.now().plusDays(5))
+                .setParameter("endTime", LocalDateTime.now().plusDays(7))
                 .setParameter("showId", showId)
                 .getResultList();
     }
@@ -103,9 +93,9 @@ public class ShowTimeService implements Serializable {
         List<LocalDate> dates = new ArrayList<>();
         List<LocalDateTime> dateTimeList =
                 entityManager
-                        .createQuery("select distinct s.startTime from showTimeEntity s where s.startTime between :startTime and :endTime and s.show.id =:showId and s.status = true and s.deleted = false ", LocalDateTime.class)
+                        .createQuery("select distinct s.startTime from showTimeEntity s where s.startTime between :startTime and :endTime and s.show.id =:showId and s.deleted = false ", LocalDateTime.class)
                         .setParameter("startTime", LocalDateTime.now())
-                        .setParameter("endTime", LocalDateTime.now().plusDays(5))
+                        .setParameter("endTime", LocalDateTime.now().plusDays(7))
                         .setParameter("showId", showId)
                         .getResultList();
         for (LocalDateTime localDateTime : dateTimeList) {
@@ -131,7 +121,7 @@ public class ShowTimeService implements Serializable {
     @Transactional
     public List<Cinema> findDistinctCinemasByShowIdAndDate(Long showId, LocalDate date) throws Exception {
         return entityManager
-                .createQuery("select distinct s.cinema from showTimeEntity s where s.startTime between :startTime and :endTime and s.show.id = :showId and s.status = true and s.deleted = false", Cinema.class)
+                .createQuery("select distinct s.cinema from showTimeEntity s where s.startTime between :startTime and :endTime and s.show.id = :showId and s.status = true and s.deleted = false and s.cinema.status=true ", Cinema.class)
                 .setParameter("startTime", date.atTime(1, 0, 0))
                 .setParameter("endTime", date.atTime(23, 59, 59))
                 .setParameter("showId", showId)
@@ -142,7 +132,7 @@ public class ShowTimeService implements Serializable {
     @Transactional
     public List<ShowTime> findByShowIdAndDateAndCinemaId(Long ShowId, LocalDate date, Long cinemaId) throws Exception {
         return entityManager
-                .createQuery("select s from showTimeEntity s where s.startTime between :startTime and :endTime and s.show.id =:ShowId and s.cinema.id =:cinemaId and s.status = true and s.deleted = false ", ShowTime.class)
+                .createQuery("select s from showTimeEntity s where s.startTime between :startTime and :endTime and s.show.id =:ShowId and s.cinema.id =:cinemaId and s.saloon.status=true and s.status = true and s.deleted = false ", ShowTime.class)
                 .setParameter("startTime", date.atTime(1, 0, 0))
                 .setParameter("endTime", date.atTime(23, 59, 59))
                 .setParameter("ShowId", ShowId)
@@ -159,5 +149,21 @@ public class ShowTimeService implements Serializable {
                 .setParameter("saloonId", saloonId)
                 .getResultList();
     }
+
+    @Transactional
+    public List<ShowTime> findShowtimeBySaloonIdAndTime(Long saloonId, LocalDateTime startTime, LocalDateTime endTime) throws Exception {
+        return entityManager
+                .createQuery("select s from showTimeEntity s where s.deleted=false and s.saloon.id =: saloonId and (" +
+                        "(s.startTime between :startTime and :endTime)" +
+                        " or (s.endTime between :startTime and :endTime)" +
+                        " or (:startTime between s.startTime and s.endTime)" +
+                        ")", ShowTime.class)
+                .setParameter("saloonId", saloonId)
+                .setParameter("startTime", startTime)
+                .setParameter("endTime", endTime)
+                .getResultList();
+    }
+
+
 
 }

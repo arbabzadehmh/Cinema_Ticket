@@ -66,17 +66,11 @@ public class TicketService implements Serializable {
     }
 
     @Transactional
-    public Ticket findByCustomerPhoneNumber(String phoneNumber) throws Exception {
-        List<Ticket> ticketList =
-                entityManager
-                        .createQuery("select t from ticketEntity t where t.customer.phoneNumber =:phoneNumber and t.deleted=false ", Ticket.class)
-                        .setParameter("phoneNumber", phoneNumber)
-                        .getResultList();
-        if (!ticketList.isEmpty()) {
-            return ticketList.get(0);
-        } else {
-            return null;
-        }
+    public List<Ticket> findByCustomerPhoneNumber(String phoneNumber) throws Exception {
+        return entityManager
+                .createQuery("select t from ticketEntity t where t.customer.phoneNumber =:phoneNumber and t.deleted=false ", Ticket.class)
+                .setParameter("phoneNumber", phoneNumber)
+                .getResultList();
     }
 
     @Transactional
@@ -102,5 +96,6 @@ public class TicketService implements Serializable {
                 .setParameter("allowedTime", LocalDateTime.now().minusMinutes(15))
                 .getResultList();
     }
+
 
 }

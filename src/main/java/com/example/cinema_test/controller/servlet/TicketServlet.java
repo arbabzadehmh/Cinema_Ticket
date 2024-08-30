@@ -5,6 +5,7 @@ import com.example.cinema_test.model.entity.Seat;
 import com.example.cinema_test.model.entity.ShowTime;
 import com.example.cinema_test.model.entity.ShowTimeVo;
 import com.example.cinema_test.model.entity.Ticket;
+import com.example.cinema_test.model.entity.enums.ShowType;
 import com.example.cinema_test.model.service.BankService;
 import com.example.cinema_test.model.service.SeatService;
 import com.example.cinema_test.model.service.ShowTimeService;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 
 
@@ -44,6 +46,14 @@ public class TicketServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
 
+            Enumeration<String> attributeNames = req.getSession().getAttributeNames();
+            System.out.println("ticket.do");
+            while (attributeNames.hasMoreElements()) {
+                String attributeName = attributeNames.nextElement();
+                System.out.println("Attribute Name: " + attributeName);
+            }
+            System.out.println("ticket.do\n\n\n\n");
+
 
 
         } catch (Exception e) {
@@ -67,16 +77,22 @@ public class TicketServlet extends HttpServlet {
 
             if (selectedSeatsParam != null && !selectedSeatsParam.isEmpty()) {
                 List<String> selectedSeatIds = Arrays.asList(selectedSeatsParam.split(","));
+
                 for (String seatId : selectedSeatIds) {
 
                     Seat seat = seatService.findById(Long.parseLong(seatId));
+
+                    double seatRatio = seat.getPriceRatio();;
+                    if (showTime.getShow().getShowType().equals(ShowType.MOVIE)){
+                        seatRatio = 1;
+                    }
 
                     Ticket ticket =
                             Ticket
                                     .builder()
                                     .customer(null)
                                     .showTime(showTime)
-                                    .price(showTime.getShow().getBasePrice() * seat.getPriceRatio())
+                                    .price(showTime.getShow().getBasePrice() * seatRatio)
                                     .issueTime(LocalDateTime.now())
                                     .seatId(seat.getId())
                                     .reserved(true)

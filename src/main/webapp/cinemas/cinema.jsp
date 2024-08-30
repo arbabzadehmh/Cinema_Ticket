@@ -136,15 +136,16 @@
                                 <td>${cinema.address}</td>
 
                                 <td>
+
                                     <c:choose>
-                                        <c:when test="${not empty cinema.attachments}">
-                                            <img src="${cinema.attachments.get(0).fileName}" alt="Cinema Image"
-                                                 height="80px" width="80px">
+                                        <c:when test="${cinema.imageUrl != ''}">
+                                            <img src="${cinema.imageUrl}" alt="Cinema Image" height="80px" width="80px">
                                         </c:when>
                                         <c:otherwise>
                                             No Image
                                         </c:otherwise>
                                     </c:choose>
+
                                 </td>
 
 
@@ -261,7 +262,7 @@
     }
 
     function setShowTime(id) {
-        // window.location.replace("/show.do?cinemaId=" + id);
+        window.location.replace("/showtime.do?cinemaId=" + id);
     }
 
 

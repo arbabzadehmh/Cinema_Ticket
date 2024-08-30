@@ -4,8 +4,6 @@ package com.example.cinema_test.controller.servlet;
 import com.example.cinema_test.model.entity.Role;
 import com.example.cinema_test.model.entity.User;
 import com.example.cinema_test.model.service.RoleService;
-import com.example.cinema_test.model.service.ShowCheck;
-import com.example.cinema_test.model.service.ShowTimeService;
 import com.example.cinema_test.model.service.UserService;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;

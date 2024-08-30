@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 
@@ -53,8 +54,17 @@ public class SaloonServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-
         try {
+
+            Enumeration<String> attributeNames = req.getSession().getAttributeNames();
+            System.out.println("saloon.do");
+            while (attributeNames.hasMoreElements()) {
+                String attributeName = attributeNames.nextElement();
+                System.out.println("Attribute Name: " + attributeName);
+            }
+            System.out.println("saloon.do\n\n\n\n");
+
+
 
             User user = (User) req.getSession().getAttribute("user");
 
@@ -65,7 +75,6 @@ public class SaloonServlet extends HttpServlet {
             if (user.getRole().getRole().equals("manager")) {
                 managervo = (ManagerVO) req.getSession().getAttribute("manager");
                 manager = managerService.findById(managervo.getId());
-//                TODO : edit
                 redirectPath = "/managers/manager-saloon.jsp";
             } else if (user.getRole().getRole().equals("admin") || user.getRole().getRole().equals("moderator")) {
                 if (req.getParameter("cinemaId") != null) {
@@ -260,6 +269,7 @@ public class SaloonServlet extends HttpServlet {
             editingSaloon.setStatus(saloonAb.isStatus());
             editingSaloon.setDescription(saloonAb.getDescription());
             editingSaloon.setEditing(false);
+            editingSaloon.setCapacity(saloonService.findSaloonSeats(editingSaloon.getId()).size());
             saloonService.edit(editingSaloon);
 
             log.info("Saloon edited successfully-ID : " + editingSaloon.getId());

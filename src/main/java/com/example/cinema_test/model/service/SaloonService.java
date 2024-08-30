@@ -70,4 +70,14 @@ public class SaloonService implements Serializable {
                 .getResultList();
     }
 
+    @Transactional
+    public List<Seat> findSaloonSeats(Long saloonId) throws Exception {
+        return entityManager
+                .createQuery("select seat from saloonEntity s join s.seats seat where s.id = :saloonId and s.deleted = false and seat.status = true", Seat.class)
+                .setParameter("saloonId", saloonId)
+                .getResultList();
+    }
+
+
+
 }

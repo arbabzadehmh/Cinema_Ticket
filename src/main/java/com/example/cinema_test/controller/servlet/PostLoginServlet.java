@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 @WebServlet(urlPatterns = "/postLogin.do")
 public class PostLoginServlet extends HttpServlet {
@@ -21,6 +22,15 @@ public class PostLoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
+
+            Enumeration<String> attributeNames = req.getSession().getAttributeNames();
+            System.out.println("postLogin.do");
+            while (attributeNames.hasMoreElements()) {
+                String attributeName = attributeNames.nextElement();
+                System.out.println("Attribute Name: " + attributeName);
+            }
+            System.out.println("postLogin.do\n\n\n\n");
+
 
             if (req.getRemoteUser() != null) {
                 String username = req.getRemoteUser();

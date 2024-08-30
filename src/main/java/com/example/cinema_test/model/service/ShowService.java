@@ -70,9 +70,9 @@ public class ShowService implements Serializable {
     }
 
     @Transactional
-    public List<Show> findActiveShows() throws Exception {
+    public List<Show> findAvailableShows() throws Exception {
         return entityManager
-                .createQuery("select s from showEntity s where s.available=true and s.deleted=false ", Show.class)
+                .createQuery("select s from showEntity s where s.available=true and s.status=true and s.deleted=false ", Show.class)
                 .getResultList();
     }
 
@@ -88,6 +88,13 @@ public class ShowService implements Serializable {
         } else {
             return null;
         }
+    }
+
+    @Transactional
+    public List<Show> findUsableShows() throws Exception {
+        return entityManager
+                .createQuery("select s from showEntity s where s.status=true and s.deleted=false ", Show.class)
+                .getResultList();
     }
 
 }

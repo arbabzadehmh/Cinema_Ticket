@@ -57,8 +57,8 @@
 
                         <td>
                             <c:choose>
-                                <c:when test="${not empty sessionScope.cinema.attachments}">
-                                    <img src="${sessionScope.cinema.attachments.get(0).fileName}" alt="Cinema Image" height="80px" width="80px">
+                                <c:when test="${sessionScope.cinema.imageUrl != ''}">
+                                    <img src="${sessionScope.cinema.imageUrl}" alt="Cinema Image" height="80px" width="80px">
                                 </c:when>
                                 <c:otherwise>
                                     No Image
@@ -82,7 +82,7 @@
             <div class="d-flex justify-content-between mt-5 w-75">
                 <a class="btn btn-secondary w-25" href="saloon.do">Saloons</a>
                 <a class="btn btn-secondary w-25" href="show.do">Shows</a>
-                <a class="btn btn-secondary w-25" href="../index.jsp">Show Times</a>
+                <a class="btn btn-secondary w-25" href="showtime.do">Show Times</a>
             </div>
 
 

@@ -29,7 +29,7 @@ public class Cinema extends Base{
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", length =30 , nullable = false )
+    @Column(name = "name", length =30 , nullable = false, unique = true )
     private String name;
 
     @Column(name = "address", length = 100)

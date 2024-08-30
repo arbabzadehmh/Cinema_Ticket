@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-
+import java.util.Enumeration;
 
 
 @WebServlet(urlPatterns = "/payment.do")
@@ -23,6 +23,14 @@ public class PaymentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+
+            Enumeration<String> attributeNames = req.getSession().getAttributeNames();
+            System.out.println("payment.do");
+            while (attributeNames.hasMoreElements()) {
+                String attributeName = attributeNames.nextElement();
+                System.out.println("Attribute Name: " + attributeName);
+            }
+            System.out.println("payment.do\n\n\n\n");
 
 
 

@@ -28,6 +28,8 @@ public class ShowTimeVo {
 
     private LocalDateTime endTime;
 
+    private boolean status;
+
     private String description;
 
 
@@ -39,6 +41,7 @@ public class ShowTimeVo {
         this.remainingCapacity = showTime.getRemainingCapacity();
         this.startTime = showTime.getStartTime();
         this.endTime = showTime.getEndTime();
+        this.status = showTime.isStatus();
         this.description = showTime.getDescription();
 
     }

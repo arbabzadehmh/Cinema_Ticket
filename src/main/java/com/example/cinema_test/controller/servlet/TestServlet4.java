@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -36,6 +37,9 @@ public class TestServlet4 extends HttpServlet {
 
     @Inject
     CinemaService cinemaService;
+
+    @Inject
+    private SaloonService saloonService;
 
 
     @Override
@@ -74,14 +78,15 @@ public class TestServlet4 extends HttpServlet {
 //            User user = userService.findByUsername(username);
 //            req.getSession().setAttribute("user", user);
 
+//            LocalDateTime startTime = LocalDateTime.of(2024,8,29,15,15);
+//            LocalDateTime endTime = LocalDateTime.of(2024,8,29,17,30);
+//            List<ShowTime> showTimeList = showTimeService.findShowtimeBySaloonIdAndTime(4L,startTime,endTime );
+//            for (ShowTime showTime : showTimeList){
+//                System.out.println(showTime.getId());
+//            }
 
 
-
-
-
-
-
-
+            System.out.println(saloonService.findSaloonSeats(1L).size());
 
 
         } catch (Exception e) {

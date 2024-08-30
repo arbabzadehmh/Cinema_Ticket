@@ -17,8 +17,7 @@ public class TicketPaymentCheckScheduler {
     @Schedule(hour="*", minute="*/2", second="0", persistent=false)
     public void checkShows() {
         try {
-            System.out.println("Checking failed tickets...");
-            System.out.println(LocalTime.now());
+            System.out.println("Checking failed tickets..." + LocalTime.now() + "\n\n");
 
             for (Ticket ticket : ticketService.findFailedTickets()) {
                 ticket.setReserved(false);

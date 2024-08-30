@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Enumeration;
 import java.util.List;
 
 
@@ -54,6 +55,15 @@ public class ShowServlet extends HttpServlet {
 
 
         try {
+
+            Enumeration<String> attributeNames = req.getSession().getAttributeNames();
+            System.out.println("show.do");
+            while (attributeNames.hasMoreElements()) {
+                String attributeName = attributeNames.nextElement();
+                System.out.println("Attribute Name: " + attributeName);
+            }
+            System.out.println("show.do\n\n\n\n");
+
 
             User user = (User) req.getSession().getAttribute("user");
 
@@ -102,15 +112,6 @@ public class ShowServlet extends HttpServlet {
                 return;
             }
 
-
-//            if (req.getParameter("removeFromList") != null){
-//                System.out.println(cinemaShows.size());
-//                cinemaShows.remove(showService.findById(Long.parseLong(req.getParameter("removeFromList"))));
-//                System.out.println(cinemaShows.size());
-//                cinemaService.edit(manager.getCinema());
-//                resp.sendRedirect("/show.do");
-//                return;
-//            }
 
             if (req.getParameter("add") != null) {
                 Show addingShow = showService.findById(Long.parseLong(req.getParameter("add")));

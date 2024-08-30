@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 @WebServlet(urlPatterns = "/cinemaHome.do")
@@ -36,6 +37,15 @@ public class HomePageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+
+            Enumeration<String> attributeNames = req.getSession().getAttributeNames();
+            System.out.println("cinemaHome.do");
+            while (attributeNames.hasMoreElements()) {
+                String attributeName = attributeNames.nextElement();
+                System.out.println("Attribute Name: " + attributeName);
+            }
+            System.out.println("cinemaHome.do\n\n\n\n");
+
 
             if (req.getParameter("selectCinema") != null) {
 
@@ -79,7 +89,7 @@ public class HomePageServlet extends HttpServlet {
 
             } else {
 
-                req.getSession().setAttribute("allActiveShows", showService.findActiveShows());
+                req.getSession().setAttribute("allActiveShows", showService.findAvailableShows());
 
                 req.getRequestDispatcher("/show-select.jsp").forward(req, resp);
 

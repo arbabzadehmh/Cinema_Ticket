@@ -42,12 +42,12 @@ public class CinemaService implements Serializable {
         Cinema cinema = entityManager.find(Cinema.class, id);
         if (cinema != null) {
 
-            for (ShowTime showTime : cinema.getShowTimeList()){
+            for (ShowTime showTime : cinema.getShowTimeList()) {
                 showTime.setDeleted(true);
                 entityManager.merge(showTime);
             }
 
-            for (Saloon saloon :cinema.getSaloonList()){
+            for (Saloon saloon : cinema.getSaloonList()) {
                 saloon.setDeleted(true);
                 entityManager.merge(saloon);
             }
@@ -110,6 +110,29 @@ public class CinemaService implements Serializable {
         }
     }
 
+    @Transactional
+    public List<Saloon> findCinemaActiveSaloons(Long cinemaId) {
+        return entityManager
+                .createQuery("select s from cinemaEntity c join c.saloonList s where c.id = :cinemaId and s.status = true", Saloon.class)
+                .setParameter("cinemaId", cinemaId)
+                .getResultList();
+    }
+
+
+    @Transactional
+    public Saloon findSaloonByCinemaIdAndSaloonNumber(Long cinemaId, int saloonNumber) {
+        List<Saloon> saloonList =
+                entityManager
+                        .createQuery("select s from cinemaEntity c join c.saloonList s where c.id = :cinemaId and s.saloonNumber =: saloonNumber", Saloon.class)
+                        .setParameter("cinemaId", cinemaId)
+                        .setParameter("saloonNumber", saloonNumber)
+                        .getResultList();
+        if (!saloonList.isEmpty()) {
+            return saloonList.get(0);
+        } else {
+            return null;
+        }
+    }
 
 
 }

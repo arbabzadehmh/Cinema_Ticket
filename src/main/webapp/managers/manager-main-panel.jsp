@@ -54,8 +54,14 @@
 
                         <td>
 
-                            <img src="${sessionScope.manager.imageUrl}" alt="Manager Image" height="80px" width="80px">
-
+                            <c:choose>
+                                <c:when test="${sessionScope.manager.imageUrl != ''}">
+                                    <img src="${sessionScope.manager.imageUrl}" alt="Cinema Image" height="80px" width="80px">
+                                </c:when>
+                                <c:otherwise>
+                                    No Image
+                                </c:otherwise>
+                            </c:choose>
                         </td>
 
                     </tr>
@@ -66,9 +72,6 @@
 
             </div>
 
-
-            <%--            <button onclick="findManagerByName('${sessionScope.manager.name}')"> name</button>--%>
-            <%--            <button onclick="findManagerByPhone('${sessionScope.manager.phoneNumber}')"> phone</button>--%>
 
 
             <button onclick="editManager(${sessionScope.manager.id})" class="btn btn-primary w-25 mt-4">Edit</button>

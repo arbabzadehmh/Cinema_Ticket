@@ -23,6 +23,8 @@ public class CinemaVO {
 
     private String address;
 
+    private boolean status;
+
     private String description;
 
     private String imageUrl;
@@ -32,6 +34,7 @@ public class CinemaVO {
         this.id = cinema.getId();
         this.name = cinema.getName();
         this.address = cinema.getAddress();
+        this.status = cinema.isStatus();
         this.description = cinema.getDescription();
 
         if (cinema.getAttachments().isEmpty()) {

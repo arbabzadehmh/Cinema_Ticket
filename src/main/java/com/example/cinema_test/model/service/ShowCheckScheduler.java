@@ -20,8 +20,7 @@ public class ShowCheckScheduler {
     @Schedule(hour="*", minute="*/2", second="0", persistent=false)
     public void checkShows() {
         try {
-            System.out.println("Checking active shows...");
-            System.out.println(LocalTime.now());
+            System.out.println("Checking active shows..." + LocalTime.now()+ "\n\n");
 
             for (Show show : showService.findAll()) {
                 show.setAvailable(false);

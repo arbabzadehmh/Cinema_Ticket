@@ -24,6 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 @Slf4j
 @WebServlet(urlPatterns = "/cinema.do")
@@ -47,16 +50,33 @@ public class CinemaServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+
+            Enumeration<String> attributeNames = req.getSession().getAttributeNames();
+            System.out.println("cinema.do");
+            while (attributeNames.hasMoreElements()) {
+                String attributeName = attributeNames.nextElement();
+                System.out.println("Attribute Name: " + attributeName);
+            }
+            System.out.println("cinema.do\n\n\n\n");
+
+
             User user = (User) req.getSession().getAttribute("user");
             String redirectPath = "";
 
             if (user.getRole().getRole().equals("manager")) {
                 ManagerVO managerVO = (ManagerVO) req.getSession().getAttribute("manager");
                 Manager manager = managerService.findById(managerVO.getId());
-                req.getSession().setAttribute("cinema", managerService.findCinemaByManagerId(manager.getId()));
+                CinemaVO cinemaVO = new CinemaVO(managerService.findCinemaByManagerId(manager.getId()));
+                req.getSession().setAttribute("cinema", cinemaVO);
                 redirectPath = "/managers/manager-cinema.jsp";
             } else if (user.getRole().getRole().equals("admin") || user.getRole().getRole().equals("moderator")) {
-                req.getSession().setAttribute("allCinemas", cinemaService.findAll());
+                List<CinemaVO> cinemaVOList = new ArrayList<>();
+                List<Cinema> cinemaList = cinemaService.findAll();
+                for (Cinema cinema : cinemaList) {
+                    CinemaVO cinemaVO = new CinemaVO(cinema);
+                    cinemaVOList.add(cinemaVO);
+                }
+                req.getSession().setAttribute("allCinemas", cinemaVOList);
                 redirectPath = "/cinemas/cinema.jsp";
             }
 

@@ -82,6 +82,7 @@ public class ShowTimeServlet extends HttpServlet {
 
             List<ShowTime> cinemaShowTimes = cinema.getShowTimeList();
             List<Saloon> cinemaSaloons = cinemaService.findCinemaActiveSaloons(cinema.getId());
+            List<Show> cinemaShows = cinemaService.findCinemaActiveShows(cinema.getId());
 
 
             if (req.getParameter("cancel") != null) {
@@ -105,7 +106,7 @@ public class ShowTimeServlet extends HttpServlet {
             } else {
                 req.getSession().setAttribute("cinemaShowTimes", cinemaShowTimes);
                 req.getSession().setAttribute("cinemaSaloons", cinemaSaloons);
-                req.getSession().setAttribute("allUsableShows", showService.findUsableShows());
+                req.getSession().setAttribute("allUsableShows", cinemaShows);
                 req.getRequestDispatcher(redirectPath).forward(req, resp);
             }
         } catch (Exception e) {

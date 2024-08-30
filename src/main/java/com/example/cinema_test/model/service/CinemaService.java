@@ -134,5 +134,13 @@ public class CinemaService implements Serializable {
         }
     }
 
+    @Transactional
+    public List<Show> findCinemaActiveShows(Long cinemaId) {
+        return entityManager
+                .createQuery("select s from cinemaEntity c join c.showList s where c.id = :cinemaId and s.status = true", Show.class)
+                .setParameter("cinemaId", cinemaId)
+                .getResultList();
+    }
+
 
 }

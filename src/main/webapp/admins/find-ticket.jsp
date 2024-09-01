@@ -65,8 +65,7 @@
                         <th>Cinema</th>
                         <th>Saloon</th>
                         <th>Address</th>
-                        <th>Row</th>
-                        <th>Number</th>
+                        <th>Seat</th>
                         <th>Name</th>
                         <th>Family</th>
                         <th>Phone Number</th>
@@ -157,8 +156,7 @@
                             "<td>" + ticket.cinemaName + "</td>" +
                             "<td>" + ticket.saloonNumber + "</td>" +
                             "<td>" + ticket.address + "</td>" +
-                            "<td>" + ticket.seatRow + "</td>" +
-                            "<td>" + ticket.seatNumber + "</td>" +
+                            "<td>" + ticket.seatLabel + "</td>" +
                             "<td>" + ticket.customerName + "</td>" +
                             "<td>" + ticket.customerFamily + "</td>" +
                             "<td>" + ticket.customerPhoneNumber + "</td>" +
@@ -184,8 +182,7 @@
                         "<td>" + response.cinemaName + "</td>" +
                         "<td>" + response.saloonNumber + "</td>" +
                         "<td>" + response.address + "</td>" +
-                        "<td>" + response.seatRow + "</td>" +
-                        "<td>" + response.seatNumber + "</td>" +
+                        "<td>" + response.seatLabel + "</td>" +
                         "<td>" + response.customerName + "</td>" +
                         "<td>" + response.customerFamily + "</td>" +
                         "<td>" + response.customerPhoneNumber + "</td>" +
@@ -232,8 +229,7 @@
                             "<td>" + ticket.cinemaName + "</td>" +
                             "<td>" + ticket.saloonNumber + "</td>" +
                             "<td>" + ticket.address + "</td>" +
-                            "<td>" + ticket.seatRow + "</td>" +
-                            "<td>" + ticket.seatNumber + "</td>" +
+                            "<td>" + ticket.seatLabel + "</td>" +
                             "<td>" + ticket.customerName + "</td>" +
                             "<td>" + ticket.customerFamily + "</td>" +
                             "<td>" + ticket.customerPhoneNumber + "</td>" +
@@ -259,8 +255,7 @@
                         "<td>" + response.cinemaName + "</td>" +
                         "<td>" + response.saloonNumber + "</td>" +
                         "<td>" + response.address + "</td>" +
-                        "<td>" + response.seatRow + "</td>" +
-                        "<td>" + response.seatNumber + "</td>" +
+                        "<td>" + response.seatLabel + "</td>" +
                         "<td>" + response.customerName + "</td>" +
                         "<td>" + response.customerFamily + "</td>" +
                         "<td>" + response.customerPhoneNumber + "</td>" +
@@ -307,8 +302,7 @@
                             "<td>" + ticket.cinemaName + "</td>" +
                             "<td>" + ticket.saloonNumber + "</td>" +
                             "<td>" + ticket.address + "</td>" +
-                            "<td>" + ticket.seatRow + "</td>" +
-                            "<td>" + ticket.seatNumber + "</td>" +
+                            "<td>" + ticket.seatLabel + "</td>" +
                             "<td>" + ticket.customerName + "</td>" +
                             "<td>" + ticket.customerFamily + "</td>" +
                             "<td>" + ticket.customerPhoneNumber + "</td>" +
@@ -334,8 +328,7 @@
                         "<td>" + response.cinemaName + "</td>" +
                         "<td>" + response.saloonNumber + "</td>" +
                         "<td>" + response.address + "</td>" +
-                        "<td>" + response.seatRow + "</td>" +
-                        "<td>" + response.seatNumber + "</td>" +
+                        "<td>" + response.seatLabel + "</td>" +
                         "<td>" + response.customerName + "</td>" +
                         "<td>" + response.customerFamily + "</td>" +
                         "<td>" + response.customerPhoneNumber + "</td>" +

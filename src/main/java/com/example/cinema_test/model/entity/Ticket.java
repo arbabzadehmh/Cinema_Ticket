@@ -64,6 +64,8 @@ public class Ticket extends Base {
     private List<Attachment> attachments;
 
 
+
+
     public void addAttachment(Attachment attachment) {
         if (attachments == null) {
             attachments = new ArrayList<>();

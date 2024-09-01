@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 @NoArgsConstructor
 @Getter
@@ -27,7 +28,7 @@ public class TicketVO {
 
     private String customerPhoneNumber;
 
-    private LocalDateTime issueTime;
+    private String issueTime;
 
     private LocalDate showDate;
 
@@ -37,9 +38,7 @@ public class TicketVO {
 
     private double price;
 
-    private int seatRow;
-
-    private int seatNumber;
+    private String seatLabel;
 
     private int saloonNumber;
 
@@ -63,7 +62,7 @@ public class TicketVO {
         this.customerName = ticket.getCustomer().getName();
         this.customerFamily = ticket.getCustomer().getFamily();
         this.customerPhoneNumber = ticket.getCustomer().getPhoneNumber();
-        this.issueTime = ticket.getIssueTime();
+        this.issueTime = ticket.getIssueTime().toLocalDate().toString() + "      " + ticket.getIssueTime().getHour() + ":" + ticket.getIssueTime().getMinute();
         this.showDate = ticket.getShowTime().getStartTime().toLocalDate();
         this.startHour = ticket.getShowTime().getStartTime().toLocalTime();
         this.endHour = ticket.getShowTime().getEndTime().toLocalTime();
@@ -75,10 +74,17 @@ public class TicketVO {
         this.description = ticket.getShowTime().getShow().getDescription() + "\n" + ticket.getShowTime().getDescription();
 
         if (ticket.getAttachments().isEmpty()) {
+            this.qrCode = "";
+        } else {
+            this.qrCode = ticket.getAttachments().get(0).getFileName();
+        }
+
+        if (ticket.getShowTime().getShow().getAttachments().isEmpty()){
             this.imageUrl = "";
         } else {
             this.imageUrl = ticket.getShowTime().getShow().getAttachments().get(0).getFileName();
         }
+
 
         if (ticket.getPayment() != null){
             this.verified = true;

@@ -2,11 +2,10 @@ package com.example.cinema_test.controller.servlet;
 
 
 import com.example.cinema_test.model.entity.*;
+import com.example.cinema_test.model.entity.enums.FileType;
 import com.example.cinema_test.model.entity.enums.ShowType;
-import com.example.cinema_test.model.service.BankService;
-import com.example.cinema_test.model.service.SeatService;
-import com.example.cinema_test.model.service.ShowTimeService;
-import com.example.cinema_test.model.service.TicketService;
+import com.example.cinema_test.model.service.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,7 +13,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,15 +56,12 @@ public class TicketServlet extends HttpServlet {
             String redirectPath = "";
 
             if (user != null && user.getRole().getRole().equals("customer")) {
-//
+
                 List<Ticket> ticketList = ticketService.findByCustomerPhoneNumber(user.getUsername());
                 List<TicketVO> ticketVOList = new ArrayList<>();
                 for (Ticket ticket : ticketList) {
-                    int seatRow = seatService.findById(ticket.getSeatId()).getRowNumber();
-                    int seatNumber = seatService.findById(ticket.getSeatId()).getSeatNumber();
                     TicketVO ticketVO = new TicketVO(ticket);
-                    ticketVO.setSeatNumber(seatNumber);
-                    ticketVO.setSeatRow(seatRow);
+                    ticketVO.setSeatLabel(seatService.findById(ticket.getSeatId()).getLabel());
                     ticketVOList.add(ticketVO);
                 }
                 req.getSession().setAttribute("customerTickets", ticketVOList);
@@ -78,8 +76,15 @@ public class TicketServlet extends HttpServlet {
 
             if (req.getParameter("print") != null) {
                 Ticket printingTicket = ticketService.findById(Long.parseLong(req.getParameter("print")));
-                req.getSession().setAttribute("printingTicket", printingTicket);
-                req.getRequestDispatcher("/tickets/ticket-print.jsp").forward(req, resp);
+                if (printingTicket.getPayment()==null){
+                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "No payment found for this ticket !!!" + "</h1>");
+                    return;
+                } else {
+                    TicketVO ticketVO = new TicketVO(printingTicket);
+                    ticketVO.setSeatLabel(seatService.findById(printingTicket.getSeatId()).getLabel());
+                    req.getSession().setAttribute("printingTicket", ticketVO);
+                    req.getRequestDispatcher("/tickets/ticket-print.jsp").forward(req, resp);
+                }
             }
 
 
@@ -147,6 +152,33 @@ public class TicketServlet extends HttpServlet {
                                     .payment(null)
                                     .build();
 
+
+                    String applicationPath = req.getServletContext().getRealPath("");
+                    String uploadDirectory = applicationPath + "uploads/qrCodes";
+                    File uploadDir = new File(uploadDirectory);
+                    if (!uploadDir.exists()) {
+                        uploadDir.mkdir();
+                    }
+
+
+                    // Generate QR Code
+                    String qrCodeText = "Ticket ID: " + ticket.getId() + ", Seat: " + seat.getId();
+                    String qrCodeFilePath = req.getServletContext().getRealPath("/uploads/qrCodes/") + "ticket_" + ticket.getShowTime().getId() + seatId + ".png";
+
+                    QRCodeGenerator.generateQRCodeImage(qrCodeText, 350, 350, qrCodeFilePath);
+
+
+                    // Create an attachment for the QR code
+
+                    Attachment qrCodeAttachment = Attachment.builder()
+                            .attachTime(LocalDateTime.now())
+                            .fileName("/uploads/qrCodes/ticket_" + ticket.getShowTime().getId() + seatId  + ".png")
+                            .fileType(FileType.PNG)
+                            .fileSize(new File(qrCodeFilePath).length())
+                            .build();
+
+                    ticket.addAttachment(qrCodeAttachment);
+
                     ticketService.save(ticket);
                     ticketIds.add(ticket.getId());
 
@@ -160,6 +192,43 @@ public class TicketServlet extends HttpServlet {
         }catch (Exception e) {
             resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
             e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // Set the response content type to JSON
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
+        // Create an ObjectMapper to handle JSON parsing (Jackson library)
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // Parse the JSON request body into a Manager object
+        Ticket ticketAb;
+        try {
+
+            ticketAb = objectMapper.readValue(req.getInputStream(), Ticket.class);
+            Ticket editingTicket = (Ticket) req.getSession().getAttribute("editingTicket");
+            editingTicket.setReserved(ticketAb.isReserved());
+            editingTicket.setEditing(false);
+            ticketService.edit(editingTicket);
+
+
+            // Send success response with updated manager
+            resp.setStatus(HttpServletResponse.SC_OK);
+            PrintWriter out = resp.getWriter();
+            objectMapper.writeValue(out, ticketAb); // Write manager object as JSON response
+            out.flush();
+
+        } catch (Exception e) {
+
+            // Send error response if something goes wrong
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            PrintWriter out = resp.getWriter();
+            out.write("{\"message\": \"Failed to update ticket.\"}");
+            out.flush();
         }
     }
 

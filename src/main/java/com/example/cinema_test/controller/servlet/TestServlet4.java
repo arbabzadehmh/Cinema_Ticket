@@ -86,7 +86,15 @@ public class TestServlet4 extends HttpServlet {
 //            }
 
 
-            System.out.println(saloonService.findSaloonSeats(1L).size());
+//            System.out.println(saloonService.findSaloonSeats(1L).size());
+
+
+            System.out.println(ticketService.findById(71L).getAttachments().get(0).getFileName());
+//            System.out.println(ticketService.findById(71L).getAttachments().get(1).getFileName());
+
+            System.out.println(ticketService.findById(72L).getAttachments().get(0).getFileName());
+            System.out.println(ticketService.findById(72L).getAttachments().get(1).getFileName());
+
 
 
         } catch (Exception e) {

@@ -1,16 +1,163 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: arbab
-  Date: 8/31/2024
-  Time: 7:35 PM
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Ticket Print</title>
+    <title>Ticket Printing</title>
+
+
+    <jsp:include page="../css-import.jsp"/>
+
 </head>
 <body>
-<h1>ticket print</h1>
+
+<div class="container-fluid d-flex flex-row vh-100 p-0">
+
+    <div class="mt-5 d-flex flex-row flex-grow-1 justify-content-center">
+
+
+        <div class="d-flex flex-column w-75 h-100 " style="border: 2px solid #4e555b;">
+
+            <div class="m-3 d-flex justify-content-between">
+                <div>
+                    <h2>Cinema Ticket</h2>
+                </div>
+
+                <div class="mt-2">
+                    <h6>Ticket Number : ${sessionScope.printingTicket.id}</h6>
+                </div>
+            </div>
+
+            <div class="h-100 m-3  d-flex justify-content-between p-3" style="background-color: #e6dbb9; border: 2px solid #4e555b;">
+
+                <div>
+                    <h2 class="mb-4 text-left">
+                        Show : ${sessionScope.printingTicket.showName}
+                    </h2>
+
+                    <h5 class="mb-3">
+                        ${sessionScope.printingTicket.showDate}
+                    </h5>
+
+                    <h5 class="mb-3">
+                        ${sessionScope.printingTicket.startHour} - ${sessionScope.printingTicket.endHour}
+                    </h5>
+                </div>
+
+                <div>
+                    <h2 class="mb-4 text-left">
+                        Cinema : ${sessionScope.printingTicket.cinemaName}
+                    </h2>
+
+                    <h5 class="mb-3">
+                        Saloon Number : ${sessionScope.printingTicket.saloonNumber}
+                    </h5>
+
+                    <h5 class="mb-3">
+                        Seat : ${sessionScope.printingTicket.seatLabel}
+                    </h5>
+                </div>
+
+                <div>
+                    <c:choose>
+                        <c:when test="${sessionScope.printingTicket.imageUrl != ''}">
+                            <img src="${sessionScope.printingTicket.imageUrl}" alt="Show Image" height="225px" width="150px">
+                        </c:when>
+                        <c:otherwise>
+                            No Image For This Show
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+
+
+
+
+            </div>
+
+
+
+            <div class="h-100 m-3  d-flex justify-content-between" >
+
+                <div class="d-flex flex-column w-75 align-items-start p-3">
+
+                    <div class="mb-3 text-left d-flex">
+                        <div>
+                            <h5>
+                                ${sessionScope.printingTicket.customerName}
+                            </h5>
+                        </div>
+                        <div style="margin-left: 8%">
+                            <h5>
+                                ${sessionScope.printingTicket.customerFamily}
+                            </h5>
+                        </div>
+                        <div style="margin-left: 45%">
+                            <h5>
+                                ${sessionScope.printingTicket.customerPhoneNumber}
+                            </h5>
+                        </div>
+                    </div>
+
+                    <div class="mb-5 text-left d-flex w-100 ">
+                        <div>
+                            <h5>
+                                Price:${sessionScope.printingTicket.price}
+                            </h5>
+                        </div>
+                        <div style="margin-left: 15%" >
+                            <h5>
+                                Issue Time:${sessionScope.printingTicket.issueTime}
+                            </h5>
+                        </div>
+                    </div>
+
+                    <h5 class="mb-4 text-left">
+                        Address: ${sessionScope.printingTicket.address}
+                    </h5>
+
+                    <h5 class="text-left">
+                        Description: ${sessionScope.printingTicket.description}
+                    </h5>
+                </div>
+
+
+
+
+                <div>
+
+                    <c:choose>
+                        <c:when test="${sessionScope.printingTicket.qrCode != ''}">
+                            <img src="${sessionScope.printingTicket.qrCode}" alt="QR Code" height="200px" width="200px">
+                        </c:when>
+                        <c:otherwise>
+                            No QR Code
+                        </c:otherwise>
+                    </c:choose>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<script>
+
+
+    async function cancelEditingTicket(id) {
+
+        window.location.replace("/ticket.do?cancel=" + id)
+    }
+
+
+</script>
+
+
+<jsp:include page="../js-import.jsp"/>
+
 </body>
 </html>

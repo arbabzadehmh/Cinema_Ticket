@@ -18,7 +18,7 @@
 
         <div class="input-register text-center mx-auto">
             <form action="j_security_check" method="post">
-                <input class="mb-2" type="text" style="display: block; width: 80%; margin: 0 auto;" placeholder="Enter Username" name="j_username">
+                <input class="mb-2" type="text" style="display: block; width: 80%; margin: 0 auto;" placeholder="Enter Username / Phone Number" name="j_username">
                 <input class="mb-4" type="password" style="display: block; width: 80%; margin: 0 auto;" placeholder="Enter password" name="j_password">
                 <input type="submit" class="btn btn-outline-dark" style="display: block; width: 80%; margin: 0 auto;" value="Login">
             </form>
@@ -26,7 +26,7 @@
 
         <div class="footer-register text-center mx-auto">
             <a href="cinemaHome.do" class="btn-reg">Back</a>
-            <a href="" class="btn-reg">Forget Password</a>
+            <a href="user.do" class="btn-reg">Forget Password</a>
             <a href="customer.do" class="btn-reg">Create account</a>
         </div>
     </div>

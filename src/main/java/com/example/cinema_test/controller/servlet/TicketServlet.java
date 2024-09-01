@@ -1,10 +1,7 @@
 package com.example.cinema_test.controller.servlet;
 
 
-import com.example.cinema_test.model.entity.Seat;
-import com.example.cinema_test.model.entity.ShowTime;
-import com.example.cinema_test.model.entity.ShowTimeVo;
-import com.example.cinema_test.model.entity.Ticket;
+import com.example.cinema_test.model.entity.*;
 import com.example.cinema_test.model.entity.enums.ShowType;
 import com.example.cinema_test.model.service.BankService;
 import com.example.cinema_test.model.service.SeatService;
@@ -54,8 +51,59 @@ public class TicketServlet extends HttpServlet {
             }
             System.out.println("ticket.do\n\n\n\n");
 
+            User user = (User) req.getSession().getAttribute("user");
+            String redirectPath = "";
+
+            if (user != null && user.getRole().getRole().equals("customer")) {
+//
+                List<Ticket> ticketList = ticketService.findByCustomerPhoneNumber(user.getUsername());
+                List<TicketVO> ticketVOList = new ArrayList<>();
+                for (Ticket ticket : ticketList) {
+                    int seatRow = seatService.findById(ticket.getSeatId()).getRowNumber();
+                    int seatNumber = seatService.findById(ticket.getSeatId()).getSeatNumber();
+                    TicketVO ticketVO = new TicketVO(ticket);
+                    ticketVO.setSeatNumber(seatNumber);
+                    ticketVO.setSeatRow(seatRow);
+                    ticketVOList.add(ticketVO);
+                }
+                req.getSession().setAttribute("customerTickets", ticketVOList);
+                redirectPath = "/customers/tickets.jsp";
+
+            } else {
+
+                redirectPath = "/admins/find-ticket.jsp";
+
+            }
 
 
+            if (req.getParameter("print") != null) {
+                Ticket printingTicket = ticketService.findById(Long.parseLong(req.getParameter("print")));
+                req.getSession().setAttribute("printingTicket", printingTicket);
+                req.getRequestDispatcher("/tickets/ticket-print.jsp").forward(req, resp);
+            }
+
+
+            if (req.getParameter("cancel") != null) {
+                Ticket editingTicket = ticketService.findById(Long.parseLong(req.getParameter("cancel")));
+                editingTicket.setEditing(false);
+                ticketService.edit(editingTicket);
+                resp.sendRedirect("/ticket.do");
+                return;
+            }
+
+            if (req.getParameter("edit") != null) {
+                Ticket editingTicket = ticketService.findById(Long.parseLong(req.getParameter("edit")));
+                if (!editingTicket.isEditing()) {
+                    editingTicket.setEditing(true);
+                    ticketService.edit(editingTicket);
+                    req.getSession().setAttribute("editingTicket", editingTicket);
+                    req.getRequestDispatcher("/tickets/ticket-edit.jsp").forward(req, resp);
+                } else {
+                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
+                }
+            } else {
+                req.getRequestDispatcher(redirectPath).forward(req, resp);
+            }
         } catch (Exception e) {
             resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
             e.printStackTrace();

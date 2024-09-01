@@ -56,7 +56,7 @@
 
                             <c:choose>
                                 <c:when test="${sessionScope.manager.imageUrl != ''}">
-                                    <img src="${sessionScope.manager.imageUrl}" alt="Cinema Image" height="80px" width="80px">
+                                    <img src="${sessionScope.manager.imageUrl}" alt="Manager Image" height="80px" width="80px">
                                 </c:when>
                                 <c:otherwise>
                                     No Image

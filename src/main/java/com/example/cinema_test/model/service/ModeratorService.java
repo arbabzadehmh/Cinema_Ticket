@@ -58,7 +58,7 @@ public class ModeratorService implements Serializable {
     @Transactional
     public List<Moderator> findByNameAndFamily(String name, String family) throws Exception {
         return entityManager
-                .createQuery("select a from moderatorEntity a where a.name like :name and a.family like :family and a.deleted=false ", Moderator.class)
+                .createQuery("select m from moderatorEntity m where m.name like :name and m.family like :family and m.deleted=false ", Moderator.class)
                 .setParameter("name", name + "%")
                 .setParameter("family", family + "%")
                 .getResultList();
@@ -68,7 +68,7 @@ public class ModeratorService implements Serializable {
     public Moderator findByPhoneNumber(String phoneNumber) throws Exception {
         List<Moderator> moderatorList =
                 entityManager
-                        .createQuery("select a from moderatorEntity a where a.phoneNumber =:phoneNumber and a.deleted=false ", Moderator.class)
+                        .createQuery("select m from moderatorEntity m where m.phoneNumber =:phoneNumber and m.deleted=false ", Moderator.class)
                         .setParameter("phoneNumber", phoneNumber)
                         .getResultList();
         if (!moderatorList.isEmpty()){
@@ -82,8 +82,22 @@ public class ModeratorService implements Serializable {
     public Moderator findByUsername(String username) {
         List<Moderator> moderatorList =
                 entityManager
-                        .createQuery("select a from moderatorEntity a where a.user.username =:username and a.deleted=false ", Moderator.class)
+                        .createQuery("select m from moderatorEntity m where m.user.username =:username and m.deleted=false ", Moderator.class)
                         .setParameter("username", username)
+                        .getResultList();
+        if (!moderatorList.isEmpty()){
+            return moderatorList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Transactional
+    public Moderator findByNationalCode(String nationalCode) throws Exception {
+        List<Moderator> moderatorList =
+                entityManager
+                        .createQuery("select m from moderatorEntity m where m.nationalCode =:nationalCode and m.deleted=false ", Moderator.class)
+                        .setParameter("nationalCode", nationalCode)
                         .getResultList();
         if (!moderatorList.isEmpty()){
             return moderatorList.get(0);

@@ -25,7 +25,7 @@
         <div class="w-50 d-sm-none d-lg-flex m-auto">Search</div>
     </a>
 
-    <a class="item d-flex justify-content-center align-items-center m-auto " href="#">
+    <a class="item d-flex justify-content-center align-items-center m-auto " href="cinemaHome.do">
         <div class="item-icon w-25"><i class="fa fa-home"></i></div>
         <div class="w-50 d-sm-none d-lg-flex m-auto">Home</div>
     </a>

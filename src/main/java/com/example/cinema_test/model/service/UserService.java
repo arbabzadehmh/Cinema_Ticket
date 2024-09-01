@@ -34,8 +34,8 @@ public class UserService implements Serializable {
 
     @Transactional
     public User edit(User user) throws Exception {
-        user = entityManager.find(User.class, user.getUsername());
-        if (user != null) {
+        User foundUser = entityManager.find(User.class, user.getUsername());
+        if (foundUser != null) {
             entityManager.merge(user);
             return user;
         }

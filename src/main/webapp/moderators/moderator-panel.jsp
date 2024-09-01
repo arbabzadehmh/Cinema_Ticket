@@ -8,7 +8,6 @@
 
 </head>
 <body>
-
 <div class="container-fluid d-flex flex-row vh-100 p-0">
 
     <jsp:include page="/admins/admin-moderator-sidebar.jsp"/>
@@ -53,7 +52,7 @@
 
                         <div class="d-flex mb-4">
 
-                            <input class="m-1" type="text" name="nationalCode" placeholder="National Code">
+                            <input class="m-1 text-danger-emphasis bg-secondary-subtle" type="text" name="nationalCode" placeholder="National Code - Search"  oninput="findModeratorByNationalCode(this.value)">
 
                             <input class="m-1" type="text" name="phoneNumber" placeholder="Phone Number">
 
@@ -184,6 +183,47 @@
                 console.error('Error:', error);
                 alert("An error occurred: " + error.message);
             });
+    }
+
+
+    function findModeratorByNationalCode(nationalCode) {
+
+        $.ajax({
+            url: "/rest/moderator/findByNationalCode/" + nationalCode,
+            method: "GET",
+            dataType: "json", // Expect JSON response
+            success: function (response) {
+                // Clear previous results
+                $("#resultTable tbody").empty();
+
+                if (typeof response === 'object' && response !== null) {
+                    var imageHtml = response.imageUrl ? "<img src='" + response.imageUrl + "' alt='Moderator Image' height='80px' width='80px'>" : "No Image";
+
+
+                    var row = "<tr>" +
+                        "<td>" + response.id + "</td>" +
+                        "<td>" + response.name + "</td>" +
+                        "<td>" + response.family + "</td>" +
+                        "<td>" + response.username + "</td>" +
+                        "<td>" + response.password + "</td>" +
+                        "<td>" + response.nationalCode + "</td>" +
+                        "<td>" + response.phoneNumber + "</td>" +
+                        "<td>" + response.email + "</td>" +
+                        "<td>" + response.address + "</td>" +
+                        "<td>" + imageHtml + "</td>" +
+                        "<td>" + "<button class='btn btn-primary' onclick='editModerator(" + response.id + ")'>Edit</button>" + "</td>" +
+                        "<td>" + "<button class='btn btn-danger' onclick='removeModerator(" + response.id + ")'>Remove</button>" + "</td>" +
+                        "</tr>";
+                    $("#resultTable tbody").append(row);
+                } else {
+                    var noDataRow = "<tr><td colspan='3'>No records found</td></tr>";
+                    $("#resultTable tbody").append(noDataRow);
+                }
+            },
+            error: function (xhr, status, error) {
+                // alert("Error fetching data: " + error);
+            }
+        });
     }
 
 

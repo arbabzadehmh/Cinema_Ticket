@@ -53,7 +53,16 @@ public class TicketService implements Serializable {
 
     @Transactional
     public Ticket findById(Long id) throws Exception {
-        return entityManager.find(Ticket.class, id);
+        List<Ticket> ticketList =
+                entityManager
+                        .createQuery("select t from ticketEntity t where t.id=:id and t.deleted=false", Ticket.class)
+                        .setParameter("id", id)
+                        .getResultList();
+        if (!ticketList.isEmpty()) {
+            return ticketList.get(0);
+        } else {
+            return null;
+        }
     }
 
     @Transactional
@@ -94,6 +103,14 @@ public class TicketService implements Serializable {
         return entityManager
                 .createQuery("select t from ticketEntity t where t.reserved=true and t.issueTime <: allowedTime and t.deleted=false ", Ticket.class)
                 .setParameter("allowedTime", LocalDateTime.now().minusMinutes(15))
+                .getResultList();
+    }
+
+    @Transactional
+    public List<Ticket> findByShowTimeId(Long showTimeId) throws Exception {
+        return entityManager
+                .createQuery("select t from ticketEntity t where t.showTime.id=:showTimeId and t.deleted=false ", Ticket.class)
+                .setParameter("showTimeId", showTimeId)
                 .getResultList();
     }
 

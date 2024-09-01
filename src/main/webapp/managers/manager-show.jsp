@@ -42,7 +42,7 @@
 
                         <div class="d-flex mb-4">
 
-                            <input class="m-1" type="text" name="name" placeholder="Name type to search" oninput="findShowByName(this.value)">
+                            <input class="m-1 text-danger-emphasis bg-secondary-subtle" type="text" name="name" placeholder="Name type to search" oninput="findShowByName(this.value)">
 
 
                             <select name="showType" class="m-1">

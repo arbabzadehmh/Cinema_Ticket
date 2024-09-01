@@ -43,7 +43,7 @@
 
                         <div class="d-flex mb-4">
 
-                            <input class="m-1" type="text" name="name" placeholder="Name type to search"
+                            <input class="m-1 text-danger-emphasis bg-secondary-subtle" type="text" name="name" placeholder="Name type to search"
                                    oninput="findCinemaByName(this.value)">
 
                             <select name="status" class="m-1">

@@ -31,7 +31,7 @@ public class Payment extends Base {
     private Long id;
 
     @Column(name = "payment_price")
-    private double price;
+    private Double price;
 
     @Column(name = "payment_date")
     private LocalDateTime paymentDateTime;

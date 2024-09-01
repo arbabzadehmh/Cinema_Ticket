@@ -1,11 +1,14 @@
 package com.example.cinema_test.controller.api;
 
 import com.example.cinema_test.controller.exception.ExceptionWrapper;
+import com.example.cinema_test.model.entity.Manager;
+import com.example.cinema_test.model.entity.ManagerVO;
+import com.example.cinema_test.model.entity.Moderator;
+import com.example.cinema_test.model.entity.ModeratorVO;
 import com.example.cinema_test.model.service.ModeratorService;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,7 +43,27 @@ public class ModeratorApi {
     }
 
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/findByNationalCode/{nationalCode}")
+    public Response findModeratorByNationalCode(@PathParam(value = "nationalCode") String nationalCode) {
+        try {
+            Moderator moderator = moderatorService.findByNationalCode(nationalCode);
 
+            if (moderator != null) {
+                ModeratorVO moderatorVO = new ModeratorVO(moderator);
+                return Response.ok(moderatorVO).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("No records found for moderator")
+                        .build();
+            }
+        }catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred: " + e.getMessage())
+                    .build();
+        }
+    }
 
 
 }

@@ -69,8 +69,5 @@ public class Customer extends Base {
         attachment.setCustomer(this);
     }
 
-    public void customerUsernameSet() {
-        this.user.setUsername(this.phoneNumber);
-    }
 
 }

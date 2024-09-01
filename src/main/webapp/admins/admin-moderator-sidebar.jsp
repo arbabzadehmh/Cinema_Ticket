@@ -65,9 +65,24 @@
             <div class="w-50 d-sm-none d-lg-flex">Managers</div>
         </a>
 
+        <a class="item d-flex justify-content-center align-items-center mb-auto ps-lg-4" href="customer.do">
+            <div class="item-icon w-25"><i class="fa fa-person"></i></div>
+            <div class="w-50 d-sm-none d-lg-flex">Customers</div>
+        </a>
+
         <a class="item d-flex justify-content-center align-items-center mb-auto ps-lg-4" href="cinema.do">
             <div class="item-icon w-25"><i class="fa fa-camera-movie"></i></div>
             <div class="w-50 d-sm-none d-lg-flex">Cinemas</div>
+        </a>
+
+        <a class="item d-flex justify-content-center align-items-center mb-auto ps-lg-4" href="show.do">
+            <div class="item-icon w-25"><i class="fa fa-theater-masks"></i></div>
+            <div class="w-50 d-sm-none d-lg-flex">Shows</div>
+        </a>
+
+        <a class="item d-flex justify-content-center align-items-center mb-auto ps-lg-4" href="ticket.do">
+            <div class="item-icon w-25"><i class="fa fa-ticket"></i></div>
+            <div class="w-50 d-sm-none d-lg-flex">Tickets</div>
         </a>
 
         <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="#">

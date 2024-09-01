@@ -2,6 +2,7 @@ package com.example.cinema_test.controller.api;
 
 import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.model.entity.Manager;
+import com.example.cinema_test.model.entity.ManagerVO;
 import com.example.cinema_test.model.service.ManagerService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -115,6 +116,28 @@ public class ManagerApi {
 
             if (result != null) {
                 return Response.ok(result).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("No records found for manager")
+                        .build();
+            }
+        }catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred: " + e.getMessage())
+                    .build();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/findByNationalCode/{nationalCode}")
+    public Response findManagerByNationalCode(@PathParam(value = "nationalCode") String nationalCode) {
+        try {
+            Manager manager = managerService.findByNationalCode(nationalCode);
+
+            if (manager != null) {
+                ManagerVO managerVO = new ManagerVO(manager);
+                return Response.ok(managerVO).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for manager")

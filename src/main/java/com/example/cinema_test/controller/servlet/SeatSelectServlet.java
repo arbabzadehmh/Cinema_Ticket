@@ -3,6 +3,7 @@ package com.example.cinema_test.controller.servlet;
 
 import com.example.cinema_test.model.entity.ShowTime;
 import com.example.cinema_test.model.entity.ShowTimeVo;
+import com.example.cinema_test.model.entity.User;
 import com.example.cinema_test.model.service.*;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
@@ -38,17 +39,45 @@ public class SeatSelectServlet extends HttpServlet {
             System.out.println("seatSelect.do\n\n\n\n");
 
 
-            ShowTime selectedShowTime = showTimeService.findById(Long.parseLong(req.getParameter("selectShowTimeId")));
+            req.getSession().removeAttribute("cinemas");
+            req.getSession().removeAttribute("showDates");
+            req.getSession().removeAttribute("allActiveShows");
+            req.getSession().removeAttribute("showTimes");
+
+
+            ShowTime selectedShowTime;
+
+            if (req.getParameter("selectShowTimeId") != null){
+                selectedShowTime = showTimeService.findById(Long.parseLong(req.getParameter("selectShowTimeId")));
+                ShowTimeVo selectedShowTimeVo = new ShowTimeVo(selectedShowTime);
+                req.getSession().setAttribute("selectedShowTime", selectedShowTimeVo);
+            } else {
+                ShowTimeVo showTimeVo = (ShowTimeVo) req.getSession().getAttribute("selectedShowTime");
+                selectedShowTime = showTimeService.findById(showTimeVo.getId());
+            }
+
+
+            User user = (User) req.getSession().getAttribute("user");
 
             if (selectedShowTime.getRemainingCapacity()>0){
 
-                ShowTimeVo selectedShowTimeVo = new ShowTimeVo(selectedShowTime);
+
+
                 req.getSession().setAttribute("saloonColum", selectedShowTime.getSaloon().getSaloonColumn());
                 req.getSession().setAttribute("showSeats", selectedShowTime.getSaloon().getSeats());
-                req.getSession().setAttribute("selectedShowTime", selectedShowTimeVo);
+
                 req.getSession().setAttribute("soldSeatsId", ticketService.findSoldSeatsByShowId(selectedShowTime.getId()));
                 req.getSession().setAttribute("reservedSeatsId", ticketService.findReservedSeatsByShowId(selectedShowTime.getId()));
-                req.getRequestDispatcher("/seat-select.jsp").forward(req, resp);
+
+                if (user == null || !user.getRole().getRole().equals("customer")) {
+
+                    req.getRequestDispatcher("/customer.do").forward(req, resp);
+                } else {
+                    req.getRequestDispatcher("/seat-select.jsp").forward(req, resp);
+                }
+
+
+
 
             } else {
                 resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "The saloon is full !!!" + "</h1>");

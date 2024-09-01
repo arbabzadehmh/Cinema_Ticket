@@ -53,7 +53,7 @@
 
                         <div class="d-flex mb-4">
 
-                            <input class="m-1" type="text" name="nationalCode" placeholder="National Code">
+                            <input class="m-1 text-danger-emphasis bg-secondary-subtle" type="text" name="nationalCode" placeholder="National Code - Search"  oninput="findManagerByNationalCode(this.value)">
 
                             <input class="m-1" type="text" name="phoneNumber" placeholder="Phone Number">
 
@@ -187,6 +187,48 @@
                 console.error('Error:', error);
                 alert("An error occurred: " + error.message);
             });
+    }
+
+
+    function findManagerByNationalCode(nationalCode) {
+
+        $.ajax({
+            url: "/rest/manager/findByNationalCode/" + nationalCode,
+            method: "GET",
+            dataType: "json", // Expect JSON response
+            success: function (response) {
+                // Clear previous results
+                $("#resultTable tbody").empty();
+
+                if (typeof response === 'object' && response !== null) {
+                    var imageHtml = response.imageUrl ? "<img src='" + response.imageUrl + "' alt='Manager Image' height='80px' width='80px'>" : "No Image";
+
+
+                    var row = "<tr>" +
+                        "<td>" + response.id + "</td>" +
+                        "<td>" + response.name + "</td>" +
+                        "<td>" + response.family + "</td>" +
+                        "<td>" + "" + "</td>" +
+                        "<td>" + "" + "</td>" +
+                        "<td>" + response.cinemaName + "</td>" +
+                        "<td>" + response.nationalCode + "</td>" +
+                        "<td>" + response.phoneNumber + "</td>" +
+                        "<td>" + response.email + "</td>" +
+                        "<td>" + response.address + "</td>" +
+                        "<td>" + imageHtml + "</td>" +
+                        "<td>" + "<button class='btn btn-primary' onclick='editManager(" + response.id + ")'>Edit</button>" + "</td>" +
+                        "<td>" + "<button class='btn btn-danger' onclick='removeManager(" + response.id + ")'>Remove</button>" + "</td>" +
+                        "</tr>";
+                    $("#resultTable tbody").append(row);
+                } else {
+                    var noDataRow = "<tr><td colspan='3'>No records found</td></tr>";
+                    $("#resultTable tbody").append(noDataRow);
+                }
+            },
+            error: function (xhr, status, error) {
+                // alert("Error fetching data: " + error);
+            }
+        });
     }
 
 

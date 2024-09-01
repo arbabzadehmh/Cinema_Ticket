@@ -24,6 +24,10 @@ public class CustomerVO {
 
     private String family;
 
+    private String username;
+
+    private String password;
+
     private String phoneNumber;
 
     private String email;
@@ -37,6 +41,8 @@ public class CustomerVO {
         this.id = customer.getId();
         this.name = customer.getName();
         this.family = customer.getFamily();
+        this.username = customer.getUser().getUsername();
+        this.password = customer.getUser().getPassword();
         this.phoneNumber = customer.getPhoneNumber();
         this.email = customer.getEmail();
 

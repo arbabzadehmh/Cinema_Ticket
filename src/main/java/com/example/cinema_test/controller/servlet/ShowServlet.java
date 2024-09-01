@@ -214,10 +214,12 @@ public class ShowServlet extends HttpServlet {
 
             if (showValidator.validate(show).isEmpty()) {
                 showService.save(show);
-                Cinema cinema = (Cinema) req.getSession().getAttribute("cinema");
+
+                ManagerVO managerVO = (ManagerVO) req.getSession().getAttribute("manager");
+                Manager manager = managerService.findById(managerVO.getId());
+                Cinema cinema = manager.getCinema();
                 cinema.addShow(show);
                 cinemaService.edit(cinema);
-                req.getSession().setAttribute("cinema", cinema);
                 resp.sendRedirect("/show.do");
                 log.info("Show saved successfully-ID : " + show.getId());
             } else {

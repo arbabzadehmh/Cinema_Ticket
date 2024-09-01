@@ -34,13 +34,19 @@
                         Show : ${sessionScope.printingTicket.showName}
                     </h2>
 
-                    <h5 class="mb-3">
-                        ${sessionScope.printingTicket.showDate}
-                    </h5>
+                    <div class="d-flex">
+                        <div class="item-icon m-1 "><i class="fa fa-calendar" style="font-size: large; margin-right: 5px;"></i></div>
+                        <h5 class="mb-3">
+                            ${sessionScope.printingTicket.showDate}
+                        </h5>
+                    </div>
 
-                    <h5 class="mb-3">
-                        ${sessionScope.printingTicket.startHour} - ${sessionScope.printingTicket.endHour}
-                    </h5>
+                    <div class="d-flex">
+                        <div class="item-icon m-1 "><i class="fa fa-clock" style="font-size: large; margin-right: 5px;"></i></div>
+                        <h5 class="mb-3">
+                            ${sessionScope.printingTicket.startHour} - ${sessionScope.printingTicket.endHour}
+                        </h5>
+                    </div>
                 </div>
 
                 <div>
@@ -48,13 +54,19 @@
                         Cinema : ${sessionScope.printingTicket.cinemaName}
                     </h2>
 
-                    <h5 class="mb-3">
-                        Saloon Number : ${sessionScope.printingTicket.saloonNumber}
-                    </h5>
+                    <div class="d-flex">
+                        <div class="item-icon m-1 "><i class="fa fa-camera-movie" style="font-size: large; margin-right: 5px;"></i></div>
+                        <h5 class="mb-3">
+                            Saloon Number : ${sessionScope.printingTicket.saloonNumber}
+                        </h5>
+                    </div>
 
-                    <h5 class="mb-3">
-                        Seat : ${sessionScope.printingTicket.seatLabel}
-                    </h5>
+                    <div class="d-flex">
+                        <div class="item-icon m-1 "><i class="fa fa-chair-office" style="font-size: large; margin-right: 5px;"></i></div>
+                        <h5 class="mb-3">
+                            Seat : ${sessionScope.printingTicket.seatLabel}
+                        </h5>
+                    </div>
                 </div>
 
                 <div>
@@ -81,6 +93,9 @@
 
                     <div class="mb-3 text-left d-flex">
                         <div>
+                            <div class="item-icon m-1 "><i class="fa fa-user" style="font-size: large; margin-right: 5px;"></i></div>
+                        </div>
+                        <div>
                             <h5>
                                 ${sessionScope.printingTicket.customerName}
                             </h5>
@@ -90,7 +105,8 @@
                                 ${sessionScope.printingTicket.customerFamily}
                             </h5>
                         </div>
-                        <div style="margin-left: 45%">
+                        <div class="d-flex" style="margin-left: 45%">
+                            <div class="item-icon m-1 "><i class="fa fa-mobile-android-alt" style="font-size: large; margin-right: 5px;"></i></div>
                             <h5>
                                 ${sessionScope.printingTicket.customerPhoneNumber}
                             </h5>
@@ -99,24 +115,34 @@
 
                     <div class="mb-5 text-left d-flex w-100 ">
                         <div>
+                            <div class="item-icon m-1 "><i class="fa fa-money-bill-1" style="font-size: large; margin-right: 5px;"></i></div>
+                        </div>
+                        <div>
                             <h5>
                                 Price:${sessionScope.printingTicket.price}
                             </h5>
                         </div>
-                        <div style="margin-left: 15%" >
+                        <div class="d-flex" style="margin-left: 18%" >
+                            <div class="item-icon m-1 "><i class="fa fa-timer" style="font-size: large; margin-right: 5px;"></i></div>
                             <h5>
                                 Issue Time:${sessionScope.printingTicket.issueTime}
                             </h5>
                         </div>
                     </div>
 
-                    <h5 class="mb-4 text-left">
-                        Address: ${sessionScope.printingTicket.address}
-                    </h5>
+                    <div class="d-flex">
+                        <div class="item-icon m-1 "><i class="fa fa-map-marker-alt" style="font-size: large; margin-right: 5px;"></i></div>
+                        <h5 class="mb-4 text-left">
+                            Address: ${sessionScope.printingTicket.address}
+                        </h5>
+                    </div>
 
-                    <h5 class="text-left">
-                        Description: ${sessionScope.printingTicket.description}
-                    </h5>
+                    <div class="d-flex">
+                        <div class="item-icon m-1 "><i class="fa fa-sticky-note" style="font-size: large; margin-right: 5px;"></i></div>
+                        <h5 class="text-left">
+                            Description: ${sessionScope.printingTicket.description}
+                        </h5>
+                    </div>
                 </div>
 
 

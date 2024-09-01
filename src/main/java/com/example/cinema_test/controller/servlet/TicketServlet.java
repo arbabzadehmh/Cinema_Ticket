@@ -83,7 +83,7 @@ public class TicketServlet extends HttpServlet {
                     TicketVO ticketVO = new TicketVO(printingTicket);
                     ticketVO.setSeatLabel(seatService.findById(printingTicket.getSeatId()).getLabel());
                     req.getSession().setAttribute("printingTicket", ticketVO);
-                    req.getRequestDispatcher("/tickets/ticket-print.jsp").forward(req, resp);
+                    redirectPath = "/tickets/ticket-print.jsp";
                 }
             }
 

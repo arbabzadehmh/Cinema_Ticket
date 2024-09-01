@@ -2,6 +2,7 @@ package com.example.cinema_test.model.entity;
 
 import com.example.cinema_test.model.entity.enums.Genre;
 import com.example.cinema_test.model.entity.enums.ShowType;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -69,6 +70,7 @@ public class Show extends Base {
     @Column(name = "description", length =50)
     private String description;
 
+    @JsonbTransient
     @OneToMany(mappedBy = "show", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Attachment> attachments;
 

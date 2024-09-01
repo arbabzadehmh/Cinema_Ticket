@@ -54,7 +54,16 @@ public class CustomerService implements Serializable {
 
     @Transactional
     public Customer findById(Long id) throws Exception {
-        return entityManager.find(Customer.class, id);
+        List<Customer> customerList =
+                entityManager
+                        .createQuery("select c from customerEntity c where c.id =:id and c.deleted=false ", Customer.class)
+                        .setParameter("id", id)
+                        .getResultList();
+        if (!customerList.isEmpty()){
+            return customerList.get(0);
+        } else {
+            return null;
+        }
     }
 
     @Transactional
@@ -92,6 +101,14 @@ public class CustomerService implements Serializable {
         } else {
             return null;
         }
+    }
+
+    @Transactional
+    public List<Customer> findByFamily(String family) throws Exception {
+        return entityManager
+                .createQuery("select c from customerEntity c where c.family like :family and c.deleted=false ", Customer.class)
+                .setParameter("family", family + "%")
+                .getResultList();
     }
     
 }

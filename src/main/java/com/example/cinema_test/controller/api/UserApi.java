@@ -65,7 +65,50 @@ public class UserApi {
         }
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/findUserByUsername/{username}")
+    public Response findByName(@PathParam(value = "username") String username) {
+        try {
 
+            Object result = userService.findByUsername(username);
+
+            if (result != null) {
+                return Response.ok(result).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("No records found for name: " + username)
+                        .build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred: " + e.getMessage())
+                    .build();
+        }
+    }
+
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/findByRole/{role}")
+    public Response findByRole(@PathParam(value = "role") String role) {
+        try {
+
+            Object result = userService.findByRole(role);
+
+            if (result != null) {
+                return Response.ok(result).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("No records found for role: " + role)
+                        .build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred: " + e.getMessage())
+                    .build();
+        }
+    }
 
 
 

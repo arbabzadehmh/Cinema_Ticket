@@ -1,6 +1,7 @@
 package com.example.cinema_test.controller.servlet;
 
 
+import com.example.cinema_test.model.entity.Seat;
 import com.example.cinema_test.model.entity.ShowTime;
 import com.example.cinema_test.model.entity.ShowTimeVo;
 import com.example.cinema_test.model.entity.User;
@@ -13,7 +14,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.List;
 
 
 @WebServlet(urlPatterns = "/seatSelect.do")
@@ -24,6 +27,9 @@ public class SeatSelectServlet extends HttpServlet {
 
     @Inject
     private TicketService ticketService;
+
+    @Inject
+    private SeatService seatService;
 
 
     @Override
@@ -62,15 +68,16 @@ public class SeatSelectServlet extends HttpServlet {
             if (selectedShowTime.getRemainingCapacity()>0){
 
 
+                List<Seat> seats = selectedShowTime.getSaloon().getSeats();
+                seats.sort(Comparator.comparing(Seat::getLabel));
+                req.getSession().setAttribute("showSeats", seats);
 
-                req.getSession().setAttribute("saloonColum", selectedShowTime.getSaloon().getSaloonColumn());
-                req.getSession().setAttribute("showSeats", selectedShowTime.getSaloon().getSeats());
 
+                req.getSession().setAttribute("saloonColumn", selectedShowTime.getSaloon().getSaloonColumn());
                 req.getSession().setAttribute("soldSeatsId", ticketService.findSoldSeatsByShowId(selectedShowTime.getId()));
                 req.getSession().setAttribute("reservedSeatsId", ticketService.findReservedSeatsByShowId(selectedShowTime.getId()));
 
                 if (user == null || !user.getRole().getRole().equals("customer")) {
-
                     req.getRequestDispatcher("/customer.do").forward(req, resp);
                 } else {
                     req.getRequestDispatcher("/seat-select.jsp").forward(req, resp);

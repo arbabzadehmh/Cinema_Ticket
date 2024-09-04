@@ -17,7 +17,7 @@
             <div class="w-50 d-sm-none d-lg-flex">Profile</div>
         </a>
 
-        <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="#">
+        <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="users.do">
             <div class="item-icon w-25"><i class="fa fa-user-check"></i></div>
             <div class="w-50 d-sm-none d-lg-flex">Account</div>
         </a>
@@ -27,7 +27,7 @@
             <div class="w-50 d-sm-none d-lg-flex">My Tickets</div>
         </a>
 
-        <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="#">
+        <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="logout.do">
             <div class="item-icon w-25"><i class="fa fa-sign-out"></i></div>
             <div class="w-50 d-sm-none d-lg-flex">Exit</div>
         </a>

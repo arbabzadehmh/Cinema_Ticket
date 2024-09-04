@@ -1,9 +1,6 @@
 package com.example.cinema_test.controller.servlet;
 
-import com.example.cinema_test.model.entity.Cinema;
-import com.example.cinema_test.model.entity.CinemaVO;
-import com.example.cinema_test.model.entity.ShowTime;
-import com.example.cinema_test.model.entity.ShowTimeVo;
+import com.example.cinema_test.model.entity.*;
 import com.example.cinema_test.model.service.*;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
@@ -15,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -86,7 +84,16 @@ public class HomePageServlet extends HttpServlet {
 
             } else {
 
-                req.getSession().setAttribute("allActiveShows", showService.findAvailableShows());
+                List<Show> allActiveShows = showService.findAvailableShows();
+
+
+                for (Show show : allActiveShows){
+                    if (show.getAttachments() != null && !show.getAttachments().isEmpty()){
+                        Collections.shuffle(show.getAttachments());
+                    }
+                }
+
+                req.getSession().setAttribute("allActiveShows", allActiveShows);
 
                 req.getRequestDispatcher("/show-select.jsp").forward(req, resp);
 

@@ -7,10 +7,12 @@ import com.example.cinema_test.model.entity.*;
 import com.example.cinema_test.model.entity.enums.FileType;
 import com.example.cinema_test.model.entity.enums.Genre;
 import com.example.cinema_test.model.entity.enums.ShowType;
+import com.example.cinema_test.model.service.AttachmentService;
 import com.example.cinema_test.model.service.CinemaService;
 import com.example.cinema_test.model.service.ManagerService;
 import com.example.cinema_test.model.service.ShowService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -27,6 +29,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -49,6 +52,9 @@ public class ShowServlet extends HttpServlet {
     @Inject
     private ShowService showService;
 
+    @Inject
+    private AttachmentService attachmentService;
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -67,28 +73,37 @@ public class ShowServlet extends HttpServlet {
 
             User user = (User) req.getSession().getAttribute("user");
 
+
             ManagerVO managervo = null;
             Manager manager = null;
             String redirectPath = "";
+            List<Show> cinemaShows = new ArrayList<>();
+
 
             if (user.getRole().getRole().equals("manager")) {
                 managervo = (ManagerVO) req.getSession().getAttribute("manager");
                 manager = managerService.findById(managervo.getId());
+                cinemaShows = manager.getCinema().getShowList();
                 redirectPath = "/managers/manager-show.jsp";
+                req.getSession().setAttribute("shows", managerService.findShowsByManagerId(manager.getId()));
             } else if (user.getRole().getRole().equals("admin") || user.getRole().getRole().equals("moderator")) {
-                if (req.getParameter("cinemaId") != null){
+                if (req.getParameter("cinemaId") != null) {
                     manager = managerService.findManagerByCinemaId(Long.parseLong(req.getParameter("cinemaId")));
-                    managervo = new ManagerVO(manager);
-                    req.getSession().setAttribute("manager", managervo);
+                    ManagerVO managerVO1 = new ManagerVO(manager);
+                    req.getSession().setAttribute("manager", managerVO1);
+                    redirectPath = "/cinemas/cinema-show.jsp";
+                    cinemaShows = manager.getCinema().getShowList();
+                    req.getSession().setAttribute("shows", managerService.findShowsByManagerId(manager.getId()));
                 } else {
-                    managervo = (ManagerVO) req.getSession().getAttribute("manager");
-                    manager = managerService.findById(managervo.getId());
+                    if (req.getSession().getAttribute("manager") != null) {
+                        managervo = (ManagerVO) req.getSession().getAttribute("manager");
+                        manager = managerService.findById(managervo.getId());
+                        cinemaShows = manager.getCinema().getShowList();
+                    }
+                    redirectPath = "/shows/show.jsp";
                 }
-                redirectPath = "/cinemas/cinema-show.jsp";
+
             }
-
-            List<Show> cinemaShows = manager.getCinema().getShowList();
-
 
 
             if (req.getParameter("cancel") != null) {
@@ -142,7 +157,6 @@ public class ShowServlet extends HttpServlet {
                 }
             } else {
                 req.getSession().setAttribute("allShows", showService.findAll());
-                req.getSession().setAttribute("shows", managerService.findShowsByManagerId(manager.getId()));
                 req.getRequestDispatcher(redirectPath).forward(req, resp);
             }
         } catch (Exception e) {
@@ -157,73 +171,118 @@ public class ShowServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
 
-            Show show =
-                    Show
-                            .builder()
-                            .name(req.getParameter("name").toUpperCase())
-                            .genre(Genre.valueOf(req.getParameter("genre")))
-                            .director(req.getParameter("director").toUpperCase())
-                            .producer(req.getParameter("producer"))
-                            .singer(req.getParameter("singer").toUpperCase())
-                            .speaker(req.getParameter("speaker").toUpperCase())
-                            .basePrice(Double.parseDouble(req.getParameter("basePrice")))
-                            .deleted(false)
-                            .available(false)
-                            .showType(ShowType.valueOf(req.getParameter("showType")))
-                            .status(Boolean.parseBoolean((req.getParameter("status"))))
-                            .releasedDate(LocalDate.parse(req.getParameter("releasedDate")))
-                            .description(req.getParameter("description"))
-                            .build();
+            if (req.getPart("newImage") != null) {
+                Show editingShow = (Show) req.getSession().getAttribute("editingShow");
+
+//                for (Attachment attachment : editingShow.getAttachments()) {
+//                    attachmentService.remove(attachment.getId());
+//                }
+//                editingShow.getAttachments().clear();
 
 
-            // Handle the file upload part
-            Part filePart = req.getPart("image");
+                Part filePart = req.getPart("newImage");
 
-            if (filePart != null && filePart.getSize() > 0) { // Check if file is uploaded
-                // Get the application's absolute path
                 String applicationPath = req.getServletContext().getRealPath("");
 
-
-                // Define the path where the file will be saved
                 String uploadDirectory = applicationPath + "uploads";
                 File uploadDir = new File(uploadDirectory);
                 if (!uploadDir.exists()) {
-                    uploadDir.mkdir(); // Create the uploads directory if it doesn't exist
+                    uploadDir.mkdir();
                 }
 
-                // Generate a unique file name (to avoid collisions)
                 String fileName = filePart.getSubmittedFileName();
                 String filePath = uploadDirectory + File.separator + fileName;
-                String relativePath = "/uploads/" + fileName; // Path for displaying in JSP
+                String relativePath = "/uploads/" + fileName;
 
-                // Save the file to the specified directory
                 filePart.write(filePath);
 
-                // Create and add the attachment
+
                 Attachment attachment = Attachment.builder()
                         .attachTime(LocalDateTime.now())
-                        .fileName(relativePath) // Store the relative path for JSP display
-                        .fileType(FileType.JPG) // Assuming JPG, modify as needed
+                        .fileName(relativePath)
+                        .fileType(FileType.JPG)
                         .fileSize(filePart.getSize())
                         .build();
 
-                show.addAttachment(attachment);
-            }
-
-            BeanValidator<Show> showValidator = new BeanValidator<>();
-
-            if (showValidator.validate(show).isEmpty()) {
-                showService.save(show);
-
-                ManagerVO managerVO = (ManagerVO) req.getSession().getAttribute("manager");
-                Manager manager = managerService.findById(managerVO.getId());
-                Cinema cinema = manager.getCinema();
-                cinema.addShow(show);
-                cinemaService.edit(cinema);
+                editingShow.addAttachment(attachment);
+                editingShow.setEditing(false);
+                showService.edit(editingShow);
                 resp.sendRedirect("/show.do");
-                log.info("Show saved successfully-ID : " + show.getId());
+                log.info("Show image changed successfully-ID : " + editingShow.getId());
+
             } else {
-                resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Show Data !!!" + "</h1>");
+
+                Show show =
+                        Show
+                                .builder()
+                                .name(req.getParameter("name").toUpperCase())
+                                .genre(Genre.valueOf(req.getParameter("genre")))
+                                .director(req.getParameter("director").toUpperCase())
+                                .producer(req.getParameter("producer"))
+                                .singer(req.getParameter("singer").toUpperCase())
+                                .speaker(req.getParameter("speaker").toUpperCase())
+                                .basePrice(Double.parseDouble(req.getParameter("basePrice")))
+                                .deleted(false)
+                                .available(false)
+                                .showType(ShowType.valueOf(req.getParameter("showType")))
+                                .status(Boolean.parseBoolean((req.getParameter("status"))))
+                                .releasedDate(LocalDate.parse(req.getParameter("releasedDate")))
+                                .description(req.getParameter("description"))
+                                .build();
+
+
+                // Handle the file upload part
+                Part filePart = req.getPart("image");
+
+                if (filePart != null && filePart.getSize() > 0) { // Check if file is uploaded
+                    // Get the application's absolute path
+                    String applicationPath = req.getServletContext().getRealPath("");
+
+
+                    // Define the path where the file will be saved
+                    String uploadDirectory = applicationPath + "uploads";
+                    File uploadDir = new File(uploadDirectory);
+                    if (!uploadDir.exists()) {
+                        uploadDir.mkdir(); // Create the uploads directory if it doesn't exist
+                    }
+
+                    // Generate a unique file name (to avoid collisions)
+                    String fileName = filePart.getSubmittedFileName();
+                    String filePath = uploadDirectory + File.separator + fileName;
+                    String relativePath = "/uploads/" + fileName; // Path for displaying in JSP
+
+                    // Save the file to the specified directory
+                    filePart.write(filePath);
+
+                    // Create and add the attachment
+                    Attachment attachment = Attachment.builder()
+                            .attachTime(LocalDateTime.now())
+                            .fileName(relativePath) // Store the relative path for JSP display
+                            .fileType(FileType.JPG) // Assuming JPG, modify as needed
+                            .fileSize(filePart.getSize())
+                            .build();
+
+                    show.addAttachment(attachment);
+                }
+
+                BeanValidator<Show> showValidator = new BeanValidator<>();
+
+                if (showValidator.validate(show).isEmpty()) {
+                    showService.save(show);
+
+                    if (req.getSession().getAttribute("manager") != null) {
+                        ManagerVO managerVO = (ManagerVO) req.getSession().getAttribute("manager");
+                        Manager manager = managerService.findById(managerVO.getId());
+                        Cinema cinema = manager.getCinema();
+                        cinema.addShow(show);
+                        cinemaService.edit(cinema);
+                    }
+
+                    resp.sendRedirect("/show.do");
+                    log.info("Show saved successfully-ID : " + show.getId());
+                } else {
+                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Show Data !!!" + "</h1>");
+                }
             }
         } catch (Exception e) {
             resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
@@ -235,17 +294,20 @@ public class ShowServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        System.out.println("doput");
+
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
 
         Show showAb;
 
         try {
             showAb = objectMapper.readValue(req.getInputStream(), Show.class);
             Show editingShow = (Show) req.getSession().getAttribute("editingShow");
-            editingShow.setName(showAb.getName().toUpperCase());
+
             editingShow.setDirector(showAb.getDirector().toUpperCase());
             editingShow.setProducer(showAb.getProducer());
             editingShow.setSinger(showAb.getSinger().toUpperCase());
@@ -254,9 +316,11 @@ public class ShowServlet extends HttpServlet {
             editingShow.setStatus(showAb.isStatus());
             editingShow.setShowType(showAb.getShowType());
             editingShow.setGenre(showAb.getGenre());
+            editingShow.setBasePrice(showAb.getBasePrice());
             editingShow.setDescription(showAb.getDescription());
             editingShow.setEditing(false);
             showService.edit(editingShow);
+
 
             log.info("Show edited successfully : " + editingShow.toString());
 
@@ -267,6 +331,7 @@ public class ShowServlet extends HttpServlet {
             out.flush();
 
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(ExceptionWrapper.getMessage(e).toString());
 
             // Send error response if something goes wrong

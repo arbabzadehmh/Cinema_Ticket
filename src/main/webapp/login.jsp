@@ -1,9 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <head>
+
     <title>Login</title>
     <link rel="stylesheet" href="assets/css/boot.css">
     <link rel="stylesheet" href="assets/css/UI.css">
+
 </head>
 <body style="background-color:#f3f3f3">
 

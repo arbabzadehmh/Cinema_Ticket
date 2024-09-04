@@ -13,7 +13,7 @@
 
         #seats {
             display: grid;
-            grid-template-columns: repeat(${sessionScope.saloonColum}, 1fr); /* Dynamic column count */
+            grid-template-columns: repeat(${sessionScope.saloonColumn}, 1fr); /* Dynamic column count */
             gap: 10px;
             margin: 10%;
             margin-bottom: 50px;

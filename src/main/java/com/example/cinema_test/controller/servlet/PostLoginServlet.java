@@ -35,23 +35,29 @@ public class PostLoginServlet extends HttpServlet {
             if (req.getRemoteUser() != null) {
                 String username = req.getRemoteUser();
                 User user = userService.findByUsername(username);
-                req.getSession().setAttribute("user", user);
 
-                switch (user.getRole().getRole()) {
-                    case "admin":
-                        resp.sendRedirect("/admins.do");
-                        break;
-                    case "moderator":
-                        resp.sendRedirect("/moderator.do");
-                        break;
-                    case "manager":
-                        resp.sendRedirect("/managers.do");
-                        break;
-                    case "customer":
-                        resp.sendRedirect("/customer.do");
-                        break;
+                if (!user.isLocked()){
+
+                    req.getSession().setAttribute("user", user);
+
+                    switch (user.getRole().getRole()) {
+                        case "admin":
+                            resp.sendRedirect("/admins.do");
+                            break;
+                        case "moderator":
+                            resp.sendRedirect("/moderator.do");
+                            break;
+                        case "manager":
+                            resp.sendRedirect("/managers.do");
+                            break;
+                        case "customer":
+                            resp.sendRedirect("/customer.do");
+                            break;
+                    }
+
+                } else {
+                    resp.sendRedirect("error-423.jsp");
                 }
-
             } else {
                 // Default to login page if no valid role
                 resp.sendRedirect("login.jsp");

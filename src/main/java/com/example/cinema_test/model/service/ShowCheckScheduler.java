@@ -1,11 +1,9 @@
 package com.example.cinema_test.model.service;
 
 import com.example.cinema_test.model.entity.Show;
-
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-
 import java.time.LocalTime;
 
 @Stateless
@@ -31,6 +29,7 @@ public class ShowCheckScheduler {
                 show.setAvailable(true);
                 showService.edit(show);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

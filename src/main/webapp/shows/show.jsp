@@ -42,7 +42,7 @@
 
                         <div class="d-flex mb-4">
 
-                            <input class="m-1" type="text" name="name" placeholder="Name type to search">
+                            <input class="m-1" type="text" name="name" placeholder="Name type to search" oninput="findShowByName(this.value)">
 
                             <select name="showType" class="m-1">
                                 <option value="MOVIE">Movie</option>
@@ -122,7 +122,7 @@
                 <table id="allResultTable" border="1" class="table-light w-100">
                     <thead>
                     <tr>
-                        <th hidden="hidden">ID</th>
+                        <th>ID</th>
                         <th>Name</th>
                         <th>Genre</th>
                         <th>Director</th>
@@ -144,7 +144,7 @@
                     <c:forEach var="show" items="${sessionScope.allShows}">
 
                         <tr>
-                            <td hidden="hidden">${show.id}</td>
+                            <td>${show.id}</td>
                             <td>${show.name}</td>
                             <td>${show.genre}</td>
                             <td>${show.director}</td>
@@ -199,9 +199,73 @@
     function removeShow(id){
         fetch("/rest/show/" + id, {
             method: "DELETE"
-        }).then(() => {
-            window.location = "/show.do"
         })
+            .then(response => {
+            if (response.ok) {
+                // Redirect if deletion was successful
+                window.location = "/show.do";
+            } else {
+                // If the response is not successful, read the error message
+                return response.text().then(errorMessage => {
+                    // Alert the error message returned from the API
+                    alert(errorMessage);
+                });
+            }
+        })
+            .catch(error => {
+                // Handle any other errors that may occur
+                console.error('Error:', error);
+                alert("An error occurred: " + error.message);
+            });
+    }
+
+
+
+    function findShowByName(name) {
+
+        // AJAX call to fetch data from the API
+        $.ajax({
+            url: "/rest/show/findByName/" + name,
+            method: "GET",
+            dataType: "json", // Expect JSON response
+            success: function(response) {
+                // Clear previous results
+                $("#allResultTable tbody").empty();
+
+
+                 if (typeof response === 'object' && response !== null) {
+                    // Handle a single object response
+                    var button = "<button class='btn btn-primary w-100' onclick='editShow(" + response.id + ")'>Edit</button>";
+                    var button1 = "<button class='btn btn-danger w-100' onclick='removeShow(" + response.id + ")'>Remove</button>";
+                    var row = "<tr>" +
+                        "<td>" + response.id + "</td>" +
+                        "<td>" + response.name + "</td>" +
+                        "<td>" + response.genre + "</td>" +
+                        "<td>" + response.director + "</td>" +
+                        "<td>" + response.producer + "</td>" +
+                        "<td>" + response.singer + "</td>" +
+                        "<td>" + response.speaker + "</td>" +
+                        "<td>" + response.releasedDate + "</td>" +
+                        "<td>" + response.basePrice + "</td>" +
+                        "<td>" + response.showType + "</td>" +
+                        "<td>" + response.available + "</td>" +
+                        "<td>" + response.status + "</td>" +
+                        "<td>" + response.description + "</td>" +
+                        "<td>" + button + "</td>" +
+                        "<td>" + button1 + "</td>" +
+                        "</tr>";
+                    $("#allResultTable tbody").append(row);
+                } else {
+                    // If no data, show "No records found" message
+                    var noDataRow = "<tr><td colspan='3'>No records found</td></tr>";
+                    $("#allResultTable tbody").append(noDataRow);
+                }
+            },
+
+            error: function(xhr, status, error) {
+                // alert("Error fetching data: " + error);
+            }
+        });
     }
 
 </script>

@@ -3,13 +3,12 @@ package com.example.cinema_test.model.service;
 import com.example.cinema_test.controller.exception.DuplicateShowException;
 import com.example.cinema_test.controller.exception.ShowIsPlayingException;
 import com.example.cinema_test.controller.exception.ShowNotFoundException;
-import com.example.cinema_test.model.entity.Attachment;
+
 import com.example.cinema_test.model.entity.Show;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -47,7 +46,7 @@ public class ShowService implements Serializable {
     public Show remove(Long id) throws Exception {
         Show show = entityManager.find(Show.class, id);
         if (show != null) {
-            if (!show.isAvailable()) {
+            if (show.isAvailable()) {
                 throw new ShowIsPlayingException();
             }
             show.setDeleted(true);
@@ -66,7 +65,16 @@ public class ShowService implements Serializable {
 
     @Transactional
     public Show findById(Long id) throws Exception {
-        return entityManager.find(Show.class, id);
+        List<Show> showList =
+                entityManager
+                        .createQuery("select s from showEntity s where s.id =:id and s.deleted=false", Show.class)
+                        .setParameter("id", id)
+                        .getResultList();
+        if (!showList.isEmpty()) {
+            return showList.get(0);
+        } else {
+            return null;
+        }
     }
 
     @Transactional

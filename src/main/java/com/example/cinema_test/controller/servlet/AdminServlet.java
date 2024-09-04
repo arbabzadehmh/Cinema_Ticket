@@ -226,10 +226,10 @@ public class AdminServlet extends HttpServlet {
             adminService.edit(editingAdmin);
 
 
-            // Send success response with updated manager
+            // Send success response with updated admin
             resp.setStatus(HttpServletResponse.SC_OK);
             PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, adminAb); // Write manager object as JSON response
+            objectMapper.writeValue(out, adminAb); // Write admin object as JSON response
             out.flush();
 
         } catch (Exception e) {

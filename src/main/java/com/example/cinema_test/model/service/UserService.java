@@ -21,10 +21,10 @@ public class UserService implements Serializable {
 
     @Transactional
     public User save(User user) throws Exception {
-        List<User> userList =entityManager
+        List<User> userList = entityManager
                 .createQuery("select u from userEntity u where u.username =:username and u.deleted=false", User.class)
-                        .setParameter("username", user.getUsername())
-                                .getResultList();
+                .setParameter("username", user.getUsername())
+                .getResultList();
         if (!userList.isEmpty()) {
             throw new DuplicateUserException();
         }
@@ -60,6 +60,7 @@ public class UserService implements Serializable {
                 .getResultList();
     }
 
+    @Transactional
     public User findByUsername(String username) throws Exception {
         List<User> userList =
                 entityManager
@@ -73,6 +74,7 @@ public class UserService implements Serializable {
         }
     }
 
+    @Transactional
     public User findByUsernameAndPassword(String username, String password) throws Exception {
         List<User> userList =
                 entityManager
@@ -85,6 +87,15 @@ public class UserService implements Serializable {
         } else {
             throw new AccessDeniedException();
         }
+    }
+
+    @Transactional
+    public List<User> findByRole(String role) throws Exception {
+        return entityManager
+                .createQuery("select u from userEntity u where u.role.role=:role", User.class)
+                .setParameter("role", role)
+                .getResultList();
+
     }
 
 

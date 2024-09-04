@@ -39,6 +39,9 @@ public class TicketServlet extends HttpServlet {
     @Inject
     private SeatService seatService;
 
+    @Inject
+    private CustomerService customerService;
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -121,8 +124,10 @@ public class TicketServlet extends HttpServlet {
 
         try {
             ShowTimeVo showTimeVo = (ShowTimeVo) req.getSession().getAttribute("selectedShowTime");
-
             ShowTime showTime = showTimeService.findById(showTimeVo.getId());
+
+            CustomerVO customerVO = (CustomerVO) req.getSession().getAttribute("customer");
+            Customer customer = customerService.findById(customerVO.getId());
 
             List<Long> ticketIds = new ArrayList<>();
 
@@ -135,7 +140,7 @@ public class TicketServlet extends HttpServlet {
 
                     Seat seat = seatService.findById(Long.parseLong(seatId));
 
-                    double seatRatio = seat.getPriceRatio();;
+                    double seatRatio = seat.getPriceRatio();
                     if (showTime.getShow().getShowType().equals(ShowType.MOVIE)){
                         seatRatio = 1;
                     }
@@ -143,7 +148,7 @@ public class TicketServlet extends HttpServlet {
                     Ticket ticket =
                             Ticket
                                     .builder()
-                                    .customer(null)
+                                    .customer(customer)
                                     .showTime(showTime)
                                     .price(showTime.getShow().getBasePrice() * seatRatio)
                                     .issueTime(LocalDateTime.now())

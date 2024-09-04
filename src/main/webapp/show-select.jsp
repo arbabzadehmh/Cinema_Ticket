@@ -1,3 +1,5 @@
+<%@ page import="com.example.cinema_test.model.entity.Attachment" %>
+<%@ page import="java.util.List" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -25,6 +27,7 @@
     </div>
 
     <div class="mb-auto justify-content-center d-flex">
+
 
         <div class="container">
             <div class="row">

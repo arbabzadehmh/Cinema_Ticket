@@ -2,7 +2,6 @@ package com.example.cinema_test.controller.servlet;
 
 import com.example.cinema_test.controller.validation.BeanValidator;
 import com.example.cinema_test.model.entity.*;
-import com.example.cinema_test.model.entity.enums.FileType;
 import com.example.cinema_test.model.service.AttachmentService;
 import com.example.cinema_test.model.service.CustomerService;
 import com.example.cinema_test.model.service.RoleService;
@@ -10,29 +9,18 @@ import com.example.cinema_test.model.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
 
 @Slf4j
-@WebServlet(urlPatterns = "/user.do")
-@MultipartConfig(
-        fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
-        maxFileSize = 1024 * 1024 * 10,      // 10 MB
-        maxRequestSize = 1024 * 1024 * 100   // 100 MB
-)
+@WebServlet(urlPatterns = "/users.do")
 public class UserServlet extends HttpServlet {
 
     @Inject
@@ -53,15 +41,15 @@ public class UserServlet extends HttpServlet {
         try {
 
             Enumeration<String> attributeNames = req.getSession().getAttributeNames();
-            System.out.println("user.do");
+            System.out.println("users.do");
             while (attributeNames.hasMoreElements()) {
                 String attributeName = attributeNames.nextElement();
                 System.out.println("Attribute Name: " + attributeName);
             }
-            System.out.println("user.do\n\n\n\n");
+            System.out.println("users.do\n\n\n\n");
 
 
-            User   user = (User) req.getSession().getAttribute("user");
+            User user = (User) req.getSession().getAttribute("user");
             String redirectPath = "";
 
             if (user == null) {
@@ -69,11 +57,12 @@ public class UserServlet extends HttpServlet {
                 return;
             }
 
-            if (user.getRole().getRole().equals("customer")  || user.getRole().getRole().equals("manager")){
+            if (user.getRole().getRole().equals("customer") || user.getRole().getRole().equals("manager")) {
+                req.getSession().setAttribute("editingUser", user);
+                System.out.println(user);
+                redirectPath = "/users/user-edit.jsp";
 
-//                redirectPath = "/customers/customer-panel.jsp";
-
-            } else if (user.getRole().getRole().equals("moderator") ||  user.getRole().getRole().equals("admin")) {
+            } else if (user.getRole().getRole().equals("moderator") || user.getRole().getRole().equals("admin")) {
 
                 req.getSession().setAttribute("allUsers", userService.findAll());
                 redirectPath = "/admins/users.jsp";
@@ -82,20 +71,29 @@ public class UserServlet extends HttpServlet {
 
 
             if (req.getParameter("cancel") != null) {
-                Customer editingCustomer = customerService.findById(Long.parseLong(req.getParameter("cancel")));
-                editingCustomer.setEditing(false);
-                customerService.edit(editingCustomer);
-                resp.sendRedirect("/customer.do");
+                User editingUser = userService.findByUsername(req.getParameter("cancel"));
+                editingUser.setEditing(false);
+                userService.edit(editingUser);
+//                if (user.getRole().getRole().equals("customer")) {
+//                    resp.sendRedirect("/customer.do");
+//                } else if (user.getRole().getRole().equals("moderator")) {
+//                    resp.sendRedirect("/moderator.do");
+//                } else if (user.getRole().getRole().equals("admin")) {
+//                    resp.sendRedirect("/admins.do");
+//                } else if (user.getRole().getRole().equals("manager")) {
+//                    resp.sendRedirect("/managers.do");
+//                }
+                resp.sendRedirect("/postLogin.do");
                 return;
             }
 
             if (req.getParameter("edit") != null) {
-                Customer editingCustomer = customerService.findById(Long.parseLong(req.getParameter("edit")));
-                if (!editingCustomer.isEditing()) {
-                    editingCustomer.setEditing(true);
-                    customerService.edit(editingCustomer);
-                    req.getSession().setAttribute("editingCustomer", editingCustomer);
-                    req.getRequestDispatcher("/customers/customer-edit.jsp").forward(req, resp);
+                User editingUser = userService.findByUsername(req.getParameter("edit"));
+                if (!editingUser.isEditing()) {
+                    editingUser.setEditing(true);
+                    userService.edit(editingUser);
+                    req.getSession().setAttribute("editingUser", editingUser);
+                    req.getRequestDispatcher("/users/user-edit.jsp").forward(req, resp);
                 } else {
                     resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
                 }
@@ -103,6 +101,7 @@ public class UserServlet extends HttpServlet {
                 req.getRequestDispatcher(redirectPath).forward(req, resp);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
         }
 
@@ -114,109 +113,39 @@ public class UserServlet extends HttpServlet {
 
         try {
 
-            if (req.getPart("newImage") != null) {
-                Customer editingCustomer = (Customer) req.getSession().getAttribute("editingCustomer");
+            Role role = roleService.findByRole("customer");
 
-                for (Attachment attachment : editingCustomer.getAttachments()) {
-                    attachmentService.remove(attachment.getId());
-                }
-                editingCustomer.getAttachments().clear();
-
-
-                Part filePart = req.getPart("newImage");
-
-                String applicationPath = req.getServletContext().getRealPath("");
-
-                String uploadDirectory = applicationPath + "uploads";
-                File uploadDir = new File(uploadDirectory);
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdir();
-                }
-
-                String fileName = filePart.getSubmittedFileName();
-                String filePath = uploadDirectory + File.separator + fileName;
-                String relativePath = "/uploads/" + fileName;
-
-                filePart.write(filePath);
-
-
-                Attachment attachment = Attachment.builder()
-                        .attachTime(LocalDateTime.now())
-                        .fileName(relativePath)
-                        .fileType(FileType.JPG)
-                        .fileSize(filePart.getSize())
-                        .build();
-
-                editingCustomer.addAttachment(attachment);
-                editingCustomer.setEditing(false);
-                customerService.edit(editingCustomer);
-                resp.sendRedirect("/customer.do");
-                log.info("Customer image changed successfully-ID : " + editingCustomer.getId());
-
-
-            } else {
-
-
-                Role role = roleService.findByRole("customer");
-
-                User user =
-                        User
-                                .builder()
-                                .username(req.getParameter("phoneNumber"))
-                                .password(req.getParameter("password"))
-                                .role(role)
-                                .locked(false)
-                                .deleted(false)
-                                .build();
-
-
-                Customer customer =
-                        Customer
-                                .builder()
-                                .name(req.getParameter("name"))
-                                .family(req.getParameter("family"))
-                                .phoneNumber(req.getParameter("phoneNumber"))
-                                .email(req.getParameter("email"))
-                                .user(user)
-                                .deleted(false)
-                                .build();
-
-                Part filePart = req.getPart("image");
-
-                if (filePart != null && filePart.getSize() > 0) {
-                    String applicationPath = req.getServletContext().getRealPath("");
-
-                    String uploadDirectory = applicationPath + "uploads";
-                    File uploadDir = new File(uploadDirectory);
-                    if (!uploadDir.exists()) {
-                        uploadDir.mkdir();
-                    }
-
-                    String fileName = filePart.getSubmittedFileName();
-                    String filePath = uploadDirectory + File.separator + fileName;
-                    String relativePath = "/uploads/" + fileName;
-
-                    filePart.write(filePath);
-
-                    Attachment attachment = Attachment.builder()
-                            .attachTime(LocalDateTime.now())
-                            .fileName(relativePath)
-                            .fileType(FileType.JPG)
-                            .fileSize(filePart.getSize())
+            User user =
+                    User
+                            .builder()
+                            .username(req.getParameter("phoneNumber"))
+                            .password(req.getParameter("password"))
+                            .role(role)
+                            .locked(false)
+                            .deleted(false)
                             .build();
 
-                    customer.addAttachment(attachment);
-                }
 
-                BeanValidator<Customer> customerValidator = new BeanValidator<>();
-                if (customerValidator.validate(customer).isEmpty()) {
-                    customerService.save(customer);
-                    req.getSession().setAttribute("user", user);
-                    resp.sendRedirect("/customer.do");
-                    log.info("Customer saved successfully : " + customer.getPhoneNumber());
-                } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Customer Data !!!" + "</h1>");
-                }
+            Customer customer =
+                    Customer
+                            .builder()
+                            .name(req.getParameter("name"))
+                            .family(req.getParameter("family"))
+                            .phoneNumber(req.getParameter("phoneNumber"))
+                            .email(req.getParameter("email"))
+                            .user(user)
+                            .deleted(false)
+                            .build();
+
+
+            BeanValidator<Customer> customerValidator = new BeanValidator<>();
+            if (customerValidator.validate(customer).isEmpty()) {
+                customerService.save(customer);
+                req.getSession().setAttribute("user", user);
+                resp.sendRedirect("/customer.do");
+                log.info("Customer saved successfully : " + customer.getPhoneNumber());
+            } else {
+                resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Customer Data !!!" + "</h1>");
             }
         } catch (Exception e) {
             resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
@@ -235,36 +164,34 @@ public class UserServlet extends HttpServlet {
         ObjectMapper objectMapper = new ObjectMapper();
 
         // Parse the JSON request body into a Manager object
-        Customer customerAb;
+        User userAb;
         try {
 
-            customerAb = objectMapper.readValue(req.getInputStream(), Customer.class);
-            Customer editingCustomer = (Customer) req.getSession().getAttribute("editingCustomer");
-            editingCustomer.setName(customerAb.getName());
-            editingCustomer.setFamily(customerAb.getFamily());
-            editingCustomer.setPhoneNumber(customerAb.getPhoneNumber());
-            editingCustomer.setEmail(customerAb.getEmail());
-            editingCustomer.setEditing(false);
 
-            User user = userService.findByUsername(editingCustomer.getPhoneNumber());
-            user.setUsername(customerAb.getPhoneNumber());
-            userService.edit(user);
+            userAb = objectMapper.readValue(req.getInputStream(), User.class);
+            User editingUser = (User) req.getSession().getAttribute("editingUser");
 
-            customerService.edit(editingCustomer);
 
+            editingUser.setPassword(userAb.getPassword());
+            editingUser.setLocked(userAb.isLocked());
+            editingUser.setEditing(false);
+
+
+            userService.edit(editingUser);
 
             // Send success response with updated manager
             resp.setStatus(HttpServletResponse.SC_OK);
             PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, customerAb); // Write manager object as JSON response
+            objectMapper.writeValue(out, userAb); // Write manager object as JSON response
             out.flush();
 
         } catch (Exception e) {
+            e.printStackTrace();
 
             // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             PrintWriter out = resp.getWriter();
-            out.write("{\"message\": \"Failed to update customer.\"}");
+            out.write("{\"message\": \"Failed to update user.\"}");
             out.flush();
         }
     }

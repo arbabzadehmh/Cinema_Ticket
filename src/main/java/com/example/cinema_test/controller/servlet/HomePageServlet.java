@@ -45,7 +45,9 @@ public class HomePageServlet extends HttpServlet {
             if (req.getParameter("selectCinema") != null) {
 
                 Long cinemaId = Long.parseLong(req.getParameter("selectCinema"));
-                req.getSession().setAttribute("selectedCinemaName", cinemaService.findById(cinemaId).getName());
+                Cinema cinema = cinemaService.findById(cinemaId);
+                CinemaVO cinemaVO = new CinemaVO(cinema);
+                req.getSession().setAttribute("selectedCinema", cinemaVO);
                 Long showId = Long.parseLong(req.getSession().getAttribute("showId").toString());
                 LocalDate selectedDate = LocalDate.parse(req.getSession().getAttribute("selectedDate").toString());
                 List<ShowTime> showTimes = showTimeService.findByShowIdAndDateAndCinemaId(showId, selectedDate, cinemaId);

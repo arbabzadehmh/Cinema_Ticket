@@ -4,49 +4,123 @@
 <head>
     <title>Show Time Select</title>
 
+    <jsp:include page="/css-import.jsp"/>
+
+    <style>
+        /* Custom style to fit 5 shows in a row */
+        .show-card {
+            width: 25%; /* Each show takes 20% of the row (1/5th) */
+        }
+    </style>
 
 </head>
 <body>
 
-<h1>Select Show Time</h1>
-<h2>Show : ${sessionScope.selectedShow.name}</h2>
-<h2>Date : ${sessionScope.selectedDate}</h2>
-<h2>Cinema : ${sessionScope.selectedCinemaName}</h2>
+<div class="content d-flex flex-column flex-grow-1 h-100">
 
-<div>
+    <jsp:include page="/navbar.jsp"/>
 
-    <table>
-        <thead>
-        <tr>
-            <th hidden="hidden">ID</th>
-            <th>Saloon</th>
-            <th>Start Time</th>
-            <th>End Time</th>
-            <th>Remaining Capacity</th>
-            <th>Description</th>
-            <th>Select</th>
-        </tr>
-        </thead>
+    <div class="bg-dark h-50 d-flex flex-row p-5">
+        <div>
+            <img src="${sessionScope.selectedShow.attachments.get(0).fileName}" alt="No Image" height="280px"
+                 width="190px">
+        </div>
 
-        <tbody>
+        <div class="text-white  d-flex flex-column justify-content-between" style="margin-left: 5%">
+            <div class="mb-2">
+                <h2 style="text-align: left">${sessionScope.selectedShow.name}</h2>
+            </div>
 
-        <c:forEach var="showTime" items="${sessionScope.showTimes}">
-            <tr>
-                <td hidden="hidden">${showTime.id}</td>
-                <td>${showTime.saloonNumber}</td>
-                <td>${showTime.startTime.toLocalTime()}</td>
-                <td>${showTime.endTime.toLocalTime()}</td>
-                <td>${showTime.remainingCapacity}</td>
-                <td>${showTime.description}</td>
-                <td>
-                    <button onclick="selectShowTime(${showTime.id})">Select</button>
-                </td>
-            </tr>
-        </c:forEach>
+            <div>
+                <div class="mb-4">
+                    <h5 style="text-align: left">Director : ${sessionScope.selectedShow.director}</h5>
+                </div>
 
-        </tbody>
+                <div class="mb-4">
+                    <h5 style="text-align: left">Producer : ${sessionScope.selectedShow.producer}</h5>
+                </div>
 
-    </table>
+                <div class="mb-4">
+                    <h5 style="text-align: left">Genre : ${sessionScope.selectedShow.genre}</h5>
+                </div>
+
+                <div>
+                    <h5 style="text-align: left">Release Date : ${sessionScope.selectedShow.releasedDate}</h5>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="text-white p-4 w-25" style="margin-left: 15%">
+            <p style="white-space: pre-line; text-align: left;">${sessionScope.selectedShow.description}</p>
+        </div>
+
+    </div>
+
+
+    <div class="bg-secondary d-flex h-25 flex-row align-items-center">
+        <div class="bg-secondary p-4 w-25 h-100 text-white">
+            <div class="d-flex m-1 flex-row">
+                <i class="fa fa-calendar" style="font-size: xx-large; margin-right: 8px;"></i>
+                <h2>Date </h2>
+            </div>
+            <div class="d-flex">
+                <h2>${sessionScope.selectedDate}</h2>
+            </div>
+        </div>
+
+        <div class="h-100 align-items-center justify-content-between p-3 d-flex flex-row w-75 text-white" style="background-color: #9aa1a6; margin-left: 10%">
+            <div>
+                <h2 class="mb-4">Cinema : ${sessionScope.selectedCinema.name}</h2>
+                <h5 style="text-align: left">address : ${sessionScope.selectedCinema.address}</h5>
+            </div>
+
+            <div style="margin-right: 3%">
+                <c:choose>
+                    <c:when test="${sessionScope.selectedCinema.imageUrl != ''}">
+                        <img src="${sessionScope.selectedCinema.imageUrl}" alt="Cinema Image" height="150px" width="150px">
+                    </c:when>
+                    <c:otherwise>
+                        No Image
+                    </c:otherwise>
+                </c:choose>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="h-50 d-flex p-4 justify-content-center">
+
+        <div class="flex-column">
+            <h1 style="text-align: left">Select</h1>
+            <h1>ShowTime</h1>
+        </div>
+
+
+        <div class="d-flex w-100 justify-content-center">
+            <div class="row w-75 justify-content-center">
+                <c:forEach var="showTime" items="${sessionScope.showTimes}">
+                    <div class="show-card m-3 "> <!-- Each show occupies 1/5th of the row -->
+                        <div class="card h-100"> <!-- Card layout for each date -->
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Saloon : ${showTime.saloonNumber}</h5>
+                                <h5 class="card-title text-center">${showTime.startTime.toLocalTime()}-${showTime.endTime.toLocalTime()}</h5>
+                                <h5 class="card-title text-center">Capacity : ${showTime.remainingCapacity}</h5>
+                                <h6 class="card-title text-center">${showTime.description}</h6>
+                                <div class="text-center">
+                                    <button class="btn btn-primary" onclick="selectShowTime(${showTime.id})">Select</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
+
+    </div>
+    <jsp:include page="/footer.jsp"/>
 
 </div>
 
@@ -59,9 +133,7 @@
 
 </script>
 
-
-
-
+<jsp:include page="/js-import.jsp"/>
 
 </body>
 </html>

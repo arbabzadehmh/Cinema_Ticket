@@ -63,7 +63,7 @@
 
     <div class="col">
         <div class="row text-center mb-3">
-            <h2 class="large-text">Cinema : ${sessionScope.selectedCinemaName}</h2>
+            <h2 class="large-text">Cinema : ${sessionScope.selectedCinema.name}</h2>
         </div>
         <div class="row text-center">
             <h2 class="large-text">Saloon : ${sessionScope.selectedShowTime.saloonNumber}</h2>

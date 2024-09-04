@@ -67,7 +67,7 @@ public class Show extends Base {
     @Column(name = "status")
     private boolean status;
 
-    @Column(name = "description", length =50)
+    @Column(name = "description", length =300)
     private String description;
 
     @JsonbTransient

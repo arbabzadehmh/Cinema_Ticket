@@ -133,7 +133,7 @@ public class ModeratorServlet extends HttpServlet {
                 editingModerator.addAttachment(attachment);
                 editingModerator.setEditing(false);
                 moderatorService.edit(editingModerator);
-                resp.sendRedirect("/admins.do");
+                resp.sendRedirect("/moderator.do");
                 log.info("Moderator image changed successfully-ID : " + editingModerator.getId());
 
 

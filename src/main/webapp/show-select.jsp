@@ -44,7 +44,6 @@
                             </c:choose>
                             <div class="card-body">
                                 <h5 class="card-title text-center">${show.name}</h5>
-                                <p class="card-text">${show.description}</p>
                                 <div class="text-center">
                                     <button class="btn btn-primary" onclick="selectShow(${show.id})">Select</button>
                                 </div>

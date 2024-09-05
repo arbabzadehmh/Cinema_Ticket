@@ -61,7 +61,7 @@
 
     <div class="bg-secondary d-flex h-25 flex-row align-items-center">
         <div class="bg-secondary p-4 w-25 h-100 text-white">
-            <div class="d-flex m-1 flex-row">
+            <div class="d-flex m-1 flex-row mb-1">
                 <i class="fa fa-calendar" style="font-size: xx-large; margin-right: 8px;"></i>
                 <h2>Date </h2>
             </div>
@@ -71,9 +71,30 @@
         </div>
 
         <div class="h-100 align-items-center justify-content-between p-3 d-flex flex-row w-75 text-white" style="background-color: #9aa1a6; margin-left: 10%">
+            <div style="margin-left: 2%">
+                <div class="d-flex flex-row mb-1">
+                    <i class="fa fa-camera-movie" style="font-size: xx-large; margin-right: 8px;"></i>
+                    <h2 class="mb-2">Cinema</h2>
+                </div>
+
+                <div class="d-flex">
+                    <h2 class="mb-2">${sessionScope.selectedCinema.name}</h2>
+                </div>
+
+            </div>
+
             <div>
-                <h2 class="mb-4">Cinema : ${sessionScope.selectedCinema.name}</h2>
-                <h5 style="text-align: left">address : ${sessionScope.selectedCinema.address}</h5>
+
+                <div>
+                    <div class="d-flex flex-row">
+                        <i class="fa fa-map-location-dot" style="font-size: xx-large; margin-right: 8px;"></i>
+                        <h4 style="text-align: left">Address </h4>
+                    </div>
+
+                    <div>
+                        <h5 style="text-align: left">${sessionScope.selectedCinema.address}</h5>
+                    </div>
+                </div>
             </div>
 
             <div style="margin-right: 3%">
@@ -102,8 +123,8 @@
         <div class="d-flex w-100 justify-content-center">
             <div class="row w-75 justify-content-center">
                 <c:forEach var="showTime" items="${sessionScope.showTimes}">
-                    <div class="show-card m-3 "> <!-- Each show occupies 1/5th of the row -->
-                        <div class="card h-100"> <!-- Card layout for each date -->
+                    <div class="show-card m-3 ">
+                        <div class="card h-100">
                             <div class="card-body">
                                 <h5 class="card-title text-center">Saloon : ${showTime.saloonNumber}</h5>
                                 <h5 class="card-title text-center">${showTime.startTime.toLocalTime()}-${showTime.endTime.toLocalTime()}</h5>

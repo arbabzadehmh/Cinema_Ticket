@@ -29,7 +29,7 @@
 
         <div class="footer-register text-center mx-auto">
             <a href="cinemaHome.do" class="btn-reg">Back</a>
-            <a href="user.do" class="btn-reg">Forget Password</a>
+            <a href="users.do" class="btn-reg">Forget Password</a>
             <a href="customer.do" class="btn-reg">Create account</a>
         </div>
     </div>

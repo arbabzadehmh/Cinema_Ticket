@@ -37,25 +37,30 @@ public class BankServlet extends HttpServlet {
             String accountBalance = req.getParameter("accountBalance");
             String status = req.getParameter("status");
 
+
             if (name == null || accountNumber == null || accountBalance == null || branchName == null || branchCode == null || status == null) {
                 resp.getWriter().write("All Fields Required! ");
                 return;
             }
+
+
             Bank bank = Bank.builder()
                     .name(name)
                     .branchName(branchName)
-                    .deleted(Boolean.parseBoolean(status))
                     .branchCode(Long.parseLong(branchCode))
                     .accountBalance(Long.parseLong(accountBalance))
                     .accountNumber(accountNumber)
+                    .status(Boolean.parseBoolean(status))
                     .build();
 
             BeanValidator<Bank> validator = new BeanValidator<>();
             if (validator.validate(bank).isEmpty()) {
                 bankService.save(bank);
                 resp.getWriter().write("Bank With Id " + bank.getId() + "Created");
-                resp.sendRedirect("/bank.do");
+                log.info("Bank Saved With This Id : " + bank.getId());
+                req.getRequestDispatcher("/bank.jsp").forward(req, resp);
             } else {
+                log.error("Cannot Save Bank ");
                 throw new Exception("Invalid Bank Data");
             }
 
@@ -78,14 +83,17 @@ public class BankServlet extends HttpServlet {
             } else {
                 List<Bank> bankList = bankService.findAll();
                 for (Bank bank : bankList) {
+                    bankList.add(bank);
                     resp.getWriter().write(bank.toString() + "\n");
                 }
             }
-        } catch (Exception e) {
-            resp.getWriter().write("<h1 style= \"background-color : red;\">" + e.getMessage() + "</h1>");
-        }
+                req.getRequestDispatcher("/bank.jsp").forward(req, resp);
+            } catch(Exception e){
+                resp.getWriter().write("<h1 style= \"background-color : red;\">" + e.getMessage() + "</h1>");
+                e.printStackTrace();
+            }
 
-    }
+        }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

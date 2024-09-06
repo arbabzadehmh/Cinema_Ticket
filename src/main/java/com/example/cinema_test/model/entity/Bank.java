@@ -19,7 +19,6 @@ import lombok.experimental.SuperBuilder;
 @RequestScoped
 public class Bank extends Base{
 
-
     @Id
     @SequenceGenerator(name = "bankSeq", sequenceName = "bank_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bankSeq")

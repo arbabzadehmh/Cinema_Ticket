@@ -70,7 +70,7 @@ public class UserService implements Serializable {
         if (!userList.isEmpty()) {
             return userList.get(0);
         } else {
-            throw new UserNotFoundException();
+            return null;
         }
     }
 

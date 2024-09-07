@@ -1,5 +1,6 @@
 package com.example.cinema_test.controller.servlet;
 
+import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.controller.validation.BeanValidator;
 import com.example.cinema_test.model.entity.*;
 import com.example.cinema_test.model.entity.enums.FileType;
@@ -74,14 +75,20 @@ public class AdminServlet extends HttpServlet {
                     req.getSession().setAttribute("editingAdmin", editingAdmin);
                     req.getRequestDispatcher("/admins/admin-edit.jsp").forward(req, resp);
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
+                    String errorMessage = "Record is editing by another user !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/admins.do");
                 }
             } else {
                 req.getSession().setAttribute("allAdmins", adminService.findAll());
                 req.getRequestDispatcher("/admins/admin-panel.jsp").forward(req, resp);
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/admins.do");
         }
 
     }
@@ -128,8 +135,8 @@ public class AdminServlet extends HttpServlet {
                 editingAdmin.addAttachment(attachment);
                 editingAdmin.setEditing(false);
                 adminService.edit(editingAdmin);
-                resp.sendRedirect("/admins.do");
                 log.info("Admin image changed successfully-ID : " + editingAdmin.getId());
+                resp.sendRedirect("/admins.do");
 
 
             } else {
@@ -189,15 +196,20 @@ public class AdminServlet extends HttpServlet {
                 BeanValidator<Admin> adminValidator = new BeanValidator<>();
                 if (adminValidator.validate(admin).isEmpty()) {
                     adminService.save(admin);
-                    resp.sendRedirect("/admins.do");
                     log.info("Admin saved successfully : " + admin.getFamily());
+                    resp.sendRedirect("/admins.do");
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Admin Data !!!" + "</h1>");
+                    String errorMessage = "Invalid Admin Data !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/admins.do");
                 }
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
-
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/admins.do");
         }
 
     }
@@ -224,6 +236,8 @@ public class AdminServlet extends HttpServlet {
             editingAdmin.setEmail(adminAb.getEmail());
             editingAdmin.setEditing(false);
             adminService.edit(editingAdmin);
+            log.info("Admin updated successfully : " + editingAdmin.getId());
+
 
 
             // Send success response with updated admin
@@ -233,6 +247,7 @@ public class AdminServlet extends HttpServlet {
             out.flush();
 
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
 
             // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

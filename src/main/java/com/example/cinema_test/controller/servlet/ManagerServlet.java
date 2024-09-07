@@ -1,5 +1,6 @@
 package com.example.cinema_test.controller.servlet;
 
+import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.controller.validation.BeanValidator;
 import com.example.cinema_test.model.entity.*;
 import com.example.cinema_test.model.entity.enums.FileType;
@@ -90,15 +91,19 @@ public class ManagerServlet extends HttpServlet {
                     req.getSession().setAttribute("editingManager", editingManager);
                     req.getRequestDispatcher("/managers/manager-edit.jsp").forward(req, resp);
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
+                    String errorMessage = "Record is editing by another user !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/managers.do");
                 }
             } else {
-
                 req.getRequestDispatcher(redirectPath).forward(req, resp);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/managers.do");
         }
     }
 
@@ -144,8 +149,8 @@ public class ManagerServlet extends HttpServlet {
                 editingManager.addAttachment(attachment);
                 editingManager.setEditing(false);
                 managerService.edit(editingManager);
-                resp.sendRedirect("/managers.do");
                 log.info("Manager image changed successfully-ID : " + editingManager.getId());
+                resp.sendRedirect("/managers.do");
 
 
             } else {
@@ -207,15 +212,20 @@ public class ManagerServlet extends HttpServlet {
                 BeanValidator<Manager> managerValidator = new BeanValidator<>();
                 if (managerValidator.validate(manager).isEmpty()) {
                     managerService.save(manager);
-                    resp.sendRedirect("/managers.do");
                     log.info("Manager saved successfully : " + manager.getFamily());
+                    resp.sendRedirect("/managers.do");
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Manager Data !!!" + "</h1>");
+                    String errorMessage = "Invalid Manager Data !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/managers.do");
                 }
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
-
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/managers.do");
         }
 
     }
@@ -244,6 +254,7 @@ public class ManagerServlet extends HttpServlet {
             editingManager.setAddress(managerAb.getAddress());
             editingManager.setEditing(false);
             managerService.edit(editingManager);
+            log.info("Manager updated successfully : " + editingManager.getId());
 
 
             // Send success response with updated manager
@@ -253,7 +264,7 @@ public class ManagerServlet extends HttpServlet {
             out.flush();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(ExceptionWrapper.getMessage(e).toString());
 
             // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

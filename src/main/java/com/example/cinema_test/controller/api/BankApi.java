@@ -9,17 +9,14 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 @Slf4j
 @Path("/bank")
 public class BankApi {
     @Inject
     private BankService bankService;
 
-//    @DELETE
-//    @Path("/{id}")
-//    public String delete(@PathParam(value = "id") Long id) {
-//        return "Bank deleted : " + id;
-//    }
 
 
     @DELETE
@@ -27,8 +24,6 @@ public class BankApi {
     public Response delete(@PathParam("id") Long id) {
         try {
             bankService.remove(id);
-            Bank bank = bankService.findById(id);
-            bankService.edit(bank);
             log.info("Bank removed successfully-ID : " + id);
             return Response.accepted().build();
         } catch (Exception e) {
@@ -44,9 +39,9 @@ public class BankApi {
     @Path("/findByName/{name}")
     public Response findByName(@PathParam(value = "name") String name) {
         try {
-            Bank bank = bankService.findByName(name);
+            Bank bank = bankService.findByName(name.toUpperCase());
             if (bank != null) {
-                return Response.ok().build();
+                return Response.ok(bank).build();
             }else {
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("There Is No Bank With This Name" + name)
@@ -68,7 +63,7 @@ public class BankApi {
             Bank bank = bankService.findByAccountNumber(accountNumber);
 
             if (bank != null) {
-                return Response.ok().build();
+                return Response.ok(bank).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("There Is No Bank With This AccountNumber : " + accountNumber)
@@ -89,7 +84,7 @@ public class BankApi {
         try {
             Bank bank = bankService.findByBranchCode(Long.valueOf(branchCode));
             if (bank != null) {
-                return Response.ok().build();
+                return Response.ok(bank).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("There Is No Bank With This BranchCode : " + branchCode)
@@ -107,12 +102,32 @@ public class BankApi {
     @Path("/findByBranchName/{branchName}")
     public Response findByBranchName(@PathParam(value = "branchName") String branchName) {
         try {
-            Bank bank = bankService.findByBranchName(branchName);
+            Bank bank = bankService.findByBranchName(branchName.toUpperCase());
             if (bank != null) {
-                return Response.ok().build();
+                return Response.ok(bank).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("There Is No Bank With This BranchName : " + branchName)
+                        .build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Error : " + e.getMessage())
+                    .build();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/findByStatus/{status}")
+    public Response findByBranchName(@PathParam(value = "status") boolean status) {
+        try {
+            List<Bank> bankList = bankService.findByStatus(status);
+            if (!bankList.isEmpty()) {
+                return Response.ok(bankList).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("There Is No Bank With This status : " + status)
                         .build();
             }
         } catch (Exception e) {

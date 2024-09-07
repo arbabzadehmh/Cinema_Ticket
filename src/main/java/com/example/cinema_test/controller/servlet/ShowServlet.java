@@ -117,11 +117,15 @@ public class ShowServlet extends HttpServlet {
             if (req.getParameter("removeFromList") != null) {
                 Show showToRemove = showService.findById(Long.parseLong(req.getParameter("removeFromList")));
                 if (showToRemove.isAvailable()) {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "The available show can not be removed  !!!" + "</h1>");
+                    String errorMessage = "The available show can not be removed  !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/show.do");
                 } else {
                     // Remove the show and update the cinema
                     cinemaShows.removeIf(show -> show.getId().equals(showToRemove.getId()));
                     cinemaService.edit(manager.getCinema());
+                    log.info("Removed Show: " + showToRemove.getName());
                     resp.sendRedirect("/show.do");
                 }
                 return;
@@ -135,11 +139,15 @@ public class ShowServlet extends HttpServlet {
                 boolean showExists = cinemaShows.stream().anyMatch(show -> show.getId().equals(addingShow.getId()));
 
                 if (showExists) {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "The show is already exist in your list !!!" + "</h1>");
+                    String errorMessage = "The show is already exist in your list  !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/show.do");
                 } else {
                     // Add the show to the cinema's list and update the database
                     cinemaShows.add(addingShow);
                     cinemaService.edit(manager.getCinema());
+                    log.info("Added Show: " + addingShow.getName());
                     resp.sendRedirect("/show.do");
                 }
                 return;
@@ -153,16 +161,20 @@ public class ShowServlet extends HttpServlet {
                     req.getSession().setAttribute("editingShow", editingShow);
                     req.getRequestDispatcher("/shows/show-edit.jsp").forward(req, resp);
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
+                    String errorMessage = "Record is editing by another user !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/show.do");
                 }
             } else {
                 req.getSession().setAttribute("allShows", showService.findAll());
                 req.getRequestDispatcher(redirectPath).forward(req, resp);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
             log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/show.do");
         }
     }
 
@@ -207,8 +219,8 @@ public class ShowServlet extends HttpServlet {
                 editingShow.addAttachment(attachment);
                 editingShow.setEditing(false);
                 showService.edit(editingShow);
-                resp.sendRedirect("/show.do");
                 log.info("Show image changed successfully-ID : " + editingShow.getId());
+                resp.sendRedirect("/show.do");
 
             } else {
 
@@ -278,15 +290,20 @@ public class ShowServlet extends HttpServlet {
                         cinemaService.edit(cinema);
                     }
 
-                    resp.sendRedirect("/show.do");
                     log.info("Show saved successfully-ID : " + show.getId());
+                    resp.sendRedirect("/show.do");
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Show Data !!!" + "</h1>");
+                    String errorMessage = "Invalid Show Data !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/show.do");
                 }
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
             log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/show.do");
         }
     }
 
@@ -320,8 +337,6 @@ public class ShowServlet extends HttpServlet {
             editingShow.setDescription(showAb.getDescription());
             editingShow.setEditing(false);
             showService.edit(editingShow);
-
-
             log.info("Show edited successfully : " + editingShow.toString());
 
             // Send success response with updated manager
@@ -331,7 +346,6 @@ public class ShowServlet extends HttpServlet {
             out.flush();
 
         } catch (Exception e) {
-            e.printStackTrace();
             log.error(ExceptionWrapper.getMessage(e).toString());
 
             // Send error response if something goes wrong

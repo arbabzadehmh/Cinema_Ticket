@@ -96,14 +96,19 @@ public class CinemaServlet extends HttpServlet {
                     req.getSession().setAttribute("editingCinema", editingCinema);
                     req.getRequestDispatcher("/managers/manager-cinema-edit.jsp").forward(req, resp);
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
+                    String errorMessage = "Record is editing by another user !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/cinema.do");
                 }
             } else {
                 req.getRequestDispatcher(redirectPath).forward(req, resp);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/cinema.do");
         }
     }
 
@@ -149,8 +154,8 @@ public class CinemaServlet extends HttpServlet {
                 editingCinema.addAttachment(attachment);
                 editingCinema.setEditing(false);
                 cinemaService.edit(editingCinema);
-                resp.sendRedirect("/cinema.do");
                 log.info("Cinema image changed successfully-ID : " + editingCinema.getId());
+                resp.sendRedirect("/cinema.do");
 
             } else {
 
@@ -199,16 +204,20 @@ public class CinemaServlet extends HttpServlet {
                     manager.setCinema(cinema);
                     managerService.edit(manager);
                     cinemaService.save(cinema);
-                    resp.sendRedirect("/cinema.do");
                     log.info("Cinema saved successfully-ID : " + cinema.getId());
+                    resp.sendRedirect("/cinema.do");
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Cinema Data !!!" + "</h1>");
-
+                    String errorMessage = "Invalid Cinema Data !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/cinema.do");
                 }
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
             log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/cinema.do");
 
         }
     }
@@ -233,6 +242,7 @@ public class CinemaServlet extends HttpServlet {
             editingCinema.setAddress(cinemaAb.getAddress());
             editingCinema.setEditing(false);
             cinemaService.edit(editingCinema);
+            log.info("Cinema updated successfully : " + editingCinema.getId());
 
 
             // Send success response with updated manager
@@ -242,7 +252,7 @@ public class CinemaServlet extends HttpServlet {
             out.flush();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(ExceptionWrapper.getMessage(e).toString());
 
             // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

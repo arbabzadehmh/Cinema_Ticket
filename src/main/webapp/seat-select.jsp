@@ -49,6 +49,19 @@
 </head>
 <body>
 
+<%
+    String errorMessage = (String) session.getAttribute("errorMessage");
+    if (errorMessage != null) {
+%>
+<div class="alert alert-danger">
+    <%= errorMessage %>
+</div>
+<%
+        session.removeAttribute("errorMessage");
+    }
+%>
+
+
 <jsp:include page="/navbar.jsp"/>
 
 <div class="d-flex flex-row p-5 justify-content-center " style="background-color: #2a415a; color: white">

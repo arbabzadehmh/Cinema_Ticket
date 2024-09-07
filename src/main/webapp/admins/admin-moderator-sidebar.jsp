@@ -85,6 +85,11 @@
             <div class="w-50 d-sm-none d-lg-flex">Tickets</div>
         </a>
 
+        <a class="item d-flex justify-content-center align-items-center mb-auto ps-lg-4" href="bank.do">
+            <div class="item-icon w-25"><i class="fa fa-bank"></i></div>
+            <div class="w-50 d-sm-none d-lg-flex">Banks</div>
+        </a>
+
         <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="logout.do">
             <div class="item-icon w-25"><i class="fa fa-sign-out"></i></div>
             <div class="w-50 d-sm-none d-lg-flex">Exit</div>

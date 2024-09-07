@@ -16,6 +16,19 @@
 </head>
 <body>
 
+<%
+    String errorMessage = (String) session.getAttribute("errorMessage");
+    if (errorMessage != null) {
+%>
+<div class="alert alert-danger">
+    <%= errorMessage %>
+</div>
+<%
+        session.removeAttribute("errorMessage");
+    }
+%>
+
+
 <div class="content d-flex flex-column flex-grow-1 h-100">
 
     <jsp:include page="/navbar.jsp"/>

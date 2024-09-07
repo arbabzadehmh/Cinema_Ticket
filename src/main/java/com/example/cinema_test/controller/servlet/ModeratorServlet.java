@@ -1,5 +1,6 @@
 package com.example.cinema_test.controller.servlet;
 
+import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.controller.validation.BeanValidator;
 import com.example.cinema_test.model.entity.*;
 import com.example.cinema_test.model.entity.enums.FileType;
@@ -79,14 +80,20 @@ public class ModeratorServlet extends HttpServlet {
                     req.getSession().setAttribute("editingModerator", editingModerator);
                     req.getRequestDispatcher("/moderators/moderator-edit.jsp").forward(req, resp);
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
+                    String errorMessage = "Record is editing by another user !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/moderator.do");
                 }
             } else {
                 req.getSession().setAttribute("allModerators", moderatorService.findAll());
                 req.getRequestDispatcher("/moderators/moderator-panel.jsp").forward(req, resp);
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/moderator.do");
         }
 
     }
@@ -133,8 +140,8 @@ public class ModeratorServlet extends HttpServlet {
                 editingModerator.addAttachment(attachment);
                 editingModerator.setEditing(false);
                 moderatorService.edit(editingModerator);
-                resp.sendRedirect("/moderator.do");
                 log.info("Moderator image changed successfully-ID : " + editingModerator.getId());
+                resp.sendRedirect("/moderator.do");
 
 
             } else {
@@ -196,15 +203,20 @@ public class ModeratorServlet extends HttpServlet {
                 BeanValidator<Moderator> moderatorValidator = new BeanValidator<>();
                 if (moderatorValidator.validate(moderator).isEmpty()) {
                     moderatorService.save(moderator);
-                    resp.sendRedirect("/moderator.do");
                     log.info("Moderator saved successfully : " + moderator.getFamily());
+                    resp.sendRedirect("/moderator.do");
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Moderator Data !!!" + "</h1>");
+                    String errorMessage = "Invalid Moderator Data !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/moderator.do");
                 }
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
-
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/moderator.do");
         }
 
     }
@@ -233,6 +245,7 @@ public class ModeratorServlet extends HttpServlet {
             editingModerator.setAddress(moderatorAb.getAddress());
             editingModerator.setEditing(false);
             moderatorService.edit(editingModerator);
+            log.info("Moderator updated successfully : " + editingModerator.getId());
 
 
             // Send success response with updated manager
@@ -242,6 +255,7 @@ public class ModeratorServlet extends HttpServlet {
             out.flush();
 
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
 
             // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

@@ -16,6 +16,19 @@
 </head>
 <body>
 
+<%
+    String errorMessage = (String) session.getAttribute("errorMessage");
+    if (errorMessage != null) {
+%>
+<div class="alert alert-danger">
+    <%= errorMessage %>
+</div>
+<%
+        session.removeAttribute("errorMessage");
+    }
+%>
+
+
 <br><br><br>
 <div class="container d-flex justify-content-center">
     <div class="register-item col-12 col-md-6 col-lg-6 bg-secondary">

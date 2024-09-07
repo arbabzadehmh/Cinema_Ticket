@@ -1,5 +1,6 @@
 package com.example.cinema_test.controller.servlet;
 
+import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.controller.validation.BeanValidator;
 import com.example.cinema_test.model.entity.*;
 import com.example.cinema_test.model.entity.enums.FileType;
@@ -61,7 +62,7 @@ public class CustomerServlet extends HttpServlet {
             System.out.println("customer.do\n\n\n\n");
 
 
-            User   user = (User) req.getSession().getAttribute("user");
+            User user = (User) req.getSession().getAttribute("user");
             String redirectPath = "";
 
             if (user == null) {
@@ -69,14 +70,14 @@ public class CustomerServlet extends HttpServlet {
                 return;
             }
 
-            if (user.getRole().getRole().equals("customer")){
+            if (user.getRole().getRole().equals("customer")) {
 
                 Customer customer = customerService.findByUsername(user.getUsername());
                 CustomerVO customerVO = new CustomerVO(customer);
                 req.getSession().setAttribute("customer", customerVO);
                 redirectPath = "/customers/customer-panel.jsp";
 
-            } else if (user.getRole().getRole().equals("moderator") ||  user.getRole().getRole().equals("admin")) {
+            } else if (user.getRole().getRole().equals("moderator") || user.getRole().getRole().equals("admin")) {
                 List<Customer> customerList = customerService.findAll();
                 List<CustomerVO> customerVOList = new ArrayList<>();
                 for (Customer customer : customerList) {
@@ -105,13 +106,19 @@ public class CustomerServlet extends HttpServlet {
                     req.getSession().setAttribute("editingCustomer", editingCustomer);
                     req.getRequestDispatcher("/customers/customer-edit.jsp").forward(req, resp);
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
+                    String errorMessage = "Record is editing by another user !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/customer.do");
                 }
             } else {
                 req.getRequestDispatcher(redirectPath).forward(req, resp);
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/customer.do");
         }
 
     }
@@ -158,8 +165,8 @@ public class CustomerServlet extends HttpServlet {
                 editingCustomer.addAttachment(attachment);
                 editingCustomer.setEditing(false);
                 customerService.edit(editingCustomer);
-                resp.sendRedirect("/customer.do");
                 log.info("Customer image changed successfully-ID : " + editingCustomer.getId());
+                resp.sendRedirect("/customer.do");
 
 
             } else {
@@ -177,6 +184,15 @@ public class CustomerServlet extends HttpServlet {
                                 .deleted(false)
                                 .build();
 
+//                TODO:USER VALIDATION
+
+                if (userService.findByUsername(req.getParameter("phoneNumber")) != null) {
+                    String errorMessage = "Duplicate username(phoneNumber) !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/sign-up.jsp");
+                    return;
+                }
 
                 Customer customer =
                         Customer
@@ -220,14 +236,20 @@ public class CustomerServlet extends HttpServlet {
                 if (customerValidator.validate(customer).isEmpty()) {
                     customerService.save(customer);
                     req.getSession().setAttribute("user", user);
-                    resp.sendRedirect("/customer.do");
                     log.info("Customer saved successfully : " + customer.getPhoneNumber());
+                    resp.sendRedirect("/customer.do");
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Customer Data !!!" + "</h1>");
+                    String errorMessage = "Invalid Customer Data !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/sign-up.jsp");
                 }
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/sign-up.jsp");
         }
 
     }
@@ -259,6 +281,7 @@ public class CustomerServlet extends HttpServlet {
             userService.edit(user);
 
             customerService.edit(editingCustomer);
+            log.info("Customer updated successfully : " + editingCustomer.getId());
 
 
             // Send success response with updated manager
@@ -268,6 +291,8 @@ public class CustomerServlet extends HttpServlet {
             out.flush();
 
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
+
 
             // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

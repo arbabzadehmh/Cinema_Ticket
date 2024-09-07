@@ -47,13 +47,13 @@ public class ShowTimeServlet extends HttpServlet {
 
         try {
 
-//            Enumeration<String> attributeNames = req.getSession().getAttributeNames();
-//            System.out.println("showtime.do");
-//            while (attributeNames.hasMoreElements()) {
-//                String attributeName = attributeNames.nextElement();
-//                System.out.println("Attribute Name: " + attributeName);
-//            }
-//            System.out.println("showtime.do\n\n\n\n");
+            Enumeration<String> attributeNames = req.getSession().getAttributeNames();
+            System.out.println("showtime.do");
+            while (attributeNames.hasMoreElements()) {
+                String attributeName = attributeNames.nextElement();
+                System.out.println("Attribute Name: " + attributeName);
+            }
+            System.out.println("showtime.do\n\n\n\n");
 
             User user = (User) req.getSession().getAttribute("user");
 
@@ -68,7 +68,7 @@ public class ShowTimeServlet extends HttpServlet {
 
             } else if (user.getRole().getRole().equals("admin") || user.getRole().getRole().equals("moderator")) {
 
-                if (req.getParameter("cinemaId") != null){
+                if (req.getParameter("cinemaId") != null) {
                     cinema = cinemaService.findById(Long.parseLong(req.getParameter("cinemaId")));
                     CinemaVO cinemaVO = new CinemaVO(cinema);
                     req.getSession().setAttribute("cinema", cinemaVO);
@@ -101,7 +101,10 @@ public class ShowTimeServlet extends HttpServlet {
                     req.getSession().setAttribute("editingShowTime", editingShowTime);
                     req.getRequestDispatcher("/showTimes/show-time-edit.jsp").forward(req, resp);
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
+                    String errorMessage = "Record is editing by another user !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/showtime.do");
                 }
             } else {
                 req.getSession().setAttribute("cinemaShowTimes", cinemaShowTimes);
@@ -110,8 +113,10 @@ public class ShowTimeServlet extends HttpServlet {
                 req.getRequestDispatcher(redirectPath).forward(req, resp);
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
             log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/showtime.do");
         }
     }
 
@@ -151,15 +156,19 @@ public class ShowTimeServlet extends HttpServlet {
                 showTimeService.save(showTime);
                 cinema.addShowTime(showTime);
                 cinemaService.edit(cinema);
-                resp.sendRedirect("/showtime.do");
                 log.info("ShowTime saved successfully-ID : " + showTime.getId());
-
+                resp.sendRedirect("/showtime.do");
             } else {
-                resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "The Selected Saloon Is Occupied In This Time !!!" + "</h1>");
+                String errorMessage = "The Selected Saloon Is Occupied In This Time !!!";
+                req.getSession().setAttribute("errorMessage", errorMessage);
+                log.error(errorMessage);
+                resp.sendRedirect("/showtime.do");
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
             log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/showtime.do");
         }
     }
 
@@ -182,7 +191,6 @@ public class ShowTimeServlet extends HttpServlet {
             editingShowTime.setDescription(showTimeVo.getDescription());
             editingShowTime.setEditing(false);
             showTimeService.edit(editingShowTime);
-
             log.info("ShowTime edited successfully-ID : " + editingShowTime.getId());
 
             // Send success response with updated manager
@@ -192,7 +200,6 @@ public class ShowTimeServlet extends HttpServlet {
             out.flush();
 
         } catch (Exception e) {
-            e.printStackTrace();
             log.error(ExceptionWrapper.getMessage(e).toString());
 
             // Send error response if something goes wrong

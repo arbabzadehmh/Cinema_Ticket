@@ -1,5 +1,6 @@
 package com.example.cinema_test.controller.servlet;
 
+import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.controller.validation.BeanValidator;
 import com.example.cinema_test.model.entity.*;
 import com.example.cinema_test.model.service.AttachmentService;
@@ -57,10 +58,13 @@ public class UserServlet extends HttpServlet {
                 return;
             }
 
-            if (user.getRole().getRole().equals("customer") || user.getRole().getRole().equals("manager")) {
-                req.getSession().setAttribute("editingUser", user);
-                System.out.println(user);
-                redirectPath = "/users/user-edit.jsp";
+            if (user.getRole().getRole().equals("customer")) {
+
+                redirectPath = "/customers/customer-user.jsp";
+
+            } else if (user.getRole().getRole().equals("manager")) {
+
+                redirectPath = "/managers/manager-user.jsp";
 
             } else if (user.getRole().getRole().equals("moderator") || user.getRole().getRole().equals("admin")) {
 
@@ -74,15 +78,6 @@ public class UserServlet extends HttpServlet {
                 User editingUser = userService.findByUsername(req.getParameter("cancel"));
                 editingUser.setEditing(false);
                 userService.edit(editingUser);
-//                if (user.getRole().getRole().equals("customer")) {
-//                    resp.sendRedirect("/customer.do");
-//                } else if (user.getRole().getRole().equals("moderator")) {
-//                    resp.sendRedirect("/moderator.do");
-//                } else if (user.getRole().getRole().equals("admin")) {
-//                    resp.sendRedirect("/admins.do");
-//                } else if (user.getRole().getRole().equals("manager")) {
-//                    resp.sendRedirect("/managers.do");
-//                }
                 resp.sendRedirect("/postLogin.do");
                 return;
             }
@@ -95,14 +90,19 @@ public class UserServlet extends HttpServlet {
                     req.getSession().setAttribute("editingUser", editingUser);
                     req.getRequestDispatcher("/users/user-edit.jsp").forward(req, resp);
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
+                    String errorMessage = "Record is editing by another user !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/users.do");
                 }
             } else {
                 req.getRequestDispatcher(redirectPath).forward(req, resp);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/users.do");
         }
 
     }
@@ -125,6 +125,16 @@ public class UserServlet extends HttpServlet {
                             .deleted(false)
                             .build();
 
+//            TODO: USER VALIDATION
+
+            if (userService.findByUsername(req.getParameter("phoneNumber")) != null){
+                String errorMessage = "Duplicate username(phoneNumber) !!!";
+                req.getSession().setAttribute("errorMessage", errorMessage);
+                log.error(errorMessage);
+                resp.sendRedirect("/sign-up.jsp");
+                return;
+            }
+
 
             Customer customer =
                     Customer
@@ -142,13 +152,19 @@ public class UserServlet extends HttpServlet {
             if (customerValidator.validate(customer).isEmpty()) {
                 customerService.save(customer);
                 req.getSession().setAttribute("user", user);
-                resp.sendRedirect("/customer.do");
                 log.info("Customer saved successfully : " + customer.getPhoneNumber());
+                resp.sendRedirect("/customer.do");
             } else {
-                resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Customer Data !!!" + "</h1>");
+                String errorMessage = "Invalid User Data !!!";
+                req.getSession().setAttribute("errorMessage", errorMessage);
+                log.error(errorMessage);
+                resp.sendRedirect("/sign-up.jsp");
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/sign-up.jsp");
         }
 
     }
@@ -176,8 +192,8 @@ public class UserServlet extends HttpServlet {
             editingUser.setLocked(userAb.isLocked());
             editingUser.setEditing(false);
 
-
             userService.edit(editingUser);
+            log.info("User updated successfully : " + editingUser.getUsername());
 
             // Send success response with updated manager
             resp.setStatus(HttpServletResponse.SC_OK);
@@ -186,7 +202,7 @@ public class UserServlet extends HttpServlet {
             out.flush();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(ExceptionWrapper.getMessage(e).toString());
 
             // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

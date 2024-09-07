@@ -1,5 +1,6 @@
 package com.example.cinema_test.controller.servlet;
 
+import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.model.entity.User;
 import com.example.cinema_test.model.service.UserService;
 import jakarta.inject.Inject;
@@ -8,10 +9,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.Enumeration;
 
+@Slf4j
 @WebServlet(urlPatterns = "/postLogin.do")
 public class PostLoginServlet extends HttpServlet {
 
@@ -39,6 +42,7 @@ public class PostLoginServlet extends HttpServlet {
                 if (!user.isLocked()){
 
                     req.getSession().setAttribute("user", user);
+                    log.info(username + " logged in");
 
                     switch (user.getRole().getRole()) {
                         case "admin":
@@ -56,14 +60,16 @@ public class PostLoginServlet extends HttpServlet {
                     }
 
                 } else {
+                    log.error(user.getUsername() + " is locked");
                     resp.sendRedirect("error-423.jsp");
                 }
             } else {
+                log.error(req.getRemoteUser() + " tried to login !!!");
                 // Default to login page if no valid role
                 resp.sendRedirect("login.jsp");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(ExceptionWrapper.getMessage(e).toString());
             throw new RuntimeException(e);
         }
     }

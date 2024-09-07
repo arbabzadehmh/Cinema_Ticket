@@ -9,6 +9,19 @@
 </head>
 <body>
 
+<%
+    String errorMessage = (String) session.getAttribute("errorMessage");
+    if (errorMessage != null) {
+%>
+<div class="alert alert-danger">
+    <%= errorMessage %>
+</div>
+<%
+        session.removeAttribute("errorMessage");
+    }
+%>
+
+
 <div class="container-fluid d-flex flex-row vh-100 p-0">
 
     <jsp:include page="/admins/admin-moderator-sidebar.jsp"/>
@@ -30,7 +43,7 @@
 
                 <div class=" w-50 align-content-center" style="margin-left: 5%">
 
-                    <input class="input-group m-2" type="text" name="username" placeholder="Enter username to search"
+                    <input class="input-group m-2 text-danger-emphasis bg-secondary-subtle" type="text" name="username" placeholder="Enter username to search"
                            oninput="findUserByUsername(this.value)">
 
 

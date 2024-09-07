@@ -29,6 +29,7 @@ public class AdminApi {
                 log.info("Admin removed successfully-ID : " + id);
                 return Response.accepted().build();
             } else {
+                log.error("Can not remove all admins !!!");
                 return Response.status(Response.Status.NOT_ACCEPTABLE)
                         .entity("Can not remove all admins !!!")
                         .build();

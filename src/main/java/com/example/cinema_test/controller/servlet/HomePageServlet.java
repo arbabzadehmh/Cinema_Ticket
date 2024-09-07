@@ -1,5 +1,6 @@
 package com.example.cinema_test.controller.servlet;
 
+import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.model.entity.*;
 import com.example.cinema_test.model.service.*;
 import jakarta.inject.Inject;
@@ -8,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -16,6 +18,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
+@Slf4j
 @WebServlet(urlPatterns = "/cinemaHome.do")
 public class HomePageServlet extends HttpServlet {
 
@@ -100,11 +103,11 @@ public class HomePageServlet extends HttpServlet {
                 req.getRequestDispatcher("/show-select.jsp").forward(req, resp);
 
             }
-
-
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
-            e.printStackTrace();
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/cinemaHome.do");
         }
     }
 

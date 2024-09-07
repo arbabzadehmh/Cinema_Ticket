@@ -69,9 +69,9 @@
 
                         <tr>
                             <td>${support.id}</td>
-                            <td>${support.customer_id}</td>
-                            <td>${support.moderator_id}</td>
-                            <td>${support.issue_time}</td>
+                            <td>${support.customer.id}</td>
+                            <td>${support.moderator.id}</td>
+                            <td>${support.issueTime}</td>
                             <td>${support.solved}</td>
 
                             <td>

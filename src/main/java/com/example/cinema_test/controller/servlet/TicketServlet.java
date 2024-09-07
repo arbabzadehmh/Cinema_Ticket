@@ -1,6 +1,7 @@
 package com.example.cinema_test.controller.servlet;
 
 
+import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.model.entity.*;
 import com.example.cinema_test.model.entity.enums.FileType;
 import com.example.cinema_test.model.entity.enums.ShowType;
@@ -12,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +24,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 
-
+@Slf4j
 @WebServlet(urlPatterns = "/ticket.do")
 public class TicketServlet extends HttpServlet {
 
@@ -79,8 +81,11 @@ public class TicketServlet extends HttpServlet {
 
             if (req.getParameter("print") != null) {
                 Ticket printingTicket = ticketService.findById(Long.parseLong(req.getParameter("print")));
-                if (printingTicket.getPayment()==null){
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "No payment found for this ticket !!!" + "</h1>");
+                if (printingTicket.getPayment() == null) {
+                    String errorMessage = "No payment found for this ticket !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/ticket.do");
                     return;
                 } else {
                     TicketVO ticketVO = new TicketVO(printingTicket);
@@ -107,14 +112,19 @@ public class TicketServlet extends HttpServlet {
                     req.getSession().setAttribute("editingTicket", editingTicket);
                     req.getRequestDispatcher("/tickets/ticket-edit.jsp").forward(req, resp);
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
+                    String errorMessage = "Record is editing by another user !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/ticket.do");
                 }
             } else {
                 req.getRequestDispatcher(redirectPath).forward(req, resp);
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
-            e.printStackTrace();
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/ticket.do");
         }
     }
 
@@ -141,7 +151,7 @@ public class TicketServlet extends HttpServlet {
                     Seat seat = seatService.findById(Long.parseLong(seatId));
 
                     double seatRatio = seat.getPriceRatio();
-                    if (showTime.getShow().getShowType().equals(ShowType.MOVIE)){
+                    if (showTime.getShow().getShowType().equals(ShowType.MOVIE)) {
                         seatRatio = 1;
                     }
 
@@ -177,7 +187,7 @@ public class TicketServlet extends HttpServlet {
 
                     Attachment qrCodeAttachment = Attachment.builder()
                             .attachTime(LocalDateTime.now())
-                            .fileName("/uploads/qrCodes/ticket_" + ticket.getShowTime().getId() + seatId  + ".png")
+                            .fileName("/uploads/qrCodes/ticket_" + ticket.getShowTime().getId() + seatId + ".png")
                             .fileType(FileType.PNG)
                             .fileSize(new File(qrCodeFilePath).length())
                             .build();
@@ -186,6 +196,7 @@ public class TicketServlet extends HttpServlet {
 
                     ticketService.save(ticket);
                     ticketIds.add(ticket.getId());
+                    log.info("Ticket saved successfully ID : " + ticket.getId());
 
                 }
 
@@ -194,9 +205,11 @@ public class TicketServlet extends HttpServlet {
                 req.getRequestDispatcher("/payment.jsp").forward(req, resp);
 
             }
-        }catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
-            e.printStackTrace();
+        } catch (Exception e) {
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/ticket.do");
         }
     }
 
@@ -219,6 +232,7 @@ public class TicketServlet extends HttpServlet {
             editingTicket.setReserved(ticketAb.isReserved());
             editingTicket.setEditing(false);
             ticketService.edit(editingTicket);
+            log.info("Ticket updated successfully : " + editingTicket.getId());
 
 
             // Send success response with updated manager
@@ -228,6 +242,8 @@ public class TicketServlet extends HttpServlet {
             out.flush();
 
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
+
 
             // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -236,7 +252,6 @@ public class TicketServlet extends HttpServlet {
             out.flush();
         }
     }
-
 
 
 }

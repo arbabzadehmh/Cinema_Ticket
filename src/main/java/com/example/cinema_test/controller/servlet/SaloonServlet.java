@@ -107,15 +107,20 @@ public class SaloonServlet extends HttpServlet {
                     req.getSession().setAttribute("editingSaloon", editingSaloon);
                     req.getRequestDispatcher("/saloons/saloon-edit.jsp").forward(req, resp);
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
+                    String errorMessage = "Record is editing by another user !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/saloon.do");
                 }
             } else {
                 req.getSession().setAttribute("cinemaSaloons", cinemaSaloons);
                 req.getRequestDispatcher(redirectPath).forward(req, resp);
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
             log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/saloon.do");
         }
     }
 
@@ -159,8 +164,8 @@ public class SaloonServlet extends HttpServlet {
                 editingSaloon.addAttachment(attachment);
                 editingSaloon.setEditing(false);
                 saloonService.edit(editingSaloon);
-                resp.sendRedirect("/saloon.do");
                 log.info("Saloon image changed successfully-ID : " + editingSaloon.getId());
+                resp.sendRedirect("/saloon.do");
 
             } else {
 
@@ -239,15 +244,19 @@ public class SaloonServlet extends HttpServlet {
                     cinema.addSaloon(saloon);
                     cinemaService.edit(cinema);
                     req.getSession().setAttribute("saloon", saloon);
-                    resp.sendRedirect("/saloon.do");
                     log.info("Saloon saved successfully-ID : " + saloon.getId());
+                    resp.sendRedirect("/saloon.do");
                 } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Invalid Saloon Data !!!" + "</h1>");
-                }
+                    String errorMessage = "Invalid Saloon Data !!!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/saloon.do");                }
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
             log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/saloon.do");
         }
     }
 
@@ -271,7 +280,6 @@ public class SaloonServlet extends HttpServlet {
             editingSaloon.setEditing(false);
             editingSaloon.setCapacity(saloonService.findSaloonSeats(editingSaloon.getId()).size());
             saloonService.edit(editingSaloon);
-
             log.info("Saloon edited successfully-ID : " + editingSaloon.getId());
 
             // Send success response with updated manager

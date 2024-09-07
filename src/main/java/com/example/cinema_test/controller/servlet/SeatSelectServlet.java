@@ -1,6 +1,7 @@
 package com.example.cinema_test.controller.servlet;
 
 
+import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.model.entity.Seat;
 import com.example.cinema_test.model.entity.ShowTime;
 import com.example.cinema_test.model.entity.ShowTimeVo;
@@ -12,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -19,6 +21,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 
+@Slf4j
 @WebServlet(urlPatterns = "/seatSelect.do")
 public class SeatSelectServlet extends HttpServlet {
 
@@ -83,15 +86,17 @@ public class SeatSelectServlet extends HttpServlet {
                     req.getRequestDispatcher("/seat-select.jsp").forward(req, resp);
                 }
 
-
-
-
             } else {
-                resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "The saloon is full !!!" + "</h1>");
+                String errorMessage = "The saloon is full !!!";
+                req.getSession().setAttribute("errorMessage", errorMessage);
+                log.error(errorMessage);
+                resp.sendRedirect("/cinemaHome.do");
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
-            e.printStackTrace();
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/seatSelect.do");
         }
     }
 

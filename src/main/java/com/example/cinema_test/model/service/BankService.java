@@ -63,7 +63,7 @@ public class BankService implements Serializable {
     }
 
     @Transactional
-    public Bank findAccountNumber(String accountNumber) throws Exception {
+    public Bank findByAccountNumber(String accountNumber) throws Exception {
         List<Bank> bankList = entityManager.createQuery("select b from bankEntity b where b.accountNumber=:accountNumber and b.deleted=false", Bank.class)
                 .getResultList();
         if (!bankList.isEmpty()) {

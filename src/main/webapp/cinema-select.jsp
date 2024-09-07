@@ -78,7 +78,7 @@
 
     </div>
 
-    <div class="h-50 d-flex p-4 justify-content-center">
+    <div class="h-75 d-flex p-4 justify-content-center">
 
 
         <div class="d-flex w-100 justify-content-center">

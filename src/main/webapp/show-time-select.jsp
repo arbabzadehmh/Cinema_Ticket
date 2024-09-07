@@ -112,7 +112,7 @@
 
     </div>
 
-    <div class="h-50 d-flex p-4 justify-content-center">
+    <div class="h-75 d-flex p-4 justify-content-center">
 
         <div class="flex-column">
             <h1 style="text-align: left">Select</h1>
@@ -125,6 +125,17 @@
                 <c:forEach var="showTime" items="${sessionScope.showTimes}">
                     <div class="show-card m-3 ">
                         <div class="card h-100">
+                            <c:choose>
+                                <c:when test="${showTime.saloonImage != ''}">
+                                    <img src="${showTime.saloonImage}" class="card-img-top d-block mx-auto"
+                                         alt="Cinema Image" style="width: 200px; height: 200px">
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="card-img-top d-block mx-auto text-center py-5"
+                                         style="background-color: #f0f0f0; width: 200px; height: 200px;">No Image
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
                             <div class="card-body">
                                 <h5 class="card-title text-center">Saloon : ${showTime.saloonNumber}</h5>
                                 <h5 class="card-title text-center">${showTime.startTime.toLocalTime()}-${showTime.endTime.toLocalTime()}</h5>

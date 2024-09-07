@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <html>
 <head>
     <title>Cinema</title>
@@ -156,8 +158,7 @@
                             <td>${show.showType}</td>
                             <td>${show.available}</td>
                             <td>${show.status}</td>
-                            <td>${show.description}</td>
-                            <td>
+                            <td>${fn:substring(show.description, 0, 10)}...</td>                            <td>
                                 <div class="d-flex">
                                     <button onclick="editShow(${show.id})" class="btn btn-primary w-50">Edit</button>
                                     <button onclick="removeShow(${show.id})" class="btn btn-danger w-50">Remove</button>

@@ -32,6 +32,8 @@ public class ShowTimeVo {
 
     private String description;
 
+    private String saloonImage;
+
 
     public ShowTimeVo(ShowTime showTime){
 
@@ -44,6 +46,11 @@ public class ShowTimeVo {
         this.status = showTime.isStatus();
         this.description = showTime.getDescription();
 
+        if (!showTime.getSaloon().getAttachments().isEmpty()){
+            this.saloonImage = showTime.getSaloon().getAttachments().get(0).getFileName();
+        } else {
+            this.saloonImage = "";
+        }
     }
 
 }

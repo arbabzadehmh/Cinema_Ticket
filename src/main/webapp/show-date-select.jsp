@@ -31,6 +31,8 @@
                 <h2 style="text-align: left">${sessionScope.selectedShow.name}</h2>
             </div>
 
+            
+
             <div>
                 <div class="mb-4">
                     <h5 style="text-align: left">Director : ${sessionScope.selectedShow.director}</h5>

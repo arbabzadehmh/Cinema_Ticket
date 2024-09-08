@@ -29,6 +29,7 @@ public class ManagerApi {
                 log.info("Manager removed successfully-ID : " + id);
                 return Response.accepted().build();
             } else {
+                log.error("Can not remove manager-ID : " + id);
                 return Response.status(Response.Status.NOT_ACCEPTABLE)
                         .entity("This manager is belong to a cinema !!!")
                         .build();
@@ -50,13 +51,16 @@ public class ManagerApi {
             Object result = managerService.findAll();
 
             if (result != null) {
+                log.info("Manager found successfully-find all ");
                 return Response.ok(result).build();
             } else {
+                log.error("Manager not found-find all ");
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for manager")
                         .build();
             }
         }catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("An error occurred: " + e.getMessage())
                     .build();
@@ -94,13 +98,16 @@ public class ManagerApi {
             Object result = managerService.findByPhoneNumber(phone);
 
             if (result != null) {
+                log.info("Manager found successfully-phone : " + phone);
                 return Response.ok(result).build();
             } else {
+                log.error("Manager not found-phone : " + phone);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for phone: " + phone)
                         .build();
             }
         }catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("An error occurred: " + e.getMessage())
                     .build();
@@ -115,13 +122,16 @@ public class ManagerApi {
             Object result = managerService.findManagersWantingCinema();
 
             if (result != null) {
+                log.info("Manager found successfully-manager for cinema");
                 return Response.ok(result).build();
             } else {
+                log.error("Manager not found-manager for cinema");
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for manager")
                         .build();
             }
         }catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("An error occurred: " + e.getMessage())
                     .build();
@@ -137,13 +147,16 @@ public class ManagerApi {
 
             if (manager != null) {
                 ManagerVO managerVO = new ManagerVO(manager);
+                log.info("Manager found successfully-nationCode : " + nationalCode);
                 return Response.ok(managerVO).build();
             } else {
+                log.error("Manager not found-nationalCode : " + nationalCode);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for manager")
                         .build();
             }
         }catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("An error occurred: " + e.getMessage())
                     .build();

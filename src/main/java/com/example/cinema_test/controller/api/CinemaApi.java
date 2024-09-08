@@ -31,7 +31,7 @@ public class CinemaApi {
                 Manager manager = managerService.findManagerByCinemaId(id);
                 manager.setCinema(null);
                 managerService.edit(manager);
-                log.info("Show removed successfully-ID : " + id);
+                log.info("Cinema removed successfully-ID : " + id);
                 return Response.accepted().build();
         }catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
@@ -52,13 +52,16 @@ public class CinemaApi {
 
             if (cinema != null) {
                 CinemaVO cinemaVO = new CinemaVO(cinema);
+                log.info("Cinema found successfully-ID : " + cinema.getId());
                 return Response.ok(cinemaVO).build();
             } else {
+                log.error("Cinema not found");
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for name: " + name)
                         .build();
             }
         }catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("An error occurred: " + e.getMessage())
                     .build();

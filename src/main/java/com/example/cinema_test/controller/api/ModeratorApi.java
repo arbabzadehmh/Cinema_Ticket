@@ -1,8 +1,6 @@
 package com.example.cinema_test.controller.api;
 
 import com.example.cinema_test.controller.exception.ExceptionWrapper;
-import com.example.cinema_test.model.entity.Manager;
-import com.example.cinema_test.model.entity.ManagerVO;
 import com.example.cinema_test.model.entity.Moderator;
 import com.example.cinema_test.model.entity.ModeratorVO;
 import com.example.cinema_test.model.service.ModeratorService;
@@ -30,6 +28,7 @@ public class ModeratorApi {
                 log.info("Moderator removed successfully-ID : " + id);
                 return Response.accepted().build();
             } else {
+                log.error("Can not remove all moderators !!!");
                 return Response.status(Response.Status.NOT_ACCEPTABLE)
                         .entity("Can not remove all moderators !!!")
                         .build();
@@ -52,13 +51,16 @@ public class ModeratorApi {
 
             if (moderator != null) {
                 ModeratorVO moderatorVO = new ModeratorVO(moderator);
+                log.info("Moderator found-national code : " + nationalCode);
                 return Response.ok(moderatorVO).build();
             } else {
+                log.error("Moderator not found-national code : " + nationalCode);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for moderator")
                         .build();
             }
         }catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("An error occurred: " + e.getMessage())
                     .build();

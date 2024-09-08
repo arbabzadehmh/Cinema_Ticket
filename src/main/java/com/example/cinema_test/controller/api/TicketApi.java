@@ -63,14 +63,16 @@ public class TicketApi {
             if (ticket != null) {
                 TicketVO ticketVO = new TicketVO(ticket);
                 ticketVO.setSeatLabel(seatService.findById(ticket.getSeatId()).getLabel());
+                log.info("Ticket found successfully-ID : " + id);
                 return Response.ok(ticketVO).build();
             } else {
+                log.info("Ticket not found-id : " + id);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for ID: " + id)
                         .build();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("An error occurred: " + e.getMessage())
                     .build();
@@ -92,13 +94,16 @@ public class TicketApi {
             }
 
             if (!ticketVOList.isEmpty()) {
+                log.info("Ticket found successfully-show time ID : " + id);
                 return Response.ok(ticketVOList).build();
             } else {
+                log.error("Ticket not found-show time ID : " + id);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for showtime ID: " + id)
                         .build();
             }
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("An error occurred: " + e.getMessage())
                     .build();
@@ -120,13 +125,16 @@ public class TicketApi {
             }
 
             if (!ticketVOList.isEmpty()) {
+                log.info("Ticket found successfully-customer phone number : " + phoneNumber);
                 return Response.ok(ticketVOList).build();
             } else {
+                log.error("Ticket not found-customer phone number : " + phoneNumber);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for Phone Number: " + phoneNumber)
                         .build();
             }
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("An error occurred: " + e.getMessage())
                     .build();

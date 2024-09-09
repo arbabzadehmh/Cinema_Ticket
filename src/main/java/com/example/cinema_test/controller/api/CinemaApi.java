@@ -52,10 +52,10 @@ public class CinemaApi {
 
             if (cinema != null) {
                 CinemaVO cinemaVO = new CinemaVO(cinema);
-                log.info("Cinema found successfully-ID : " + cinema.getId());
+                log.info("Cinema found successfully-name : " + name);
                 return Response.ok(cinemaVO).build();
             } else {
-                log.error("Cinema not found");
+                log.error("Cinema not found-name : " + name);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for name: " + name)
                         .build();

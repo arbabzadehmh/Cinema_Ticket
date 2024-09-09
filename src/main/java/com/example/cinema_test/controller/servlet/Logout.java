@@ -16,8 +16,13 @@ public class Logout extends HomePageServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("user");
+        if (user != null) {
+            log.info(user.getUsername() + " logged out successfully");
+        } else {
+            log.error("No user was found in the session during logout.");
+        }
         req.getSession().invalidate();
-        log.info(user.getUsername() + " logged out successfully");
         resp.sendRedirect("/postLogin.do");
     }
+
 }

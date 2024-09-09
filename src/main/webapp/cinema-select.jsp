@@ -1,3 +1,5 @@
+<%@ page import="com.example.cinema_test.model.entity.Show" %>
+<%@ page import="com.example.cinema_test.model.entity.enums.ShowType" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -46,6 +48,11 @@
             </div>
 
             <div>
+                <%
+                    Show show = (Show) session.getAttribute("selectedShow");
+                    if (show.getShowType().equals(ShowType.MOVIE)) {
+                %>
+
                 <div class="mb-4">
                     <h5 style="text-align: left">Director : ${sessionScope.selectedShow.director}</h5>
                 </div>
@@ -57,6 +64,24 @@
                 <div class="mb-4">
                     <h5 style="text-align: left">Genre : ${sessionScope.selectedShow.genre}</h5>
                 </div>
+
+                <%
+                } else if (show.getShowType().equals(ShowType.CONCERT)) {
+                %>
+
+                <div class="mb-4">
+                    <h5 style="text-align: left">Singer : ${sessionScope.selectedShow.singer}</h5>
+                </div>
+
+                <%
+                } else if (show.getShowType().equals(ShowType.EVENT)) {
+                %>
+
+                <div class="mb-4">
+                    <h5 style="text-align: left">Speaker : ${sessionScope.selectedShow.speaker}</h5>
+                </div>
+
+                <% } %>
 
                 <div>
                     <h5 style="text-align: left">Release Date : ${sessionScope.selectedShow.releasedDate}</h5>

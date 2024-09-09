@@ -226,26 +226,37 @@ public class AdminServlet extends HttpServlet {
 
         // Parse the JSON request body into a Manager object
         Admin adminAb;
+
         try {
 
             adminAb = objectMapper.readValue(req.getInputStream(), Admin.class);
             Admin editingAdmin = (Admin) req.getSession().getAttribute("editingAdmin");
+            editingAdmin.setEditing(false);
+            adminService.edit(editingAdmin);
+
             editingAdmin.setName(adminAb.getName());
             editingAdmin.setFamily(adminAb.getFamily());
             editingAdmin.setPhoneNumber(adminAb.getPhoneNumber());
             editingAdmin.setEmail(adminAb.getEmail());
-            editingAdmin.setEditing(false);
-            adminService.edit(editingAdmin);
-            log.info("Admin updated successfully : " + editingAdmin.getId());
 
+            BeanValidator<Admin> adminValidator = new BeanValidator<>();
+            if (adminValidator.validate(editingAdmin).isEmpty()) {
 
+                adminService.edit(editingAdmin);
+                log.info("Admin updated successfully : " + editingAdmin.getId());
 
-            // Send success response with updated admin
-            resp.setStatus(HttpServletResponse.SC_OK);
-            PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, adminAb); // Write admin object as JSON response
-            out.flush();
-
+                // Send success response with updated admin
+                resp.setStatus(HttpServletResponse.SC_OK);
+                PrintWriter out = resp.getWriter();
+                objectMapper.writeValue(out, adminAb); // Write admin object as JSON response
+                out.flush();
+            } else {
+                log.error("Invalid Admin Data For Update !!!");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                PrintWriter out = resp.getWriter();
+                out.write("{\"message\": \"Invalid Admin Data.\"}");
+                out.flush();
+            }
         } catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
 
@@ -256,6 +267,5 @@ public class AdminServlet extends HttpServlet {
             out.flush();
         }
     }
-
 
 }

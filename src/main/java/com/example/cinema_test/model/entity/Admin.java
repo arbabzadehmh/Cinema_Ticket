@@ -1,6 +1,7 @@
 package com.example.cinema_test.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,6 +29,7 @@ public class Admin extends Base {
     private Long id;
 
     @Column(name = "name", length = 30, nullable = false)
+    @Pattern(regexp = "^[a-zA-z\\s]{2,20}", message = "invalid name")
     private String name;
 
     @Column(name = "family", length = 30, nullable = false)

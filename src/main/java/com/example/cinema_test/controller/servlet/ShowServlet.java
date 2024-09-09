@@ -278,7 +278,6 @@ public class ShowServlet extends HttpServlet {
                 }
 
                 BeanValidator<Show> showValidator = new BeanValidator<>();
-
                 if (showValidator.validate(show).isEmpty()) {
                     showService.save(show);
 
@@ -324,6 +323,8 @@ public class ShowServlet extends HttpServlet {
         try {
             showAb = objectMapper.readValue(req.getInputStream(), Show.class);
             Show editingShow = (Show) req.getSession().getAttribute("editingShow");
+            editingShow.setEditing(false);
+            showService.edit(editingShow);
 
             editingShow.setDirector(showAb.getDirector().toUpperCase());
             editingShow.setProducer(showAb.getProducer());
@@ -335,16 +336,23 @@ public class ShowServlet extends HttpServlet {
             editingShow.setGenre(showAb.getGenre());
             editingShow.setBasePrice(showAb.getBasePrice());
             editingShow.setDescription(showAb.getDescription());
-            editingShow.setEditing(false);
-            showService.edit(editingShow);
-            log.info("Show edited successfully : " + editingShow.toString());
 
-            // Send success response with updated manager
-            resp.setStatus(HttpServletResponse.SC_OK);
-            PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, showAb); // Write manager object as JSON response
-            out.flush();
+            BeanValidator<Show> showValidator = new BeanValidator<>();
+            if (showValidator.validate(editingShow).isEmpty()) {
+                showService.edit(editingShow);
+                log.info("Show edited successfully : " + editingShow.toString());
 
+                resp.setStatus(HttpServletResponse.SC_OK);
+                PrintWriter out = resp.getWriter();
+                objectMapper.writeValue(out, showAb);
+                out.flush();
+            } else {
+                log.error("Invalid Show Data For Update !!!");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                PrintWriter out = resp.getWriter();
+                out.write("{\"message\": \"Invalid Show Data.\"}");
+                out.flush();
+            }
         } catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
 

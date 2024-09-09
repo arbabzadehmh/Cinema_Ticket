@@ -65,7 +65,6 @@ public class SaloonServlet extends HttpServlet {
             System.out.println("saloon.do\n\n\n\n");
 
 
-
             User user = (User) req.getSession().getAttribute("user");
 
             ManagerVO managervo = null;
@@ -250,7 +249,8 @@ public class SaloonServlet extends HttpServlet {
                     String errorMessage = "Invalid Saloon Data !!!";
                     req.getSession().setAttribute("errorMessage", errorMessage);
                     log.error(errorMessage);
-                    resp.sendRedirect("/saloon.do");                }
+                    resp.sendRedirect("/saloon.do");
+                }
             }
         } catch (Exception e) {
             String errorMessage = e.getMessage();
@@ -274,24 +274,33 @@ public class SaloonServlet extends HttpServlet {
         try {
             saloonAb = objectMapper.readValue(req.getInputStream(), Saloon.class);
             Saloon editingSaloon = (Saloon) req.getSession().getAttribute("editingSaloon");
+            editingSaloon.setEditing(false);
+            saloonService.edit(editingSaloon);
+
             editingSaloon.setSaloonNumber(saloonAb.getSaloonNumber());
             editingSaloon.setStatus(saloonAb.isStatus());
             editingSaloon.setDescription(saloonAb.getDescription());
-            editingSaloon.setEditing(false);
             editingSaloon.setCapacity(saloonService.findSaloonSeats(editingSaloon.getId()).size());
-            saloonService.edit(editingSaloon);
-            log.info("Saloon edited successfully-ID : " + editingSaloon.getId());
 
-            // Send success response with updated manager
-            resp.setStatus(HttpServletResponse.SC_OK);
-            PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, saloonAb); // Write manager object as JSON response
-            out.flush();
+            BeanValidator<Saloon> saloonValidator = new BeanValidator<>();
+            if (saloonValidator.validate(editingSaloon).isEmpty()) {
+                saloonService.edit(editingSaloon);
+                log.info("Saloon edited successfully-ID : " + editingSaloon.getId());
 
+                resp.setStatus(HttpServletResponse.SC_OK);
+                PrintWriter out = resp.getWriter();
+                objectMapper.writeValue(out, saloonAb); // Write manager object as JSON response
+                out.flush();
+            }else {
+                log.error("Invalid Saloon Data For Update !!!");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                PrintWriter out = resp.getWriter();
+                out.write("{\"message\": \"Invalid Saloon Data.\"}");
+                out.flush();
+            }
         } catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
 
-            // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             PrintWriter out = resp.getWriter();
             out.write("{\"message\": \"Failed to update saloon.\"}");

@@ -237,27 +237,35 @@ public class ModeratorServlet extends HttpServlet {
 
             moderatorAb = objectMapper.readValue(req.getInputStream(), Moderator.class);
             Moderator editingModerator = (Moderator) req.getSession().getAttribute("editingModerator");
+            editingModerator.setEditing(false);
+            moderatorService.edit(editingModerator);
+
             editingModerator.setName(moderatorAb.getName());
             editingModerator.setFamily(moderatorAb.getFamily());
             editingModerator.setNationalCode(moderatorAb.getNationalCode());
             editingModerator.setPhoneNumber(moderatorAb.getPhoneNumber());
             editingModerator.setEmail(moderatorAb.getEmail());
             editingModerator.setAddress(moderatorAb.getAddress());
-            editingModerator.setEditing(false);
-            moderatorService.edit(editingModerator);
-            log.info("Moderator updated successfully : " + editingModerator.getId());
 
+            BeanValidator<Moderator> moderatorValidator = new BeanValidator<>();
+            if (moderatorValidator.validate(editingModerator).isEmpty()) {
+                moderatorService.edit(editingModerator);
+                log.info("Moderator updated successfully : " + editingModerator.getId());
 
-            // Send success response with updated manager
-            resp.setStatus(HttpServletResponse.SC_OK);
-            PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, moderatorAb); // Write manager object as JSON response
-            out.flush();
-
+                resp.setStatus(HttpServletResponse.SC_OK);
+                PrintWriter out = resp.getWriter();
+                objectMapper.writeValue(out, moderatorAb); // Write manager object as JSON response
+                out.flush();
+            }else {
+                log.error("Invalid Moderator Data For Update !!!");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                PrintWriter out = resp.getWriter();
+                out.write("{\"message\": \"Invalid Moderator Data.\"}");
+                out.flush();
+            }
         } catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
 
-            // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             PrintWriter out = resp.getWriter();
             out.write("{\"message\": \"Failed to update moderator.\"}");

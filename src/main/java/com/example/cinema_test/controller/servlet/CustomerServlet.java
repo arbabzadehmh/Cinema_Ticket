@@ -184,7 +184,15 @@ public class CustomerServlet extends HttpServlet {
                                 .deleted(false)
                                 .build();
 
-//                TODO:USER VALIDATION
+                BeanValidator<User> userValidator = new BeanValidator<>();
+                if (!userValidator.validate(user).isEmpty()) {
+                    String errorMessage = "Invalid User Data!";
+                    req.getSession().setAttribute("errorMessage", errorMessage);
+                    log.error(errorMessage);
+                    resp.sendRedirect("/sign-up.jsp");
+                    return;
+                }
+
 
                 if (userService.findByUsername(req.getParameter("phoneNumber")) != null) {
                     String errorMessage = "Duplicate username(phoneNumber) !!!";
@@ -270,31 +278,37 @@ public class CustomerServlet extends HttpServlet {
 
             customerAb = objectMapper.readValue(req.getInputStream(), Customer.class);
             Customer editingCustomer = (Customer) req.getSession().getAttribute("editingCustomer");
+            editingCustomer.setEditing(false);
+            customerService.edit(editingCustomer);
+
             editingCustomer.setName(customerAb.getName());
             editingCustomer.setFamily(customerAb.getFamily());
             editingCustomer.setPhoneNumber(customerAb.getPhoneNumber());
             editingCustomer.setEmail(customerAb.getEmail());
-            editingCustomer.setEditing(false);
 
             User user = userService.findByUsername(editingCustomer.getPhoneNumber());
             user.setUsername(customerAb.getPhoneNumber());
             userService.edit(user);
 
-            customerService.edit(editingCustomer);
-            log.info("Customer updated successfully : " + editingCustomer.getId());
+            BeanValidator<Customer> customerValidator = new BeanValidator<>();
+            if (customerValidator.validate(editingCustomer).isEmpty()) {
+                customerService.edit(editingCustomer);
+                log.info("Customer updated successfully : " + editingCustomer.getId());
 
-
-            // Send success response with updated manager
-            resp.setStatus(HttpServletResponse.SC_OK);
-            PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, customerAb); // Write manager object as JSON response
-            out.flush();
-
+                resp.setStatus(HttpServletResponse.SC_OK);
+                PrintWriter out = resp.getWriter();
+                objectMapper.writeValue(out, customerAb);
+                out.flush();
+            } else {
+                log.error("Invalid Customer Data For Update !!!");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                PrintWriter out = resp.getWriter();
+                out.write("{\"message\": \"Invalid Customer Data.\"}");
+                out.flush();
+            }
         } catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
 
-
-            // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             PrintWriter out = resp.getWriter();
             out.write("{\"message\": \"Failed to update customer.\"}");

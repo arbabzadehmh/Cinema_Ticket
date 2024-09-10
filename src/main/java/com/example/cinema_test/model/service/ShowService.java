@@ -9,6 +9,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -102,6 +103,16 @@ public class ShowService implements Serializable {
     public List<Show> findUsableShows() throws Exception {
         return entityManager
                 .createQuery("select s from showEntity s where s.status=true and s.deleted=false ", Show.class)
+                .getResultList();
+    }
+
+    @Transactional
+    public List<Show> findByText(String text) throws Exception {
+        return entityManager
+                .createQuery("select s from showEntity s where " +
+                        "(s.name like :text or s.director like :text or s.singer like :text or s.speaker like :text or s.producer like :text) " +
+                        "and s.available=true and s.status=true and s.deleted=false", Show.class)
+                .setParameter("text", text.toUpperCase() + "%")
                 .getResultList();
     }
 

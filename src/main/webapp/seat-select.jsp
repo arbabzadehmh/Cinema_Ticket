@@ -1,3 +1,5 @@
+<%@ page import="com.example.cinema_test.model.entity.Show" %>
+<%@ page import="com.example.cinema_test.model.entity.enums.ShowType" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -61,7 +63,6 @@
     }
 %>
 
-
 <jsp:include page="/navbar.jsp"/>
 
 <div class="d-flex flex-row p-5 justify-content-between " style="background-color: #2a415a; color: white">
@@ -111,7 +112,23 @@
                  onclick="selectSeat(${seat.id})">
                 <h1 hidden="hidden">${seat.id}</h1>
                 <h6>${seat.label}</h6>
+
+                <%
+                    Show show = (Show) session.getAttribute("selectedShow");
+                    if (show.getShowType().equals(ShowType.MOVIE)) {
+                %>
+
+                <h6>${sessionScope.selectedShow.basePrice}</h6>
+
+                <%
+                } else {
+                %>
+
                 <h6>${seat.priceRatio*sessionScope.selectedShow.basePrice}</h6>
+
+                <% } %>
+
+
             </div>
         </c:forEach>
     </div>

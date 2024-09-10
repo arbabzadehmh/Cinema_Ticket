@@ -30,7 +30,7 @@
     </a>
     <% } %>
 
-    <a class="item d-flex justify-content-center align-items-center m-auto " href="#">
+    <a class="item d-flex justify-content-center align-items-center m-auto " href="search.do">
         <div class="item-icon w-25"><i class="fa fa-search"></i></div>
         <div class="w-50 d-sm-none d-lg-flex m-auto">Search</div>
     </a>

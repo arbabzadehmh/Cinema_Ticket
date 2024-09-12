@@ -33,6 +33,7 @@ public class ShowTimeApi {
         try {
 
             if (!ticketService.findSoldSeatsByShowId(id).isEmpty()) {
+                log.error("Some tickets of this showtime has been sold, can not remove showtime-id : " + id);
                 return Response.status(Response.Status.NOT_ACCEPTABLE)
                         .entity("Some tickets of this showtime has been sold !!!")
                         .build();
@@ -47,7 +48,6 @@ public class ShowTimeApi {
                 return Response.accepted().build();
             }
         }catch (Exception e) {
-            e.printStackTrace();
             log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("An error occurred: " + e.getMessage())

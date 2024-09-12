@@ -18,7 +18,6 @@ public class BankApi {
     private BankService bankService;
 
 
-
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
@@ -41,13 +40,16 @@ public class BankApi {
         try {
             Bank bank = bankService.findByName(name.toUpperCase());
             if (bank != null) {
+                log.info("Bank found successfully-name : " + name);
                 return Response.ok(bank).build();
-            }else {
+            } else {
+                log.error("Bank not found-name : " + name);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("There Is No Bank With This Name" + name)
                         .build();
             }
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Error : " + e.getMessage())
                     .build();
@@ -63,13 +65,16 @@ public class BankApi {
             Bank bank = bankService.findByAccountNumber(accountNumber);
 
             if (bank != null) {
+                log.info("Bank found-account number : " + accountNumber);
                 return Response.ok(bank).build();
             } else {
+                log.error("Bank not found-account number : " + accountNumber);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("There Is No Bank With This AccountNumber : " + accountNumber)
                         .build();
             }
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Error : " + e.getMessage())
                     .build();
@@ -84,13 +89,16 @@ public class BankApi {
         try {
             Bank bank = bankService.findByBranchCode(Long.valueOf(branchCode));
             if (bank != null) {
+                log.info("Bank found-branch code : " + branchCode);
                 return Response.ok(bank).build();
             } else {
+                log.error("Bank not found-branch code : " + branchCode);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("There Is No Bank With This BranchCode : " + branchCode)
                         .build();
             }
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Error : " + e.getMessage())
                     .build();
@@ -104,13 +112,16 @@ public class BankApi {
         try {
             Bank bank = bankService.findByBranchName(branchName.toUpperCase());
             if (bank != null) {
+                log.info("Bank found-branch name: " + branchName);
                 return Response.ok(bank).build();
             } else {
+                log.error("Bank not found-branch name : " + branchName);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("There Is No Bank With This BranchName : " + branchName)
                         .build();
             }
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Error : " + e.getMessage())
                     .build();
@@ -124,13 +135,16 @@ public class BankApi {
         try {
             List<Bank> bankList = bankService.findByStatus(status);
             if (!bankList.isEmpty()) {
+                log.info("Bank found-status : " + status);
                 return Response.ok(bankList).build();
             } else {
+                log.error("Bank not found-status : " + status);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("There Is No Bank With This status : " + status)
                         .build();
             }
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Error : " + e.getMessage())
                     .build();

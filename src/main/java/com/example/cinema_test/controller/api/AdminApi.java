@@ -1,13 +1,9 @@
 package com.example.cinema_test.controller.api;
 
 import com.example.cinema_test.controller.exception.ExceptionWrapper;
-import com.example.cinema_test.model.entity.Cinema;
-import com.example.cinema_test.model.entity.CinemaVO;
-import com.example.cinema_test.model.entity.Manager;
 import com.example.cinema_test.model.service.AdminService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,9 +37,5 @@ public class AdminApi {
                     .build();
         }
     }
-
-
-
-
 
 }

@@ -54,13 +54,16 @@ public class CustomerApi {
             CustomerVO customerVO = new CustomerVO(customer);
 
             if (customerVO != null) {
+                log.info("Customer found successfully-ID : " + id);
                 return Response.ok(customerVO).build();
             } else {
+                log.error("Customer not found-ID : " + id);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for id: " + id)
                         .build();
             }
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("An error occurred: " + e.getMessage())
                     .build();
@@ -81,13 +84,16 @@ public class CustomerApi {
             }
 
             if (customerVOList != null) {
+                log.info("Customer found successfully-family : " + family);
                 return Response.ok(customerVOList).build();
             } else {
+                log.error("Customer not found-family : " + family);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for family: " + family)
                         .build();
             }
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("An error occurred: " + e.getMessage())
                     .build();
@@ -104,13 +110,16 @@ public class CustomerApi {
             CustomerVO customerVO = new CustomerVO(customer);
 
             if (customerVO != null) {
+                log.info("Customer found successfully-phone : " + phone);
                 return Response.ok(customerVO).build();
             } else {
+                log.error("Customer not found-phone : " + phone);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for phone: " + phone)
                         .build();
             }
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("An error occurred: " + e.getMessage())
                     .build();

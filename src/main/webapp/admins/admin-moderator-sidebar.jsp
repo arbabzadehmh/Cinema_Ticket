@@ -85,9 +85,19 @@
             <div class="w-50 d-sm-none d-lg-flex">Tickets</div>
         </a>
 
+        <a class="item d-flex justify-content-center align-items-center mb-auto ps-lg-4" href="payment.do">
+            <div class="item-icon w-25"><i class="fa fa-money-bill-transfer"></i></div>
+            <div class="w-50 d-sm-none d-lg-flex">Payments</div>
+        </a>
+
         <a class="item d-flex justify-content-center align-items-center mb-auto ps-lg-4" href="bank.do">
             <div class="item-icon w-25"><i class="fa fa-bank"></i></div>
             <div class="w-50 d-sm-none d-lg-flex">Banks</div>
+        </a>
+
+        <a class="item d-flex justify-content-center align-items-center mb-auto ps-lg-4" href="support.do">
+            <div class="item-icon w-25"><i class="fa fa-user-headset"></i></div>
+            <div class="w-50 d-sm-none d-lg-flex">Support</div>
         </a>
 
         <a class="item d-flex justify-content-center align-items-center ps-lg-4" href="logout.do">

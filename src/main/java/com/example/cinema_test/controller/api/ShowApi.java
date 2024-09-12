@@ -29,6 +29,7 @@ public class ShowApi {
             Show showToRemove = showService.findById(id);
 
             if (showToRemove.isAvailable()) {
+                log.error("Show is active on a cinema, can not remove show-id : "+ id);
                 return Response.status(Response.Status.NOT_ACCEPTABLE)
                         .entity("Show is active on a cinema !!!")
                         .build();
@@ -59,13 +60,16 @@ public class ShowApi {
             Object result = showService.findByName(name);
 
             if (result != null) {
+                log.info("Show found-name : " + name);
                 return Response.ok(result).build();
             } else {
+                log.error("Show not found-name : " + name);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for name: " + name)
                         .build();
             }
         } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("An error occurred: " + e.getMessage())
                     .build();

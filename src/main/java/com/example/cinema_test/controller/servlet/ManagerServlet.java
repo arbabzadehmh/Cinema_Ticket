@@ -246,27 +246,35 @@ public class ManagerServlet extends HttpServlet {
 
             managerAb = objectMapper.readValue(req.getInputStream(), Manager.class);
             Manager editingManager = (Manager) req.getSession().getAttribute("editingManager");
+            editingManager.setEditing(false);
+            managerService.edit(editingManager);
+
             editingManager.setName(managerAb.getName());
             editingManager.setFamily(managerAb.getFamily());
             editingManager.setPhoneNumber(managerAb.getPhoneNumber());
             editingManager.setEmail(managerAb.getEmail());
             editingManager.setNationalCode(managerAb.getNationalCode());
             editingManager.setAddress(managerAb.getAddress());
-            editingManager.setEditing(false);
-            managerService.edit(editingManager);
-            log.info("Manager updated successfully : " + editingManager.getId());
 
+            BeanValidator<Manager> managerValidator = new BeanValidator<>();
+            if (managerValidator.validate(editingManager).isEmpty()) {
+                managerService.edit(editingManager);
+                log.info("Manager updated successfully : " + editingManager.getId());
 
-            // Send success response with updated manager
-            resp.setStatus(HttpServletResponse.SC_OK);
-            PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, managerAb); // Write manager object as JSON response
-            out.flush();
-
+                resp.setStatus(HttpServletResponse.SC_OK);
+                PrintWriter out = resp.getWriter();
+                objectMapper.writeValue(out, managerAb); // Write manager object as JSON response
+                out.flush();
+            }else {
+                log.error("Invalid Manager Data For Update !!!");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                PrintWriter out = resp.getWriter();
+                out.write("{\"message\": \"Invalid Manager Data.\"}");
+                out.flush();
+            }
         } catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
 
-            // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             PrintWriter out = resp.getWriter();
             out.write("{\"message\": \"Failed to update manager.\"}");

@@ -1,3 +1,5 @@
+<%@ page import="com.example.cinema_test.model.entity.Show" %>
+<%@ page import="com.example.cinema_test.model.entity.enums.ShowType" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -61,29 +63,32 @@
     }
 %>
 
-
 <jsp:include page="/navbar.jsp"/>
 
-<div class="d-flex flex-row p-5 justify-content-center " style="background-color: #2a415a; color: white">
+<div class="d-flex flex-row p-5 justify-content-between " style="background-color: #2a415a; color: white">
 
-    <div class="col align-content-end">
-        <div class="flex-column ">
-            <i class="fa fa-camera-movie mb-3 large-text"></i>
-            <h2 class="mb-0">Show : ${sessionScope.selectedShow.name}</h2>
+    <div class="d-flex flex-column">
+        <div class="d-flex flex-row mb-1">
+            <i class="fa fa-theater-masks" style="font-size: xxx-large"></i>
+            <h2 style="margin-left: 20px">Show</h2>
+        </div>
+
+        <div>
+            <h2>${sessionScope.selectedShow.name}</h2>
         </div>
     </div>
 
 
-    <div class="col">
-        <div class="row text-center mb-3">
+    <div class="d-flex flex-column" style="align-items: flex-start">
+        <div class="mb-3">
             <h2 class="large-text">Cinema : ${sessionScope.selectedCinema.name}</h2>
         </div>
-        <div class="row text-center">
+        <div>
             <h2 class="large-text">Saloon : ${sessionScope.selectedShowTime.saloonNumber}</h2>
         </div>
     </div>
 
-    <div class="col">
+    <div class="d-flex flex-column">
         <div class="row text-center mb-3">
             <h2 class="large-text">Date : ${sessionScope.selectedDate}</h2>
         </div>
@@ -107,7 +112,23 @@
                  onclick="selectSeat(${seat.id})">
                 <h1 hidden="hidden">${seat.id}</h1>
                 <h6>${seat.label}</h6>
+
+                <%
+                    Show show = (Show) session.getAttribute("selectedShow");
+                    if (show.getShowType().equals(ShowType.MOVIE)) {
+                %>
+
+                <h6>${sessionScope.selectedShow.basePrice}</h6>
+
+                <%
+                } else {
+                %>
+
                 <h6>${seat.priceRatio*sessionScope.selectedShow.basePrice}</h6>
+
+                <% } %>
+
+
             </div>
         </c:forEach>
     </div>

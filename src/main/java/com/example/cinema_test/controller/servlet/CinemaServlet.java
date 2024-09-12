@@ -236,21 +236,32 @@ public class CinemaServlet extends HttpServlet {
         try {
             cinemaAb = objectMapper.readValue(req.getInputStream(), Cinema.class);
             Cinema editingCinema = (Cinema) req.getSession().getAttribute("editingCinema");
+            editingCinema.setEditing(false);
+            cinemaService.edit(editingCinema);
+
             editingCinema.setName(cinemaAb.getName().toUpperCase());
             editingCinema.setStatus(cinemaAb.isStatus());
             editingCinema.setDescription(cinemaAb.getDescription());
             editingCinema.setAddress(cinemaAb.getAddress());
-            editingCinema.setEditing(false);
-            cinemaService.edit(editingCinema);
-            log.info("Cinema updated successfully : " + editingCinema.getId());
 
+            BeanValidator<Cinema> cinemaValidator = new BeanValidator<>();
 
-            // Send success response with updated manager
-            resp.setStatus(HttpServletResponse.SC_OK);
-            PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, cinemaAb); // Write manager object as JSON response
-            out.flush();
+            if (cinemaValidator.validate(editingCinema).isEmpty()) {
+                cinemaService.edit(editingCinema);
+                log.info("Cinema updated successfully : " + editingCinema.getId());
 
+                // Send success response with updated manager
+                resp.setStatus(HttpServletResponse.SC_OK);
+                PrintWriter out = resp.getWriter();
+                objectMapper.writeValue(out, cinemaAb); // Write manager object as JSON response
+                out.flush();
+            } else {
+                log.error("Invalid Cinema Data For Update !!!");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                PrintWriter out = resp.getWriter();
+                out.write("{\"message\": \"Invalid Cinema Data.\"}");
+                out.flush();
+            }
         } catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
 

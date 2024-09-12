@@ -31,6 +31,7 @@ public class SaloonApi {
         try {
 
             if (!showTimeService.findActiveShowsBySaloonId(id).isEmpty()) {
+                log.error("Show is playing on this saloon, can not remove this saloon-id : " +id);
                 return Response.status(Response.Status.NOT_ACCEPTABLE)
                         .entity("Show is playing on this saloon !!!")
                         .build();

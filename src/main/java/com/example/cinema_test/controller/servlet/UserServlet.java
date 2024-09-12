@@ -125,7 +125,14 @@ public class UserServlet extends HttpServlet {
                             .deleted(false)
                             .build();
 
-//            TODO: USER VALIDATION
+            BeanValidator<User> userValidator = new BeanValidator<>();
+            if (!userValidator.validate(user).isEmpty()) {
+                String errorMessage = "Invalid User Data!";
+                req.getSession().setAttribute("errorMessage", errorMessage);
+                log.error(errorMessage);
+                resp.sendRedirect("/sign-up.jsp");
+                return;
+            }
 
             if (userService.findByUsername(req.getParameter("phoneNumber")) != null){
                 String errorMessage = "Duplicate username(phoneNumber) !!!";
@@ -186,21 +193,28 @@ public class UserServlet extends HttpServlet {
 
             userAb = objectMapper.readValue(req.getInputStream(), User.class);
             User editingUser = (User) req.getSession().getAttribute("editingUser");
-
+            editingUser.setEditing(false);
+            userService.edit(editingUser);
 
             editingUser.setPassword(userAb.getPassword());
             editingUser.setLocked(userAb.isLocked());
-            editingUser.setEditing(false);
 
-            userService.edit(editingUser);
-            log.info("User updated successfully : " + editingUser.getUsername());
+            BeanValidator<User> userValidator = new BeanValidator<>();
+            if (userValidator.validate(editingUser).isEmpty()) {
+                userService.edit(editingUser);
+                log.info("User updated successfully : " + editingUser.getUsername());
 
-            // Send success response with updated manager
-            resp.setStatus(HttpServletResponse.SC_OK);
-            PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, userAb); // Write manager object as JSON response
-            out.flush();
-
+                resp.setStatus(HttpServletResponse.SC_OK);
+                PrintWriter out = resp.getWriter();
+                objectMapper.writeValue(out, userAb);
+                out.flush();
+            } else {
+                log.error("Invalid User Data For Update !!!");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                PrintWriter out = resp.getWriter();
+                out.write("{\"message\": \"Invalid User Data.\"}");
+                out.flush();
+            }
         } catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
 

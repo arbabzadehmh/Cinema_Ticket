@@ -36,24 +36,31 @@
                             <div class="form-row">
                                 <div class="form-group col-md-8">
                                     <label for="customer">Customer ID</label>
-                                    <input type="number" class="form-control" id="customer" name="Customer ID" value="${sessionScope.editingSupport.customer_id}" disabled>
+                                    <input type="number" class="form-control" id="customer" name="Customer ID" value="${sessionScope.editingSupport.customer.id}" disabled>
                                 </div>
                                 <div class="form-group col-md-8">
                                     <label for="moderator">Customer ID</label>
-                                    <input type="number" class="form-control" id="moderator" name="Moderator ID" value="${sessionScope.editingSupport.moderator_id}" disabled>
+                                    <input type="number" class="form-control" id="moderator" name="Moderator ID" value="${sessionScope.editingSupport.moderator.id}" disabled>
                                 </div>
                             </div>
 
 
                             <div class="form-row">
                                 <div class="form-group col-md-8">
-                                    <label for="issue_time">Phone Number</label>
-                                    <input type="datetime-local" class="form-control" id="issue_time" name="Issue Time" value="${sessionScope.editingSupport.issue_time}" disabled>
+                                    <label for="issueTime">issue time</label>
+                                    <input type="datetime-local" class="form-control" id="issueTime" name="Issue Time" value="${sessionScope.editingSupport.issuetime}" disabled>
                                 </div>
                                 <div class="form-group col-md-8">
-                                    <label for="solved">Email</label>
+                                    <label for="solved">Solved</label>
                                     <input type="checkbox" class="form-control" id="solved" name="Solved" value="${sessionScope.editingSupport.solved}">
                                 </div>
+
+                                <div class="form-group col-md-8">
+                                    <label for="message">issue time</label>
+                                    <input type="text" class="form-control" id="message" name="message" value=" " >
+                                </div>
+
+
 
                             </div>
 
@@ -71,29 +78,14 @@
                 </div>
 
                 <div class="d-inline p-5 w-25 h-100 d-flex flex-column justify-content-between" style="margin-left: 10%">
+                    <div style="margin-left: 5%">
+                        <form action="managers.do" method="post" enctype="multipart/form-data">
+                            <button onclick="findMessage()" class="btn btn-primary w-50">Find messages </button>
 
-                    <table id="resultTable" border="1" class="table-light w-100">
-                        <thead>
-                        <tr>
-                            <th>Message</th>
+                        </form>
 
-                        </tr>
-                        </thead>
+                    </div>
 
-                        <tbody>
-
-                        <c:forEach var="message" items="${sessionScope.Support.message}">
-
-                            <tr>
-                                <td>${message.text}</td>
-                            </tr>
-
-                        </c:forEach>
-                        <button onclick="editMessage" class="btn btn-primary w-25 mt-4">New</button>
-
-                        </tbody>
-
-                    </table>
 
                 </div>
 
@@ -153,6 +145,35 @@
         }
 
     }
+
+    async function findMessage() {
+        $.ajax({
+            url: "/rest/message/findAll/" + id,
+            method: "GET",
+            dataType: "json", // Expect JSON response
+            success: function (response) {
+                // Clear previous results
+                $("#allResultTable tbody").empty();
+
+                if (typeof response === 'object' && response !== null) {
+
+
+                    var row = "<tr>" +
+                        "<td>" + response.message + "</td>" +
+                        "</tr>";
+                    $("#allResultTable tbody").append(row);
+                } else {
+                    var noDataRow = "<tr><td colspan='3'>No records found</td></tr>";
+                    $("#allResultTable tbody").append(noDataRow);
+                }
+            },
+            error: function (xhr, status, error) {
+                // alert("Error fetching data: " + error);
+            }
+        });
+    }
+
+
 
 
     async function cancelEditingSupport(id) {

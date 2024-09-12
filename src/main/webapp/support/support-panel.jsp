@@ -9,6 +9,18 @@
 </head>
 <body>
 
+<%
+String errorMessage = (String) session.getAttribute("errorMessage");
+if (errorMessage != null) {
+%>
+<div class="alert alert-danger">
+    <%= errorMessage %>
+</div>
+<%
+    session.removeAttribute("errorMessage");
+    }
+%>
+
 <div class="container-fluid d-flex flex-row vh-100 p-0">
 
     <jsp:include page="/admins/admin-moderator-sidebar.jsp"/>
@@ -145,8 +157,8 @@
 
                     var row = "<tr>" +
                         "<td>" + response.id + "</td>" +
-                        "<td>" + response.customerId + "</td>" +
-                        "<td>" + response.moderatorId + "</td>" +
+                        "<td>" + response.customer.id + "</td>" +
+                        "<td>" + response.moderator.id + "</td>" +
                         "<td>" + response.issueTime + "</td>" +
                         "<td>" + response.solved + "</td>" +
                         "<td>" + "<button class='btn btn-primary' onclick='editSupport(" + response.id + ")'>Edit</button>" + "</td>" +
@@ -179,8 +191,8 @@
 
                     var row = "<tr>" +
                         "<td>" + response.id + "</td>" +
-                        "<td>" + response.customerId + "</td>" +
-                        "<td>" + response.moderatorId + "</td>" +
+                        "<td>" + response.customer.id + "</td>" +
+                        "<td>" + response.moderator.id + "</td>" +
                         "<td>" + response.issueTime + "</td>" +
                         "<td>" + response.solved + "</td>" +
                         "<td>" + "<button class='btn btn-primary' onclick='editSupport(" + response.id + ")'>Edit</button>" + "</td>" +
@@ -214,8 +226,8 @@
 
                     var row = "<tr>" +
                         "<td>" + response.id + "</td>" +
-                        "<td>" + response.customerId + "</td>" +
-                        "<td>" + response.moderatorId + "</td>" +
+                        "<td>" + response.customer.id + "</td>" +
+                        "<td>" + response.moderator.id + "</td>" +
                         "<td>" + response.issueTime + "</td>" +
                         "<td>" + response.solved + "</td>" +
                         "<td>" + "<button class='btn btn-primary' onclick='editSupport(" + response.id + ")'>Edit</button>" + "</td>" +

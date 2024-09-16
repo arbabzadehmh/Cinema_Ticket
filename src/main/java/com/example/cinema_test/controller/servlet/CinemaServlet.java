@@ -162,7 +162,7 @@ public class CinemaServlet extends HttpServlet {
                 Cinema cinema =
                         Cinema
                                 .builder()
-                                .name(req.getParameter("name"))
+                                .name(req.getParameter("name").toUpperCase())
                                 .status(Boolean.parseBoolean(req.getParameter("status")))
                                 .description(req.getParameter("description"))
                                 .address(req.getParameter("address"))
@@ -203,7 +203,6 @@ public class CinemaServlet extends HttpServlet {
                     Manager manager = managerService.findById(Long.parseLong(req.getParameter("managerId")));
                     manager.setCinema(cinema);
                     managerService.edit(manager);
-                    cinemaService.save(cinema);
                     log.info("Cinema saved successfully-ID : " + cinema.getId());
                     resp.sendRedirect("/cinema.do");
                 } else {

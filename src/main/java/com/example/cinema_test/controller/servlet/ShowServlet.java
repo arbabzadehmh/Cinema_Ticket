@@ -230,7 +230,7 @@ public class ShowServlet extends HttpServlet {
                                 .name(req.getParameter("name").toUpperCase())
                                 .genre(Genre.valueOf(req.getParameter("genre")))
                                 .director(req.getParameter("director").toUpperCase())
-                                .producer(req.getParameter("producer"))
+                                .producer(req.getParameter("producer").toUpperCase())
                                 .singer(req.getParameter("singer").toUpperCase())
                                 .speaker(req.getParameter("speaker").toUpperCase())
                                 .basePrice(Double.parseDouble(req.getParameter("basePrice")))
@@ -327,7 +327,7 @@ public class ShowServlet extends HttpServlet {
             showService.edit(editingShow);
 
             editingShow.setDirector(showAb.getDirector().toUpperCase());
-            editingShow.setProducer(showAb.getProducer());
+            editingShow.setProducer(showAb.getProducer().toUpperCase());
             editingShow.setSinger(showAb.getSinger().toUpperCase());
             editingShow.setSpeaker(showAb.getSpeaker().toUpperCase());
             editingShow.setReleasedDate(showAb.getReleasedDate());

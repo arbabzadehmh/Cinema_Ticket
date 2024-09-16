@@ -83,7 +83,7 @@ public class CustomerApi {
                 customerVOList.add(customerVO);
             }
 
-            if (customerVOList != null) {
+            if (!customerVOList.isEmpty()) {
                 log.info("Customer found successfully-family : " + family);
                 return Response.ok(customerVOList).build();
             } else {

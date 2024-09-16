@@ -77,7 +77,7 @@ public class TicketService implements Serializable {
     @Transactional
     public List<Ticket> findByCustomerPhoneNumber(String phoneNumber) throws Exception {
         return entityManager
-                .createQuery("select t from ticketEntity t where t.customer.phoneNumber =:phoneNumber and t.deleted=false ", Ticket.class)
+                .createQuery("select t from ticketEntity t where t.customer.phoneNumber =:phoneNumber and t.deleted=false order by t.issueTime desc ", Ticket.class)
                 .setParameter("phoneNumber", phoneNumber)
                 .getResultList();
     }
@@ -109,7 +109,7 @@ public class TicketService implements Serializable {
     @Transactional
     public List<Ticket> findByShowTimeId(Long showTimeId) throws Exception {
         return entityManager
-                .createQuery("select t from ticketEntity t where t.showTime.id=:showTimeId and t.deleted=false ", Ticket.class)
+                .createQuery("select t from ticketEntity t where t.showTime.id=:showTimeId and t.deleted=false order by t.issueTime desc ", Ticket.class)
                 .setParameter("showTimeId", showTimeId)
                 .getResultList();
     }

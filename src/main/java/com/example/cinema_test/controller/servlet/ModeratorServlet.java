@@ -163,8 +163,8 @@ public class ModeratorServlet extends HttpServlet {
                 Moderator moderator =
                         Moderator
                                 .builder()
-                                .name(req.getParameter("name"))
-                                .family(req.getParameter("family"))
+                                .name(req.getParameter("name").toUpperCase())
+                                .family(req.getParameter("family").toUpperCase())
                                 .phoneNumber(req.getParameter("phoneNumber"))
                                 .email(req.getParameter("email"))
                                 .nationalCode(req.getParameter("nationalCode"))
@@ -240,8 +240,8 @@ public class ModeratorServlet extends HttpServlet {
             editingModerator.setEditing(false);
             moderatorService.edit(editingModerator);
 
-            editingModerator.setName(moderatorAb.getName());
-            editingModerator.setFamily(moderatorAb.getFamily());
+            editingModerator.setName(moderatorAb.getName().toUpperCase());
+            editingModerator.setFamily(moderatorAb.getFamily().toUpperCase());
             editingModerator.setNationalCode(moderatorAb.getNationalCode());
             editingModerator.setPhoneNumber(moderatorAb.getPhoneNumber());
             editingModerator.setEmail(moderatorAb.getEmail());

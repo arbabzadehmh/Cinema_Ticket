@@ -205,8 +205,8 @@ public class CustomerServlet extends HttpServlet {
                 Customer customer =
                         Customer
                                 .builder()
-                                .name(req.getParameter("name"))
-                                .family(req.getParameter("family"))
+                                .name(req.getParameter("name").toUpperCase())
+                                .family(req.getParameter("family").toUpperCase())
                                 .phoneNumber(req.getParameter("phoneNumber"))
                                 .email(req.getParameter("email"))
                                 .user(user)
@@ -281,8 +281,8 @@ public class CustomerServlet extends HttpServlet {
             editingCustomer.setEditing(false);
             customerService.edit(editingCustomer);
 
-            editingCustomer.setName(customerAb.getName());
-            editingCustomer.setFamily(customerAb.getFamily());
+            editingCustomer.setName(customerAb.getName().toUpperCase());
+            editingCustomer.setFamily(customerAb.getFamily().toUpperCase());
             editingCustomer.setPhoneNumber(customerAb.getPhoneNumber());
             editingCustomer.setEmail(customerAb.getEmail());
 

@@ -2,9 +2,11 @@ package com.example.cinema_test.controller.servlet;
 
 import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.controller.validation.BeanValidator;
+import com.example.cinema_test.model.entity.Admin;
 import com.example.cinema_test.model.entity.Bank;
 import com.example.cinema_test.model.entity.User;
 import com.example.cinema_test.model.service.BankService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Slf4j
 @WebServlet(urlPatterns = "/bank.do")
@@ -78,7 +81,7 @@ public class BankServlet extends HttpServlet {
                     .name(name)
                     .branchName(branchName)
                     .branchCode(Long.parseLong(branchCode))
-                    .accountBalance(Long.parseLong(accountBalance))
+                    .accountBalance(Double.parseDouble(accountBalance))
                     .accountNumber(accountNumber)
                     .status(status)
                     .build();
@@ -106,35 +109,47 @@ public class BankServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Bank bankAb;
+
         try {
-            String id = req.getParameter("id");
-            String name = req.getParameter("name");
-            String accountNumber = req.getParameter("accountNumber");
-            String branchCode = req.getParameter("branchCode");
-            String branchName = req.getParameter("branchName");
-            String accountBalance = req.getParameter("accountBalance");
-            String status = req.getParameter("status");
+            bankAb = objectMapper.readValue(req.getInputStream(), Bank.class);
+            Bank editingBank = (Bank) req.getSession().getAttribute("editingBank");
+            editingBank.setEditing(false);
+            bankService.edit(editingBank);
 
-            if (id == null) {
-                resp.getWriter().write("ID Is Required");
-                return;
-            }
-            Bank bank = bankService.findById(Long.parseLong(id));
-            if (bank == null) {
-                resp.getWriter().write("Bank With Id" + id + "Not Found");
-                return;
-            }
-            if (name != null) bank.setName(name);
-            if (accountBalance != null) bank.setAccountBalance(Long.parseLong(accountBalance));
-            if (accountNumber != null) bank.setAccountNumber(accountNumber);
-            if (branchCode != null) bank.setBranchCode(Long.parseLong(branchCode));
-            if (branchName != null) bank.setBranchName(branchName);
-            if (status != null) bank.setStatus(Boolean.parseBoolean(status));
+            editingBank.setBranchName(bankAb.getBranchName());
+            editingBank.setBranchCode(bankAb.getBranchCode());
+            editingBank.setStatus(bankAb.isStatus());
 
-            bankService.edit(bank);
-            resp.getWriter().write("Bank With Id" + bank.getId() + "Edited");
+            BeanValidator<Bank> bankValidator = new BeanValidator<>();
+            if (bankValidator.validate(bankAb).isEmpty()) {
+                bankService.edit(editingBank);
+                log.info("Bank updated successfully : " + editingBank.getId());
+
+                resp.setStatus(HttpServletResponse.SC_OK);
+                PrintWriter out = resp.getWriter();
+                objectMapper.writeValue(out, bankAb);
+                out.flush();
+            } else {
+                log.error("Invalid Bank Data For Update !!!");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                PrintWriter out = resp.getWriter();
+                out.write("{\"message\": \"Invalid Bank Data.\"}");
+                out.flush();
+            }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style= \"background-color : red;\">" + e.getMessage() + "</h1>");
+            log.error(ExceptionWrapper.getMessage(e).toString());
+
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            PrintWriter out = resp.getWriter();
+            out.write("{\"message\": \"Failed to update bank.\"}");
+            out.flush();
         }
     }
 }

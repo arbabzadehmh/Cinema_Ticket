@@ -41,6 +41,9 @@ public class TestServlet4 extends HttpServlet {
     @Inject
     private SaloonService saloonService;
 
+    @Inject
+    private PaymentService paymentService;
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -96,6 +99,7 @@ public class TestServlet4 extends HttpServlet {
 //            System.out.println(ticketService.findById(72L).getAttachments().get(1).getFileName());
 
 
+            System.out.println(paymentService.findByDate(LocalDate.of(2024,9,14)).size());
 
 
 

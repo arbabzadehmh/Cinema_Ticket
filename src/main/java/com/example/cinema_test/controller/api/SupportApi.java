@@ -1,9 +1,8 @@
 package com.example.cinema_test.controller.api;
 
-import com.example.cinema_test.model.entity.Bank;
-import com.example.cinema_test.model.entity.Message;
-import com.example.cinema_test.model.service.BankService;
-import com.example.cinema_test.model.service.MessageService;
+import com.example.cinema_test.controller.exception.ExceptionWrapper;
+import com.example.cinema_test.model.entity.*;
+import com.example.cinema_test.model.service.SupportService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -13,6 +12,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,27 +21,88 @@ import java.util.List;
 public class SupportApi {
 
     @Inject
-    private MessageService messageService;
+    private SupportService supportService;
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/findById/{id}")
+    public Response findById(@PathParam(value = "id") Long id) {
+        try {
+            Support support = supportService.findById(id);
+            SupportVO supportVO = new SupportVO(support);
+
+            if (supportVO != null) {
+                log.info("Support found successfully-ID : " + id);
+                return Response.ok(supportVO).build();
+            } else {
+                log.error("Support not found-ID : " + id);
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("No records found for id: " + id)
+                        .build();
+            }
+        } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred: " + e.getMessage())
+                    .build();
+        }
+    }
 
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/message/findAll/{id}")
-    public Response findMessage(@PathParam(value = "id") Long id) {
+    @Path("/findByCustomerPhone/{phoneNumber}")
+    public Response findByCustomerPhoneNumber(@PathParam(value = "phoneNumber") String phone) {
         try {
-           List<Message> messageList= messageService.findAll();
-            if (messageList != null) {
-                return Response.ok(messageList).build();
-            }else {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("There Is No message List for Support " + id)
-                        .build();
+            List<Support> supportList = supportService.findByCustomerPhoneNumber(phone);
+            List<SupportVO> supportVOList = new ArrayList<>();
+            for (Support support : supportList) {
+                SupportVO supportVO = new SupportVO(support);
+                supportVOList.add(supportVO);
             }
 
-
+            if (!supportVOList.isEmpty()) {
+                log.info("Support found successfully-customer phone : " + phone);
+                return Response.ok(supportVOList).build();
+            } else {
+                log.error("Support not found-customer phone : " + phone);
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("No records found for phone: " + phone)
+                        .build();
+            }
         } catch (Exception e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Error : " + e.getMessage())
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred: " + e.getMessage())
+                    .build();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/findByModeratorFamily/{family}")
+    public Response findByModeratorFamily(@PathParam(value = "family") String family) {
+        try {
+            List<Support> supportList = supportService.findByModeratorFamily(family);
+            List<SupportVO> supportVOList = new ArrayList<>();
+            for (Support support : supportList) {
+                SupportVO supportVO = new SupportVO(support);
+                supportVOList.add(supportVO);
+            }
+
+            if (!supportVOList.isEmpty()) {
+                log.info("Support found successfully-moderator family : " + family);
+                return Response.ok(supportVOList).build();
+            } else {
+                log.error("Support not found-moderator family : " + family);
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("No records found for moderator family: " + family)
+                        .build();
+            }
+        } catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred: " + e.getMessage())
                     .build();
         }
     }

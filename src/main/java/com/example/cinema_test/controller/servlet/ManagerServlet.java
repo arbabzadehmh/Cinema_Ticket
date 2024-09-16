@@ -172,8 +172,8 @@ public class ManagerServlet extends HttpServlet {
                 Manager manager =
                         Manager
                                 .builder()
-                                .name(req.getParameter("name"))
-                                .family(req.getParameter("family"))
+                                .name(req.getParameter("name").toUpperCase())
+                                .family(req.getParameter("family").toUpperCase())
                                 .phoneNumber(req.getParameter("phoneNumber"))
                                 .email(req.getParameter("email"))
                                 .nationalCode(req.getParameter("nationalCode"))
@@ -249,8 +249,8 @@ public class ManagerServlet extends HttpServlet {
             editingManager.setEditing(false);
             managerService.edit(editingManager);
 
-            editingManager.setName(managerAb.getName());
-            editingManager.setFamily(managerAb.getFamily());
+            editingManager.setName(managerAb.getName().toUpperCase());
+            editingManager.setFamily(managerAb.getFamily().toUpperCase());
             editingManager.setPhoneNumber(managerAb.getPhoneNumber());
             editingManager.setEmail(managerAb.getEmail());
             editingManager.setNationalCode(managerAb.getNationalCode());

@@ -141,6 +141,8 @@ public class TicketServlet extends HttpServlet {
 
             List<Long> ticketIds = new ArrayList<>();
 
+            double totalPrice = 0;
+
             String selectedSeatsParam = req.getParameter("selectedSeats");
 
             if (selectedSeatsParam != null && !selectedSeatsParam.isEmpty()) {
@@ -196,13 +198,15 @@ public class TicketServlet extends HttpServlet {
 
                     ticketService.save(ticket);
                     ticketIds.add(ticket.getId());
+                    totalPrice += ticket.getPrice();
                     log.info("Ticket saved successfully ID : " + ticket.getId());
 
                 }
 
                 req.getSession().setAttribute("ticketIds", ticketIds);
-                req.getSession().setAttribute("banks", bankService.findAll());
-                req.getRequestDispatcher("/payment.jsp").forward(req, resp);
+                req.getSession().setAttribute("totalPrice", totalPrice);
+                req.getSession().setAttribute("banks", bankService.findByStatus(true));
+                req.getRequestDispatcher("/payments/payment.jsp").forward(req, resp);
 
             }
         } catch (Exception e) {

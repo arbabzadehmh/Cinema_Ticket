@@ -23,8 +23,8 @@ public class SupportService implements Serializable {
 
     @Transactional
     public Support edit(Support support) throws Exception {
-        support = entityManager.find(Support.class, support.getId());
-        if (support != null) {
+        Support foundSupport  = entityManager.find(Support.class, support.getId());
+        if (foundSupport != null) {
             entityManager.merge(support);
             return support;
         }
@@ -55,23 +55,18 @@ public class SupportService implements Serializable {
     }
 
     @Transactional
-    public List<Support> findByModerator(Moderator moderator) throws Exception {
+    public List<Support> findByModeratorFamily(String family) throws Exception {
         return entityManager
-                .createQuery("select oo from supportEntity oo where oo.deleted=false and oo.moderator.id=moderator.id", Support.class)
+                .createQuery("select s from supportEntity s where s.deleted=false and s.moderator.family like :family ", Support.class)
+                .setParameter("family", family.toUpperCase() + "%")
                 .getResultList();
     }
 
     @Transactional
     public List<Support> findByCustomer(Customer customer) throws Exception {
         return entityManager
-                .createQuery("select oo from supportEntity oo where oo.deleted=false and oo.customer.id=customer.id", Support.class)
-                .getResultList();
-    }
-
-    @Transactional
-    public List<Support> findByMessage(Message message) throws Exception {
-        return entityManager
-                .createQuery("select oo from supportEntity oo where oo.deleted=false and oo.message.id=message.id", Support.class)
+                .createQuery("select s from supportEntity s where s.deleted=false and s.customer=:customer order by s.issueTime desc ", Support.class)
+                .setParameter("customer", customer)
                 .getResultList();
     }
 
@@ -79,14 +74,22 @@ public class SupportService implements Serializable {
     @Transactional
     public List<Support> findByNotSolved() throws Exception {
         return entityManager
-                .createQuery("select oo from supportEntity oo where oo.deleted=false and oo.solved=false ", Support.class)
+                .createQuery("select s from supportEntity s where s.deleted=false and s.solved=false order by s.issueTime desc ", Support.class)
                 .getResultList();
     }
 
     @Transactional
     public List<Support> findBySolved() throws Exception {
         return entityManager
-                .createQuery("select oo from supportEntity oo where oo.deleted=false and oo.solved=true ", Support.class)
+                .createQuery("select s from supportEntity s where s.deleted=false and s.solved=true ", Support.class)
+                .getResultList();
+    }
+
+    @Transactional
+    public List<Support> findByCustomerPhoneNumber(String phoneNumber) throws Exception {
+        return entityManager
+                .createQuery("select s from supportEntity s where  s.customer.phoneNumber =:phoneNumber and s.deleted=false", Support.class)
+                .setParameter("phoneNumber", phoneNumber)
                 .getResultList();
     }
 

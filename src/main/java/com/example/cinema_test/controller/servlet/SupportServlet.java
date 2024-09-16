@@ -1,44 +1,24 @@
 package com.example.cinema_test.controller.servlet;
 
 import com.example.cinema_test.controller.exception.ExceptionWrapper;
-import com.example.cinema_test.controller.validation.BeanValidator;
 import com.example.cinema_test.model.entity.*;
-import com.example.cinema_test.model.entity.enums.FileType;
-import com.example.cinema_test.model.service.AttachmentService;
-import com.example.cinema_test.model.service.MessageService;
-import com.example.cinema_test.model.service.ModeratorService;
-import com.example.cinema_test.model.service.SupportService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.cinema_test.model.service.*;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 
 
 @Slf4j
-@WebServlet(urlPatterns ="/support.do")
-@MultipartConfig(
-        fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
-        maxFileSize = 1024 * 1024 * 10,      // 10 MB
-        maxRequestSize = 1024 * 1024 * 100   // 100 MB
-)
-
+@WebServlet(urlPatterns = "/support.do")
 public class SupportServlet extends HttpServlet {
-
-    @Inject
-    private MessageService messageService;
 
     @Inject
     private ModeratorService moderatorService;
@@ -47,7 +27,7 @@ public class SupportServlet extends HttpServlet {
     private SupportService supportService;
 
     @Inject
-    private AttachmentService attachmentService;
+    private CustomerService customerService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -63,93 +43,96 @@ public class SupportServlet extends HttpServlet {
 
 
             User user = (User) req.getSession().getAttribute("user");
-            Moderator loggedModerator = moderatorService.findByUsername(user.getUsername());
-            req.getSession().setAttribute("loggedModerator", loggedModerator);
+            String redirectPath = "";
 
+            if (user != null && user.getRole().getRole().equals("customer")) {
+                Customer customer = customerService.findByUsername(user.getUsername());
+                List<Support> supportList = supportService.findByCustomer(customer);
 
-            if (req.getParameter("cancel") != null) {
-                Support editingSupport = supportService.findById(Long.parseLong(req.getParameter("cancel")));
-                editingSupport.setEditing(false);
-                supportService.edit(editingSupport);
+                req.getSession().setAttribute("supportList", supportList);
+                redirectPath = "/customers/supports.jsp";
+            } else {
+                req.getSession().setAttribute("allNotSolvedSupport", supportService.findByNotSolved());
+                redirectPath = "/supports/support-panel.jsp";
+            }
+
+            if (req.getParameter("solve") != null) {
+                Support support = supportService.findById(Long.parseLong(req.getParameter("solve")));
+                support.setSolved(true);
+                supportService.edit(support);
                 resp.sendRedirect("/support.do");
                 return;
             }
 
-            if (req.getParameter("edit") != null) {
-                Support editingSupport = supportService.findById(Long.parseLong(req.getParameter("edit")));
-                if (!editingSupport.isEditing()) {
-                    editingSupport.setEditing(true);
-                    supportService.edit(editingSupport);
-                    req.getSession().setAttribute("editingSupport", editingSupport);
-                    req.getRequestDispatcher("/support/support-edit.jsp").forward(req, resp);
-                } else {
-                    resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + "Record is editing by another user !!!" + "</h1>");
-                }
+            if (req.getParameter("open") != null) {
+                Support openingSupport = supportService.findById(Long.parseLong(req.getParameter("open")));
+                req.getSession().setAttribute("openingSupport", openingSupport);
+                req.getRequestDispatcher("message.do").forward(req, resp);
             } else {
-                req.getSession().setAttribute("allSupport", supportService.findAll());
-                req.getRequestDispatcher("/support/support-panel.jsp").forward(req, resp);
+                req.getRequestDispatcher(redirectPath).forward(req, resp);
             }
         } catch (Exception e) {
-            resp.getWriter().write("<h1 style=\"background-color: yellow;\">" + e.getMessage() + "</h1>");
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            resp.sendRedirect("/support.do");
         }
     }
-
 
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Set the response content type to JSON
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-
-        // Create an ObjectMapper to handle JSON parsing (Jackson library)
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        // Parse the JSON request body into a Manager object
-        Support SupportAb ;
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            SupportAb = objectMapper.readValue(req.getInputStream(), Support.class);
-            List<Message> messageList= messageService.findAll();
-            messageList.add(SupportAb.getMessageList().get(0));
-            req.getSession().setAttribute("allMessage",messageList );
-            req.getRequestDispatcher("/support/support-edit.jsp").forward(req, resp);
 
-            Support editingSupport = (Support) req.getSession().getAttribute("editingSupport");
-            editingSupport.setMessageList(messageList);
-            editingSupport.setCustomer(SupportAb.getCustomer());
-            editingSupport.setModerator(SupportAb.getModerator());
-            editingSupport.setIssueTime(SupportAb.getIssueTime());
-            editingSupport.setSolved(SupportAb.isSolved());
-            editingSupport.setEditing(false);
-            supportService.edit(editingSupport);
-            log.info("support updated successfully : " + editingSupport.getId());
+            User user = (User) req.getSession().getAttribute("user");
+            Customer customer = customerService.findByUsername(user.getUsername());
 
+            List<Moderator> moderators = moderatorService.findAll();
+            if (!moderators.isEmpty()) {
+                Random random = new Random();
+                int randomIndex = random.nextInt(moderators.size());
+                Moderator randomModerator = moderators.get(randomIndex);
 
+                Message message =
+                        Message
+                                .builder()
+                                .text("How can I help you ?")
+                                .sendTime(LocalDateTime.now())
+                                .sender("moderator")
+                                .support(null)
+                                .deleted(false)
+                                .build();
 
-            // Send success response with updated admin
-            resp.setStatus(HttpServletResponse.SC_OK);
-            PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, SupportAb); // Write admin object as JSON response
-            out.flush();
+                Support support =
+                        Support
+                                .builder()
+                                .customer(customer)
+                                .moderator(randomModerator)
+                                .issueTime(LocalDateTime.now())
+                                .deleted(false)
+                                .build();
 
+                support.addMessage(message);
+
+                message.setSupport(support);
+
+                supportService.save(support);
+                log.info("Support saved successfully : " + support.getId());
+                req.getSession().setAttribute("openingSupport", support);
+                resp.sendRedirect("message.do");
+            } else {
+                String errorMessage = "No moderators found !!!";
+                req.getSession().setAttribute("errorMessage", errorMessage);
+                log.error(errorMessage);
+                resp.sendRedirect("/support.do");
+            }
         } catch (Exception e) {
+            String errorMessage = e.getMessage();
+            req.getSession().setAttribute("errorMessage", errorMessage);
             log.error(ExceptionWrapper.getMessage(e).toString());
-
-            // Send error response if something goes wrong
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            PrintWriter out = resp.getWriter();
-            out.write("{\"message\": \"Failed to update support.\"}");
-            out.flush();
+            resp.sendRedirect("/support.do");
         }
     }
-
-
-
-
-
-
-
-
 
 
 }

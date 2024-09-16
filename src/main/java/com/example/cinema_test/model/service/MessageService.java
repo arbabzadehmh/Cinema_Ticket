@@ -60,14 +60,16 @@ public class MessageService implements Serializable {
     @Transactional
     public List<Message> findBySupport(Support support) throws Exception {
         return entityManager
-                .createQuery("select oo from messageEntity oo where oo.deleted=false and oo.support.id=support.id", Message.class)
+                .createQuery("select m from messageEntity m where m.deleted=false and m.support=:support", Message.class)
+                .setParameter("support", support)
                 .getResultList();
     }
 
     @Transactional
     public List<Message> findBySender(String sender) throws Exception {
         return entityManager
-                .createQuery("select oo from messageEntity oo where oo.deleted=false and oo.sender=sender", Message.class)
+                .createQuery("select m from messageEntity m where m.deleted=false and m.sender=:sender", Message.class)
+                .setParameter("sender", sender)
                 .getResultList();
     }
 

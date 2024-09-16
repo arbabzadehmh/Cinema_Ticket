@@ -37,7 +37,6 @@ public class Payment extends Base {
     private LocalDateTime paymentDateTime;
 
     @Column(name = "description", length = 50)
-    @Pattern(regexp = "^[a-zA-Z\\s]{3,30}$")
     private String description;
 
     @OneToOne

@@ -10,6 +10,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Path("/manager")
 public class ManagerApi {
@@ -119,11 +122,17 @@ public class ManagerApi {
     @Path("/manager-for-cinema")
     public Response findManagersWantingCinema() {
         try {
-            Object result = managerService.findManagersWantingCinema();
+            List<Manager> managerList = managerService.findManagersWantingCinema();
+            List<ManagerVO> managerVOList = new ArrayList<>();
+            for (Manager manager : managerList) {
+                ManagerVO managerVO = new ManagerVO(manager);
+                managerVOList.add(managerVO);
+            }
 
-            if (result != null) {
+
+            if (!managerVOList.isEmpty()) {
                 log.info("Manager found successfully-manager for cinema");
-                return Response.ok(result).build();
+                return Response.ok(managerVOList).build();
             } else {
                 log.error("Manager not found-manager for cinema");
                 return Response.status(Response.Status.NOT_FOUND)

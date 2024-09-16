@@ -91,7 +91,7 @@
 
 
                             <td>
-                                <button onclick="printTicket(${ticket.id})" class="btn btn-primary w-25 mt-4">Print</button>
+                                <button onclick="printTicket(${ticket.id})" class="btn btn-primary w-100 mt-4">Print</button>
                             </td>
                         </tr>
 

@@ -42,7 +42,7 @@ public class Moderator extends Base{
     private String phoneNumber;
 
     @Column(name = "email", length = 50)
-    @Pattern(regexp = "^\\w{3,35}@(gmail|yahoo|microsoft)\\.com$" ,message = "Invalid Email")
+    @Pattern(regexp = "^\\w{0,35}@(gmail|yahoo|microsoft)\\.com$" ,message = "Invalid Email")
     private String email;
 
     @Column(name = "national_code", length = 10)

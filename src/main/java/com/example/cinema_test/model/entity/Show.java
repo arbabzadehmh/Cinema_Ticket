@@ -41,19 +41,19 @@ public class Show extends Base {
     private Genre genre;
 
     @Column(name = "director", length =30)
-    @Pattern(regexp = "^[a-zA-z\\s]{2,30}$", message = "invalid Director")
+    @Pattern(regexp = "^[a-zA-z\\s]{0,30}$", message = "invalid Director")
     private String director;
 
     @Column(name = "producer", length =30)
-    @Pattern(regexp = "^[a-zA-z\\s]{2,30}$", message = "invalid Producer")
+    @Pattern(regexp = "^[a-zA-z\\s]{0,30}$", message = "invalid Producer")
     private String producer;
 
     @Column(name = "singer", length =30)
-    @Pattern(regexp = "^[a-zA-z\\s]{2,30}$", message = "invalid Singer")
+    @Pattern(regexp = "^[a-zA-z\\s]{0,30}$", message = "invalid Singer")
     private String singer;
 
     @Column(name = "speaker", length =30)
-    @Pattern(regexp = "^[a-zA-z\\s]{2,30}$", message = "invalid Speaker")
+    @Pattern(regexp = "^[a-zA-z\\s]{0,30}$", message = "invalid Speaker")
     private String speaker;
 
     @Column(name = "released_date")

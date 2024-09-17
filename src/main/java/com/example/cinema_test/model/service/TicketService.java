@@ -93,7 +93,7 @@ public class TicketService implements Serializable {
     @Transactional
     public List<Long> findReservedSeatsByShowId(Long showId) throws Exception {
         return entityManager
-                .createQuery("select t.seatId from ticketEntity t where t.showTime.id =:showId and t.reserved=true and t.deleted=false ", Long.class)
+                .createQuery("select t.seatId from ticketEntity t where t.showTime.id =:showId and t.reserved=true and t.payment is null and t.deleted=false ", Long.class)
                 .setParameter("showId", showId)
                 .getResultList();
     }

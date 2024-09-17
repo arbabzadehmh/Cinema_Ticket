@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -135,6 +136,10 @@ public class TicketServlet extends HttpServlet {
         try {
             ShowTimeVo showTimeVo = (ShowTimeVo) req.getSession().getAttribute("selectedShowTime");
             ShowTime showTime = showTimeService.findById(showTimeVo.getId());
+            double basePrice = showTime.getShow().getBasePrice();
+            if (showTime.getShow().getShowType().equals(ShowType.MOVIE) && (showTime.getStartTime().getDayOfWeek() == DayOfWeek.TUESDAY || showTime.getStartTime().getDayOfWeek() == DayOfWeek.SATURDAY)) {
+                basePrice = basePrice / 2;
+            }
 
             CustomerVO customerVO = (CustomerVO) req.getSession().getAttribute("customer");
             Customer customer = customerService.findById(customerVO.getId());
@@ -154,7 +159,7 @@ public class TicketServlet extends HttpServlet {
 
                     double seatRatio = seat.getPriceRatio();
                     if (showTime.getShow().getShowType().equals(ShowType.MOVIE)) {
-                        seatRatio = 1;
+                        seatRatio = 1.0;
                     }
 
                     Ticket ticket =
@@ -162,7 +167,7 @@ public class TicketServlet extends HttpServlet {
                                     .builder()
                                     .customer(customer)
                                     .showTime(showTime)
-                                    .price(showTime.getShow().getBasePrice() * seatRatio)
+                                    .price(basePrice * seatRatio)
                                     .issueTime(LocalDateTime.now())
                                     .seatId(seat.getId())
                                     .reserved(true)

@@ -1,5 +1,8 @@
 <%@ page import="com.example.cinema_test.model.entity.Show" %>
 <%@ page import="com.example.cinema_test.model.entity.enums.ShowType" %>
+<%@ page import="java.time.DayOfWeek" %>
+<%@ page import="com.example.cinema_test.model.entity.ShowTime" %>
+<%@ page import="com.example.cinema_test.model.entity.ShowTimeVo" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -105,6 +108,7 @@
     <input type="hidden" id="selectedSeats" name="selectedSeats" value="">
 
     <div id="seats">
+
         <c:forEach var="seat" items="${sessionScope.showSeats}">
             <div id="seat${seat.id}"
                  class="seat ${sessionScope.soldSeatsId.contains(seat.id) ? 'sold-seat' :
@@ -114,13 +118,22 @@
                 <h6>${seat.label}</h6>
 
                 <%
+                    ShowTimeVo showTimeVo = (ShowTimeVo) session.getAttribute("selectedShowTime");
                     Show show = (Show) session.getAttribute("selectedShow");
                     if (show.getShowType().equals(ShowType.MOVIE)) {
+                        if ((showTimeVo.getStartTime().getDayOfWeek() == DayOfWeek.TUESDAY || showTimeVo.getStartTime().getDayOfWeek() == DayOfWeek.SATURDAY)) {
+                %>
+
+                <h6>${sessionScope.selectedShow.basePrice / 2}</h6>
+
+                <%
+                } else {
                 %>
 
                 <h6>${sessionScope.selectedShow.basePrice}</h6>
 
                 <%
+                    }
                 } else {
                 %>
 
@@ -133,7 +146,7 @@
         </c:forEach>
     </div>
 
-    <button class="btn btn-primary mb-5" type="submit" >Submit Selected Seats</button>
+    <button class="btn btn-primary mb-5" type="submit">Submit Selected Seats</button>
 </form>
 
 
@@ -145,6 +158,11 @@
 
     function selectSeat(id) {
         let seatDiv = document.getElementById("seat" + id);
+
+        // Prevent selection of sold or reserved seats
+        if (seatDiv.classList.contains('sold-seat') || seatDiv.classList.contains('reserved-seat')) {
+            return;  // Don't allow clicking on sold or reserved seats
+        }
 
         // Toggle selection
         if (seatDiv.classList.contains('selected-seat')) {
@@ -158,6 +176,7 @@
         // Update hidden input with selected seat IDs
         document.getElementById("selectedSeats").value = selectedSeats.join(",");
     }
+
 </script>
 
 <jsp:include page="/js-import.jsp"/>

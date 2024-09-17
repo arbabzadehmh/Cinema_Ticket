@@ -67,9 +67,8 @@ public class SeatSelectServlet extends HttpServlet {
 
             if (selectedShowTime.getRemainingCapacity()>0){
 
-
                 List<Seat> seats = selectedShowTime.getSaloon().getSeats();
-                seats.sort(Comparator.comparing(Seat::getLabel));
+                seats.sort(Comparator.comparing(Seat::getId));
                 req.getSession().setAttribute("showSeats", seats);
 
 

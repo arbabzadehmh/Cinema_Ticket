@@ -5,10 +5,7 @@ import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.controller.validation.BeanValidator;
 import com.example.cinema_test.model.entity.*;
 import com.example.cinema_test.model.entity.enums.FileType;
-import com.example.cinema_test.model.service.AttachmentService;
-import com.example.cinema_test.model.service.BankService;
-import com.example.cinema_test.model.service.PaymentService;
-import com.example.cinema_test.model.service.TicketService;
+import com.example.cinema_test.model.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
@@ -48,6 +45,9 @@ public class PaymentServlet extends HttpServlet {
 
     @Inject
     private BankService bankService;
+
+    @Inject
+    private ShowTimeService showTimeService;
 
 
     @Override
@@ -213,8 +213,13 @@ public class PaymentServlet extends HttpServlet {
                     bank.setAccountBalance(bank.getAccountBalance() + totalPrice);
                     bankService.edit(bank);
 
+                    ShowTime showTime = tickets.get(0).getShowTime();
+                    showTime.setRemainingCapacity(showTime.getRemainingCapacity() - tickets.size());
+                    showTimeService.edit(showTime);
+
                     for (Ticket ticket : tickets) {
                         if(ticket.getPayment() == null){
+                            ticket.setReserved(false);
                             ticket.setPayment(payment);
                             ticketService.edit(ticket);
                         }

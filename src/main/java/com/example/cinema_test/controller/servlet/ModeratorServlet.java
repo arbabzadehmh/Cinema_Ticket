@@ -224,14 +224,11 @@ public class ModeratorServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Set the response content type to JSON
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        // Create an ObjectMapper to handle JSON parsing (Jackson library)
         ObjectMapper objectMapper = new ObjectMapper();
 
-        // Parse the JSON request body into a Manager object
         Moderator moderatorAb;
         try {
 
@@ -254,7 +251,7 @@ public class ModeratorServlet extends HttpServlet {
 
                 resp.setStatus(HttpServletResponse.SC_OK);
                 PrintWriter out = resp.getWriter();
-                objectMapper.writeValue(out, moderatorAb); // Write manager object as JSON response
+                objectMapper.writeValue(out, moderatorAb);
                 out.flush();
             }else {
                 log.error("Invalid Moderator Data For Update !!!");

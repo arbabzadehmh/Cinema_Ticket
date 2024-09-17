@@ -8,7 +8,6 @@ import jakarta.transaction.Transactional;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped

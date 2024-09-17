@@ -35,7 +35,6 @@ public class CustomerApi {
 
             log.info("Customer removed successfully-ID : " + id);
             return Response.accepted().build();
-
         } catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)

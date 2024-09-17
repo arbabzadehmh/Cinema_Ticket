@@ -233,14 +233,11 @@ public class ManagerServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Set the response content type to JSON
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        // Create an ObjectMapper to handle JSON parsing (Jackson library)
         ObjectMapper objectMapper = new ObjectMapper();
 
-        // Parse the JSON request body into a Manager object
         Manager managerAb;
         try {
 
@@ -263,7 +260,7 @@ public class ManagerServlet extends HttpServlet {
 
                 resp.setStatus(HttpServletResponse.SC_OK);
                 PrintWriter out = resp.getWriter();
-                objectMapper.writeValue(out, managerAb); // Write manager object as JSON response
+                objectMapper.writeValue(out, managerAb);
                 out.flush();
             }else {
                 log.error("Invalid Manager Data For Update !!!");

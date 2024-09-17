@@ -1,10 +1,7 @@
 package com.example.cinema_test.controller.api;
 
 import com.example.cinema_test.controller.exception.ExceptionWrapper;
-import com.example.cinema_test.model.entity.Manager;
-import com.example.cinema_test.model.entity.ManagerVO;
 import com.example.cinema_test.model.entity.User;
-import com.example.cinema_test.model.service.AdminService;
 import com.example.cinema_test.model.service.UserService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -20,28 +17,6 @@ public class UserApi {
 
     @Inject
     private UserService userService;
-
-//    @DELETE
-//    @Path("/{id}")
-//    public Response delete(@PathParam("id") Long id) {
-//        try {
-//            if (adminService.findAll().size()>1){
-//                adminService.remove(id);
-//                log.info("Admin removed successfully-ID : " + id);
-//                return Response.accepted().build();
-//            } else {
-//                return Response.status(Response.Status.NOT_ACCEPTABLE)
-//                        .entity("Can not remove all admins !!!")
-//                        .build();
-//            }
-//        }catch (Exception e) {
-//            log.error(ExceptionWrapper.getMessage(e).toString());
-//            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-//                    .entity("An error occurred: " + e.getMessage())
-//                    .build();
-//        }
-//    }
-
 
     @GET
     @Path("/{username}")
@@ -70,7 +45,7 @@ public class UserApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/findUserByUsername/{username}")
-    public Response findByName(@PathParam(value = "username") String username) {
+    public Response findByUsername(@PathParam(value = "username") String username) {
         try {
 
             Object result = userService.findByUsername(username);

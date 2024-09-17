@@ -31,9 +31,6 @@ public class SeatSelectServlet extends HttpServlet {
     @Inject
     private TicketService ticketService;
 
-    @Inject
-    private SeatService seatService;
-
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -50,7 +50,7 @@
 
                             <input class="m-1" type="text" name="name" placeholder="Name">
 
-                            <input class="m-1" type="text" name="family" placeholder="Family">
+                            <input class="m-1 text-danger-emphasis bg-secondary-subtle" type="text" name="family" placeholder="Family - search" oninput="findModeratorByFamily(this.value)">
 
                         </div>
 
@@ -212,6 +212,69 @@
 
                 if (typeof response === 'object' && response !== null) {
                     var imageHtml = response.imageUrl ? "<img src='" + response.imageUrl + "' alt='Moderator Image' height='80px' width='80px'>" : "No Image";
+
+
+                    var row = "<tr>" +
+                        "<td>" + response.id + "</td>" +
+                        "<td>" + response.name + "</td>" +
+                        "<td>" + response.family + "</td>" +
+                        "<td>" + response.username + "</td>" +
+                        "<td>" + response.password + "</td>" +
+                        "<td>" + response.nationalCode + "</td>" +
+                        "<td>" + response.phoneNumber + "</td>" +
+                        "<td>" + response.email + "</td>" +
+                        "<td>" + response.address + "</td>" +
+                        "<td>" + imageHtml + "</td>" +
+                        "<td>" + "<button class='btn btn-primary' onclick='editModerator(" + response.id + ")'>Edit</button>" + "</td>" +
+                        "<td>" + "<button class='btn btn-danger' onclick='removeModerator(" + response.id + ")'>Remove</button>" + "</td>" +
+                        "</tr>";
+                    $("#resultTable tbody").append(row);
+                } else {
+                    var noDataRow = "<tr><td colspan='3'>No records found</td></tr>";
+                    $("#resultTable tbody").append(noDataRow);
+                }
+            },
+            error: function (xhr, status, error) {
+                // alert("Error fetching data: " + error);
+            }
+        });
+    }
+
+
+    function findModeratorByFamily(family) {
+
+        $.ajax({
+            url: "/rest/moderator/findByFamily/" + family,
+            method: "GET",
+            dataType: "json", // Expect JSON response
+            success: function (response) {
+                // Clear previous results
+                $("#resultTable tbody").empty();
+
+                if (Array.isArray(response) && response.length > 0) {
+                    response.forEach(function (moderator) {
+                        var imageHtml = moderator.imageUrl ? "<img src='" + moderator.imageUrl + "' alt='Moderator Image' height='80px' width='80px'>" : "No Image";
+
+
+                        var row = "<tr>" +
+                            "<td>" + moderator.id + "</td>" +
+                            "<td>" + moderator.name + "</td>" +
+                            "<td>" + moderator.family + "</td>" +
+                            "<td>" + moderator.username + "</td>" +
+                            "<td>" + moderator.password + "</td>" +
+                            "<td>" + moderator.nationalCode + "</td>" +
+                            "<td>" + moderator.phoneNumber + "</td>" +
+                            "<td>" + moderator.email + "</td>" +
+                            "<td>" + moderator.address + "</td>" +
+                            "<td>" + imageHtml + "</td>" +
+                            "<td>" + "<button class='btn btn-primary' onclick='editModerator(" + moderator.id + ")'>Edit</button>" + "</td>" +
+                            "<td>" + "<button class='btn btn-danger' onclick='removeModerator(" + moderator.id + ")'>Remove</button>" + "</td>" +
+                            "</tr>";
+
+                        $("#resultTable tbody").append(row);
+                    });
+                } else if (typeof response === 'object' && response !== null) {
+                    var imageHtml = response.imageUrl ? "<img src='" + response.imageUrl + "' alt='Customer Image' height='80px' width='80px'>" : "No Image";
 
 
                     var row = "<tr>" +

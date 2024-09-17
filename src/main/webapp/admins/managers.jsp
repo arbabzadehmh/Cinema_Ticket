@@ -50,7 +50,7 @@
 
                             <input class="m-1" type="text" name="name" placeholder="Name">
 
-                            <input class="m-1" type="text" name="family" placeholder="Family">
+                            <input class="m-1 text-danger-emphasis bg-secondary-subtle" type="text" name="family" placeholder="Family" oninput="findManagerByFamily(this.value)">
 
                         </div>
 
@@ -215,6 +215,71 @@
 
                 if (typeof response === 'object' && response !== null) {
                     var imageHtml = response.imageUrl ? "<img src='" + response.imageUrl + "' alt='Manager Image' height='80px' width='80px'>" : "No Image";
+
+
+                    var row = "<tr>" +
+                        "<td>" + response.id + "</td>" +
+                        "<td>" + response.name + "</td>" +
+                        "<td>" + response.family + "</td>" +
+                        "<td>" + "" + "</td>" +
+                        "<td>" + "" + "</td>" +
+                        "<td>" + response.cinemaName + "</td>" +
+                        "<td>" + response.nationalCode + "</td>" +
+                        "<td>" + response.phoneNumber + "</td>" +
+                        "<td>" + response.email + "</td>" +
+                        "<td>" + response.address + "</td>" +
+                        "<td>" + imageHtml + "</td>" +
+                        "<td>" + "<button class='btn btn-primary' onclick='editManager(" + response.id + ")'>Edit</button>" + "</td>" +
+                        "<td>" + "<button class='btn btn-danger' onclick='removeManager(" + response.id + ")'>Remove</button>" + "</td>" +
+                        "</tr>";
+                    $("#resultTable tbody").append(row);
+                } else {
+                    var noDataRow = "<tr><td colspan='3'>No records found</td></tr>";
+                    $("#resultTable tbody").append(noDataRow);
+                }
+            },
+            error: function (xhr, status, error) {
+                // alert("Error fetching data: " + error);
+            }
+        });
+    }
+
+
+    function findManagerByFamily(family) {
+
+        $.ajax({
+            url: "/rest/manager/findByFamily/" + family,
+            method: "GET",
+            dataType: "json", // Expect JSON response
+            success: function (response) {
+                // Clear previous results
+                $("#resultTable tbody").empty();
+
+                if (Array.isArray(response) && response.length > 0) {
+                    response.forEach(function (manager) {
+                        var imageHtml = manager.imageUrl ? "<img src='" + manager.imageUrl + "' alt='Manager Image' height='80px' width='80px'>" : "No Image";
+
+
+                        var row = "<tr>" +
+                            "<td>" + manager.id + "</td>" +
+                            "<td>" + manager.name + "</td>" +
+                            "<td>" + manager.family + "</td>" +
+                            "<td>" + "" + "</td>" +
+                            "<td>" + "" + "</td>" +
+                            "<td>" + manager.cinemaName + "</td>" +
+                            "<td>" + manager.nationalCode + "</td>" +
+                            "<td>" + manager.phoneNumber + "</td>" +
+                            "<td>" + manager.email + "</td>" +
+                            "<td>" + manager.address + "</td>" +
+                            "<td>" + imageHtml + "</td>" +
+                            "<td>" + "<button class='btn btn-primary' onclick='editManager(" + manager.id + ")'>Edit</button>" + "</td>" +
+                            "<td>" + "<button class='btn btn-danger' onclick='removeManager(" + manager.id + ")'>Remove</button>" + "</td>" +
+                            "</tr>";
+
+                        $("#resultTable tbody").append(row);
+                    });
+                } else if (typeof response === 'object' && response !== null) {
+                    var imageHtml = response.imageUrl ? "<img src='" + response.imageUrl + "' alt='Customer Image' height='80px' width='80px'>" : "No Image";
 
 
                     var row = "<tr>" +

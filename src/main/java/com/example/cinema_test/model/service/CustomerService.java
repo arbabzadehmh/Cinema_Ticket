@@ -2,8 +2,6 @@ package com.example.cinema_test.model.service;
 
 import com.example.cinema_test.controller.exception.CustomerNotFoundException;
 import com.example.cinema_test.model.entity.Customer;
-
-import com.example.cinema_test.model.entity.Manager;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

@@ -105,4 +105,12 @@ public class ModeratorService implements Serializable {
             return null;
         }
     }
+
+    @Transactional
+    public List<Moderator> findByFamily(String family) throws Exception {
+        return entityManager
+                .createQuery("select m from moderatorEntity m where m.family like :family and m.deleted=false ", Moderator.class)
+                .setParameter("family", family.toUpperCase() + "%")
+                .getResultList();
+    }
 }

@@ -220,14 +220,11 @@ public class TicketServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Set the response content type to JSON
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        // Create an ObjectMapper to handle JSON parsing (Jackson library)
         ObjectMapper objectMapper = new ObjectMapper();
 
-        // Parse the JSON request body into a Manager object
         Ticket ticketAb;
         try {
 
@@ -238,18 +235,14 @@ public class TicketServlet extends HttpServlet {
             ticketService.edit(editingTicket);
             log.info("Ticket updated successfully : " + editingTicket.getId());
 
-
-            // Send success response with updated manager
             resp.setStatus(HttpServletResponse.SC_OK);
             PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, ticketAb); // Write manager object as JSON response
+            objectMapper.writeValue(out, ticketAb);
             out.flush();
 
         } catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
 
-
-            // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             PrintWriter out = resp.getWriter();
             out.write("{\"message\": \"Failed to update ticket.\"}");

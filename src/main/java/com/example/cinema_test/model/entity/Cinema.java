@@ -3,6 +3,7 @@ package com.example.cinema_test.model.entity;
 
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,9 +31,11 @@ public class Cinema extends Base{
     private Long id;
 
     @Column(name = "name", length =30 , nullable = false, unique = true )
+    @Pattern(regexp = "^[a-zA-z\\d\\s]{2,30}$", message = "invalid Name")
     private String name;
 
     @Column(name = "address", length = 100)
+    @Pattern(regexp = "^[\\w\\s]{2,100}$", message = "invalid Address")
     private String address;
 
     @Column(name = "status")

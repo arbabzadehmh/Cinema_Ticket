@@ -25,8 +25,8 @@ public class Bank extends Base{
     @Column(name = "bank_id", length = 20)
     private Long  id;
 
-    @Column(name = "bank_name", columnDefinition = "NVARCHAR2(20)", nullable = false, unique = true)
-    @Pattern(regexp = "^[a-zA-zا-ی'\\s]{3,20}", message = "invalid name")
+    @Column(name = "bank_name", columnDefinition = "NVARCHAR2(20)", nullable = false, unique = true, length = 20)
+    @Pattern(regexp = "^[a-zA-zا-ی'\\s]{3,20}$", message = "invalid Name")
     @Size(min = 3, max = 20, message = "Name must be between 3 and 20 characters")
     private String name;
 
@@ -38,7 +38,7 @@ public class Bank extends Base{
     @Column(name = "bank_branchCode", nullable = false)
     private Long branchCode;
 
-    @Column(name = "bank_branchName",columnDefinition = "NVARCHAR2(20)", nullable = false)
+    @Column(name = "bank_branchName",columnDefinition = "NVARCHAR2(20)", nullable = false, length = 20)
     @Pattern(regexp = "^[a-zA-Zآ-ی\\s]{3,20}$", message = "Invalid Branch Name")
     @Size(min = 3, max = 20, message = "Branch Name must be between 3 and 20 characters")
     @NotBlank(message = "Should Not Be Null")

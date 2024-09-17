@@ -3,8 +3,6 @@ package com.example.cinema_test.controller.api;
 import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.model.entity.Payment;
 import com.example.cinema_test.model.entity.PaymentVO;
-import com.example.cinema_test.model.entity.Ticket;
-import com.example.cinema_test.model.entity.TicketVO;
 import com.example.cinema_test.model.service.PaymentService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;

@@ -214,7 +214,6 @@ public class SaloonServlet extends HttpServlet {
 
                 Part imagePart = req.getPart("image");
                 if (imagePart != null && imagePart.getSize() > 0) {
-                    // Handle image upload for new saloon creation
                     String uploadDirPath = req.getServletContext().getRealPath("") + "uploads";
                     File dir = new File(uploadDirPath);
                     if (!dir.exists()) {
@@ -289,7 +288,7 @@ public class SaloonServlet extends HttpServlet {
 
                 resp.setStatus(HttpServletResponse.SC_OK);
                 PrintWriter out = resp.getWriter();
-                objectMapper.writeValue(out, saloonAb); // Write manager object as JSON response
+                objectMapper.writeValue(out, saloonAb);
                 out.flush();
             }else {
                 log.error("Invalid Saloon Data For Update !!!");

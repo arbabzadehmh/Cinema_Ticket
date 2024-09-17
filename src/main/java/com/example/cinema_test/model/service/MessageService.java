@@ -1,8 +1,6 @@
 package com.example.cinema_test.model.service;
 
 import com.example.cinema_test.controller.exception.MessageNotFoundException;
-import com.example.cinema_test.controller.exception.SupportNotFoundException;
-import com.example.cinema_test.model.entity.Customer;
 import com.example.cinema_test.model.entity.Message;
 import com.example.cinema_test.model.entity.Support;
 import jakarta.enterprise.context.ApplicationScoped;

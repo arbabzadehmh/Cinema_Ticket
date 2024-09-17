@@ -2,9 +2,7 @@ package com.example.cinema_test.controller.servlet;
 
 import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.model.entity.*;
-import com.example.cinema_test.model.service.CinemaService;
 import com.example.cinema_test.model.service.ShowService;
-import com.example.cinema_test.model.service.ShowTimeService;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,10 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 
 @Slf4j

@@ -3,14 +3,12 @@ package com.example.cinema_test.model.service;
 
 import com.example.cinema_test.controller.exception.ShowTimeNotFoundException;
 import com.example.cinema_test.model.entity.*;
-import com.example.cinema_test.model.entity.enums.ShowType;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

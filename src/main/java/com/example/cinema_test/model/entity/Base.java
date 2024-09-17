@@ -9,8 +9,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 @NoArgsConstructor

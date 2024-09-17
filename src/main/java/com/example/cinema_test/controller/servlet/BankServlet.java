@@ -2,7 +2,6 @@ package com.example.cinema_test.controller.servlet;
 
 import com.example.cinema_test.controller.exception.ExceptionWrapper;
 import com.example.cinema_test.controller.validation.BeanValidator;
-import com.example.cinema_test.model.entity.Admin;
 import com.example.cinema_test.model.entity.Bank;
 import com.example.cinema_test.model.entity.User;
 import com.example.cinema_test.model.service.BankService;

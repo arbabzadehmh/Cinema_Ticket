@@ -51,13 +51,47 @@ public class ManagerApi {
     @Path("/findAll")
     public Response findAll() {
         try {
-            Object result = managerService.findAll();
+            List<Manager> managerList = managerService.findAll();
+            List<ManagerVO> managerVOList = new ArrayList<>();
+            for (Manager manager : managerList) {
+                ManagerVO managerVO = new ManagerVO(manager);
+                managerVOList.add(managerVO);
+            }
 
-            if (result != null) {
+            if (!managerVOList.isEmpty()) {
                 log.info("Manager found successfully-find all ");
-                return Response.ok(result).build();
+                return Response.ok(managerVOList).build();
             } else {
                 log.error("Manager not found-find all ");
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("No records found for manager")
+                        .build();
+            }
+        }catch (Exception e) {
+            log.error(ExceptionWrapper.getMessage(e).toString());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred: " + e.getMessage())
+                    .build();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/findByFamily/{family}")
+    public Response findManagerByFamily(@PathParam(value = "family") String family) {
+        try {
+            List<Manager> managerList = managerService.findByFamily(family);
+            List<ManagerVO> managerVOList = new ArrayList<>();
+            for (Manager manager : managerList) {
+                ManagerVO managerVO = new ManagerVO(manager);
+                managerVOList.add(managerVO);
+            }
+
+            if (!managerVOList.isEmpty()) {
+                log.info("Manager found-family : " + family);
+                return Response.ok(managerVOList).build();
+            } else {
+                log.error("Manager not found-family : " + family);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("No records found for manager")
                         .build();
@@ -73,36 +107,16 @@ public class ManagerApi {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/findByName/{name}")
-    public Response findByName(@PathParam(value = "name") String name) {
-        try {
-            Object result = managerService.findByNameAndFamily(name, "alipour");
-
-            if (result != null) {
-                return Response.ok(result).build();
-            } else {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("No records found for name: " + name)
-                        .build();
-            }
-        }catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("An error occurred: " + e.getMessage())
-                    .build();
-        }
-    }
-
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/findByPhone/{phone}")
     public Response findByPhoneNumber(@PathParam(value = "phone") String phone) {
         try {
-            Object result = managerService.findByPhoneNumber(phone);
+            Manager manager = managerService.findByPhoneNumber(phone);
 
-            if (result != null) {
+
+            if (manager != null) {
+                ManagerVO managerVO = new ManagerVO(manager);
                 log.info("Manager found successfully-phone : " + phone);
-                return Response.ok(result).build();
+                return Response.ok(managerVO).build();
             } else {
                 log.error("Manager not found-phone : " + phone);
                 return Response.status(Response.Status.NOT_FOUND)

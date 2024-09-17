@@ -4,6 +4,7 @@ import com.example.cinema_test.model.entity.enums.Genre;
 import com.example.cinema_test.model.entity.enums.ShowType;
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,15 +41,19 @@ public class Show extends Base {
     private Genre genre;
 
     @Column(name = "director", length =30)
+    @Pattern(regexp = "^[a-zA-z\\s]{2,30}$", message = "invalid Director")
     private String director;
 
     @Column(name = "producer", length =30)
+    @Pattern(regexp = "^[a-zA-z\\s]{2,30}$", message = "invalid Producer")
     private String producer;
 
     @Column(name = "singer", length =30)
+    @Pattern(regexp = "^[a-zA-z\\s]{2,30}$", message = "invalid Singer")
     private String singer;
 
     @Column(name = "speaker", length =30)
+    @Pattern(regexp = "^[a-zA-z\\s]{2,30}$", message = "invalid Speaker")
     private String speaker;
 
     @Column(name = "released_date")

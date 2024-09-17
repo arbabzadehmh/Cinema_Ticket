@@ -186,12 +186,6 @@ public class ShowServlet extends HttpServlet {
             if (req.getPart("newImage") != null) {
                 Show editingShow = (Show) req.getSession().getAttribute("editingShow");
 
-//                for (Attachment attachment : editingShow.getAttachments()) {
-//                    attachmentService.remove(attachment.getId());
-//                }
-//                editingShow.getAttachments().clear();
-
-
                 Part filePart = req.getPart("newImage");
 
                 String applicationPath = req.getServletContext().getRealPath("");
@@ -243,7 +237,6 @@ public class ShowServlet extends HttpServlet {
                                 .build();
 
 
-                // Handle the file upload part
                 Part filePart = req.getPart("image");
 
                 if (filePart != null && filePart.getSize() > 0) { // Check if file is uploaded
@@ -356,7 +349,6 @@ public class ShowServlet extends HttpServlet {
         } catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
 
-            // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             PrintWriter out = resp.getWriter();
             out.write("{\"message\": \"Failed to update show.\"}");

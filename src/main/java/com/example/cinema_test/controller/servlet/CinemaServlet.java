@@ -249,10 +249,9 @@ public class CinemaServlet extends HttpServlet {
                 cinemaService.edit(editingCinema);
                 log.info("Cinema updated successfully : " + editingCinema.getId());
 
-                // Send success response with updated manager
                 resp.setStatus(HttpServletResponse.SC_OK);
                 PrintWriter out = resp.getWriter();
-                objectMapper.writeValue(out, cinemaAb); // Write manager object as JSON response
+                objectMapper.writeValue(out, cinemaAb);
                 out.flush();
             } else {
                 log.error("Invalid Cinema Data For Update !!!");
@@ -264,7 +263,6 @@ public class CinemaServlet extends HttpServlet {
         } catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
 
-            // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             PrintWriter out = resp.getWriter();
             out.write("{\"message\": \"Failed to update cinema.\"}");

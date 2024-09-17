@@ -2,6 +2,7 @@ package com.example.cinema_test.model.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,9 +22,11 @@ public class User extends Base{
 
     @Id
     @Column(name = "username", length = 30)
+    @Pattern(regexp = "^[a-zA-Z\\d._-]{3,30}$", message = "Invalid username")
     private String username;
 
     @Column(name = "password", length = 15, nullable = false)
+    @Pattern(regexp = "^[a-zA-Z\\d@_]{3,15}$", message = "Invalid password")
     private String password;
 
     @OneToOne(fetch = FetchType.EAGER)

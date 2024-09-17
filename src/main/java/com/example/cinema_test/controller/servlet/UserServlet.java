@@ -31,9 +31,6 @@ public class UserServlet extends HttpServlet {
     private RoleService roleService;
 
     @Inject
-    private AttachmentService attachmentService;
-
-    @Inject
     private UserService userService;
 
     @Override
@@ -179,14 +176,11 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Set the response content type to JSON
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        // Create an ObjectMapper to handle JSON parsing (Jackson library)
         ObjectMapper objectMapper = new ObjectMapper();
 
-        // Parse the JSON request body into a Manager object
         User userAb;
         try {
 
@@ -218,7 +212,6 @@ public class UserServlet extends HttpServlet {
         } catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
 
-            // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             PrintWriter out = resp.getWriter();
             out.write("{\"message\": \"Failed to update user.\"}");

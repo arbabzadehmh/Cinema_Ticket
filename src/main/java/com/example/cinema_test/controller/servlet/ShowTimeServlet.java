@@ -32,9 +32,6 @@ public class ShowTimeServlet extends HttpServlet {
     private CinemaService cinemaService;
 
     @Inject
-    private SaloonService saloonService;
-
-    @Inject
     private ShowService showService;
 
     @Inject
@@ -193,16 +190,14 @@ public class ShowTimeServlet extends HttpServlet {
             showTimeService.edit(editingShowTime);
             log.info("ShowTime edited successfully-ID : " + editingShowTime.getId());
 
-            // Send success response with updated manager
             resp.setStatus(HttpServletResponse.SC_OK);
             PrintWriter out = resp.getWriter();
-            objectMapper.writeValue(out, showTimeVo); // Write manager object as JSON response
+            objectMapper.writeValue(out, showTimeVo);
             out.flush();
 
         } catch (Exception e) {
             log.error(ExceptionWrapper.getMessage(e).toString());
 
-            // Send error response if something goes wrong
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             PrintWriter out = resp.getWriter();
             out.write("{\"message\": \"Failed to update showtime.\"}");

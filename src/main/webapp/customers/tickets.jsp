@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -85,7 +86,7 @@
                             <td>${ticket.verified}</td>
                             <td>${ticket.price}</td>
                             <td>${ticket.issueTime}</td>
-                            <td>${ticket.description}</td>
+                            <td>${fn:substring(ticket.description, 0, 10)}...</td>
 
 
 

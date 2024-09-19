@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -161,7 +162,7 @@
                             <td>${showTime.startTime}</td>
                             <td>${showTime.endTime}</td>
                             <td>${showTime.status}</td>
-                            <td>${showTime.description}</td>
+                            <td>${fn:substring(showTime.description, 0, 10)}...</td>
 
                             <td>
                                 <button onclick="editShowTime(${showTime.id})" class="btn btn-primary w-auto mt-4">Edit</button>

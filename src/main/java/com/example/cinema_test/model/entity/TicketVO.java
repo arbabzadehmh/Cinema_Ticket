@@ -70,7 +70,12 @@ public class TicketVO {
         this.cinemaName = ticket.getShowTime().getCinema().getName();
         this.address = ticket.getShowTime().getCinema().getAddress();
         this.showName = ticket.getShowTime().getShow().getName();
-        this.description = ticket.getShowTime().getShow().getDescription() + "\n" + ticket.getShowTime().getDescription();
+
+        String showDescription = ticket.getShowTime().getShow().getDescription();
+        if (showDescription.length() > 50){
+            showDescription = showDescription.substring(0, 50) + "...";
+        }
+        this.description = ticket.getShowTime().getDescription() + showDescription;
 
         if (ticket.getAttachments().isEmpty()) {
             this.qrCode = "";

@@ -4,7 +4,7 @@
 
 <html>
 <head>
-    <title>Cinema</title>
+    <title>Shows</title>
 
     <link rel="stylesheet" href="../assets/css/index.css">
     <link rel="stylesheet" href="../assets/css/all.css">
@@ -265,7 +265,7 @@
                         "<td>" + response.showType + "</td>" +
                         "<td>" + response.available + "</td>" +
                         "<td>" + response.status + "</td>" +
-                        "<td>" + response.description + "</td>" +
+                        "<td>" + response.description.substring(0,10) + "</td>" +
                         "<td>" + button + "</td>" +
                         "<td>" + button1 + "</td>" +
                         "</tr>";

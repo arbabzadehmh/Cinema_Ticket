@@ -311,7 +311,7 @@
                             "<td>" + show.showType + "</td>" +
                             "<td>" + show.available + "</td>" +
                             "<td>" + show.status + "</td>" +
-                            "<td>" + show.description + "</td>" +
+                            "<td>" + show.description.substring(0,10) + "</td>" +
                             "<td>" + button + "</td>" +
                             "</tr>";
 
@@ -333,7 +333,7 @@
                         "<td>" + response.showType + "</td>" +
                         "<td>" + response.available + "</td>" +
                         "<td>" + response.status + "</td>" +
-                        "<td>" + response.description + "</td>" +
+                        "<td>" + response.description.substring(0,10) + "</td>" +
                         "<td>" + button + "</td>" +
                         "</tr>";
                     $("#allResultTable tbody").append(row);

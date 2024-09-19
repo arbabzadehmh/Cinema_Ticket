@@ -178,7 +178,6 @@
                                 <h5 class="card-title text-center">Saloon : ${showTime.saloonNumber}</h5>
                                 <h5 class="card-title text-center">${showTime.startTime.toLocalTime()}-${showTime.endTime.toLocalTime()}</h5>
                                 <h5 class="card-title text-center">Capacity : ${showTime.remainingCapacity}</h5>
-                                <h6 class="card-title text-center">${showTime.description}</h6>
                                 <div class="text-center">
                                     <button class="btn btn-primary" onclick="selectShowTime(${showTime.id})">Select</button>
                                 </div>

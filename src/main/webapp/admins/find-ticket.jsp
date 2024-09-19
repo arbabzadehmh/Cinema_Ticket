@@ -176,7 +176,7 @@
                             "<td>" + ticket.verified + "</td>" +
                             "<td>" + ticket.price + "</td>" +
                             "<td>" + ticket.issueTime + "</td>" +
-                            "<td>" + ticket.description + "</td>" +
+                            "<td>" + ticket.description.substring(0,10) + "</td>" +
                             "<td>" + "<button class='btn btn-secondary' onclick='printTicket(" + ticket.id + ")'>Print</button>" + "</td>" +
                             "<td>" + "<button class='btn btn-primary' onclick='editTicket(" + ticket.id + ")'>Edit</button>" + "</td>" +
                             "<td>" + "<button class='btn btn-danger' onclick='removeTicket(" + ticket.id + ")'>Remove</button>" + "</td>" +
@@ -202,7 +202,7 @@
                         "<td>" + response.verified + "</td>" +
                         "<td>" + response.price + "</td>" +
                         "<td>" + response.issueTime + "</td>" +
-                        "<td>" + response.description + "</td>" +
+                        "<td>" + response.description.substring(0,10) + "</td>" +
                         "<td>" + "<button class='btn btn-secondary' onclick='printTicket(" + response.id + ")'>Print</button>" + "</td>" +
                         "<td>" + "<button class='btn btn-primary' onclick='editTicket(" + response.id + ")'>Edit</button>" + "</td>" +
                         "<td>" + "<button class='btn btn-danger' onclick='removeTicket(" + response.id + ")'>Remove</button>" + "</td>" +
@@ -249,7 +249,7 @@
                             "<td>" + ticket.verified + "</td>" +
                             "<td>" + ticket.price + "</td>" +
                             "<td>" + ticket.issueTime + "</td>" +
-                            "<td>" + ticket.description + "</td>" +
+                            "<td>" + ticket.description.substring(0,10) + "</td>" +
                             "<td>" + "<button class='btn btn-secondary' onclick='printTicket(" + ticket.id + ")'>Print</button>" + "</td>" +
                             "<td>" + "<button class='btn btn-primary' onclick='editTicket(" + ticket.id + ")'>Edit</button>" + "</td>" +
                             "<td>" + "<button class='btn btn-danger' onclick='removeTicket(" + ticket.id + ")'>Remove</button>" + "</td>" +
@@ -275,7 +275,7 @@
                         "<td>" + response.verified + "</td>" +
                         "<td>" + response.price + "</td>" +
                         "<td>" + response.issueTime + "</td>" +
-                        "<td>" + response.description + "</td>" +
+                        "<td>" + response.description.substring(0,10) + "</td>" +
                         "<td>" + "<button class='btn btn-secondary' onclick='printTicket(" + response.id + ")'>Print</button>" + "</td>" +
                         "<td>" + "<button class='btn btn-primary' onclick='editTicket(" + response.id + ")'>Edit</button>" + "</td>" +
                         "<td>" + "<button class='btn btn-danger' onclick='removeTicket(" + response.id + ")'>Remove</button>" + "</td>" +
@@ -322,7 +322,7 @@
                             "<td>" + ticket.verified + "</td>" +
                             "<td>" + ticket.price + "</td>" +
                             "<td>" + ticket.issueTime + "</td>" +
-                            "<td>" + ticket.description + "</td>" +
+                            "<td>" + ticket.description.substring(0,10) + "</td>" +
                             "<td>" + "<button class='btn btn-secondary' onclick='printTicket(" + ticket.id + ")'>Print</button>" + "</td>" +
                             "<td>" + "<button class='btn btn-primary' onclick='editTicket(" + ticket.id + ")'>Edit</button>" + "</td>" +
                             "<td>" + "<button class='btn btn-danger' onclick='removeTicket(" + ticket.id + ")'>Remove</button>" + "</td>" +
@@ -348,7 +348,7 @@
                         "<td>" + response.verified + "</td>" +
                         "<td>" + response.price + "</td>" +
                         "<td>" + response.issueTime + "</td>" +
-                        "<td>" + response.description + "</td>" +
+                        "<td>" + response.description.substring(0,10) + "</td>" +
                         "<td>" + "<button class='btn btn-secondary' onclick='printTicket(" + response.id + ")'>Print</button>" + "</td>" +
                         "<td>" + "<button class='btn btn-primary' onclick='editTicket(" + response.id + ")'>Edit</button>" + "</td>" +
                         "<td>" + "<button class='btn btn-danger' onclick='removeTicket(" + response.id + ")'>Remove</button>" + "</td>" +

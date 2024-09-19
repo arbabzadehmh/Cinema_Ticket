@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -171,7 +172,7 @@
                             <td>${show.showType}</td>
                             <td>${show.available}</td>
                             <td>${show.status}</td>
-                            <td>${show.description}</td>
+                            <td>${fn:substring(show.description, 0, 10)}...</td>
                             <td>
                                 <div class="d-flex">
                                     <button onclick="removeShowFromList(${show.id})" class="btn btn-danger w-100">Remove</button>
@@ -235,7 +236,7 @@
                             <td>${show.showType}</td>
                             <td>${show.available}</td>
                             <td>${show.status}</td>
-                            <td>${show.description}</td>
+                            <td>${fn:substring(show.description, 0, 10)}...</td>
                             <td>
                                 <div class="d-flex">
                                     <button onclick="addShow(${show.id})" class="btn btn-dark w-100">Add</button>

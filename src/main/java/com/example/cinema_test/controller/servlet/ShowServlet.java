@@ -52,9 +52,6 @@ public class ShowServlet extends HttpServlet {
     @Inject
     private ShowService showService;
 
-    @Inject
-    private AttachmentService attachmentService;
-
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

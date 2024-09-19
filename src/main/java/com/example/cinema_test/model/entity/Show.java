@@ -45,7 +45,7 @@ public class Show extends Base {
     private String director;
 
     @Column(name = "producer", length =30)
-    @Pattern(regexp = "^[a-zA-z\\s]{0,30}$", message = "invalid Producer")
+    @Pattern(regexp = "^[a-zA-z\\d\\s]{0,30}$", message = "invalid Producer")
     private String producer;
 
     @Column(name = "singer", length =30)

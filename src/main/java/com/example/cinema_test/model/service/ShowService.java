@@ -5,6 +5,7 @@ import com.example.cinema_test.controller.exception.ShowIsPlayingException;
 import com.example.cinema_test.controller.exception.ShowNotFoundException;
 
 import com.example.cinema_test.model.entity.Show;
+import com.example.cinema_test.model.entity.enums.ShowType;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -82,6 +83,17 @@ public class ShowService implements Serializable {
     public List<Show> findAvailableShows() throws Exception {
         return entityManager
                 .createQuery("select s from showEntity s where s.available=true and s.status=true and s.deleted=false ", Show.class)
+                .getResultList();
+    }
+
+    @Transactional
+    public List<Show> findAvailableShowsByType(String showType) throws Exception {
+
+        ShowType enumShowType = ShowType.valueOf(showType.toUpperCase());
+
+        return entityManager
+                .createQuery("select s from showEntity s where s.available=true and s.status=true and s.showType=:showType and s.deleted=false ", Show.class)
+                .setParameter("showType", enumShowType)
                 .getResultList();
     }
 

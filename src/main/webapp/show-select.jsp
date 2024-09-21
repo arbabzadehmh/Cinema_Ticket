@@ -37,6 +37,16 @@
     <div class="mt-5 mb-3">
         <div class="item-icon "><i class="fa fa-masks-theater" style="font-size: xxx-large;"></i></div>
         <h1 class="p-4 text-center">Select Show</h1>
+
+        <a class="btn-reg w-25 text-decoration-none text-black m-3" href="cinemaHome.do">All</a>
+
+        <button onclick="findMovies()" class="btn-reg border-0 m-3">Movies</button>
+        <button onclick="findTheaters()" class="btn-reg border-0 m-3">Theater</button>
+        <button onclick="findConcerts()" class="btn-reg border-0 m-3">Concert</button>
+        <button onclick="findEvents()" class="btn-reg border-0 m-3">Event</button>
+
+
+
     </div>
 
     <div class="mb-auto justify-content-center d-flex">
@@ -74,8 +84,25 @@
 
 <script>
     function selectShow(id){
-        window.location.replace("/cinemaHome.do?selectShow=" + id);
+        window.location.replace("cinemaHome.do?selectShow=" + id);
     }
+
+    function findMovies() {
+        window.location.replace("cinemaHome.do?findMovies=" + 1);
+    }
+
+    function findTheaters() {
+        window.location.replace("cinemaHome.do?findTheaters=" + 1);
+    }
+
+    function findConcerts() {
+        window.location.replace("cinemaHome.do?findConcerts=" + 1);
+    }
+
+    function findEvents() {
+        window.location.replace("cinemaHome.do?findEvents=" + 1);
+    }
+
 </script>
 
 <jsp:include page="/js-import.jsp"/>

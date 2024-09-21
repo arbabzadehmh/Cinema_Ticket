@@ -99,8 +99,12 @@ public class TestServlet4 extends HttpServlet {
 //            System.out.println(ticketService.findById(72L).getAttachments().get(1).getFileName());
 
 
-            System.out.println(paymentService.findByDate(LocalDate.of(2024,9,14)).size());
+//            System.out.println(paymentService.findByDate(LocalDate.of(2024,9,14)).size());
 
+            System.out.println(showService.findAvailableShowsByType("THEATER").size());
+            System.out.println(showService.findAvailableShowsByType("EVENT").size());
+            System.out.println(showService.findAvailableShowsByType("MOVIE").size());
+            System.out.println(showService.findAvailableShowsByType("CONCERT").size());
 
 
         } catch (Exception e) {

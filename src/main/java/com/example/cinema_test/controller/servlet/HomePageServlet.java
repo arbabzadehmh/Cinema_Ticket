@@ -89,7 +89,30 @@ public class HomePageServlet extends HttpServlet {
 
             } else {
 
-                List<Show> allActiveShows = showService.findAvailableShows();
+                List<Show> allActiveShows = new ArrayList<>();
+
+                if(req.getParameter("findMovies") != null) {
+
+                    System.out.println(req.getParameter("findMovies"));
+                    System.out.println("findMovies");
+
+                    allActiveShows = showService.findAvailableShowsByType("MOVIE");
+                } else if(req.getParameter("findTheaters") != null) {
+
+                    System.out.println(req.getParameter("findTheaters"));
+                    System.out.println("findTheaters");
+
+                    allActiveShows = showService.findAvailableShowsByType("THEATER");
+                    System.out.println(allActiveShows.size());
+                } else if (req.getParameter("findEvents") != null) {
+                    allActiveShows = showService.findAvailableShowsByType("EVENT");
+                } else if (req.getParameter("findConcerts") != null) {
+                    allActiveShows = showService.findAvailableShowsByType("CONCERT");
+                } else {
+                    System.out.println("all");
+                    allActiveShows = showService.findAvailableShows();
+                }
+
 
 
                 for (Show show : allActiveShows){

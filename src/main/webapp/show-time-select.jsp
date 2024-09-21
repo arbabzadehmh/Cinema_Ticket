@@ -175,9 +175,10 @@
                                 </c:otherwise>
                             </c:choose>
                             <div class="card-body">
-                                <h5 class="card-title text-center">Saloon : ${showTime.saloonNumber}</h5>
                                 <h5 class="card-title text-center">${showTime.startTime.toLocalTime()}-${showTime.endTime.toLocalTime()}</h5>
+                                <h5 class="card-title text-center">Saloon : ${showTime.saloonNumber}</h5>
                                 <h5 class="card-title text-center">Capacity : ${showTime.remainingCapacity}</h5>
+                                <h5 class="card-title text-center">${showTime.saloonDescription}</h5>
                                 <div class="text-center">
                                     <button class="btn btn-primary" onclick="selectShowTime(${showTime.id})">Select</button>
                                 </div>

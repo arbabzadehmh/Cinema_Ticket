@@ -72,7 +72,7 @@ public class ShowTimeService implements Serializable {
         return entityManager
                 .createQuery("select distinct s.show from showTimeEntity s where s.startTime between :startTime and :endTime and  s.deleted = false ", Show.class)
                 .setParameter("startTime", LocalDateTime.now())
-                .setParameter("endTime", LocalDateTime.now().plusDays(7))
+                .setParameter("endTime", LocalDateTime.now().plusDays(20))
                 .getResultList();
     }
 

@@ -81,7 +81,7 @@ public class ShowTimeService implements Serializable {
         return entityManager
                 .createQuery("select s from showTimeEntity s where s.startTime between :startTime and :endTime and s.show.id =:showId and s.status = true and s.deleted = false ", ShowTime.class)
                 .setParameter("startTime", LocalDateTime.now())
-                .setParameter("endTime", LocalDateTime.now().plusDays(7))
+                .setParameter("endTime", LocalDateTime.now().plusDays(20))
                 .setParameter("showId", showId)
                 .getResultList();
     }
@@ -93,7 +93,7 @@ public class ShowTimeService implements Serializable {
                 entityManager
                         .createQuery("select distinct s.startTime from showTimeEntity s where s.startTime between :startTime and :endTime and s.show.id =:showId and s.deleted = false ", LocalDateTime.class)
                         .setParameter("startTime", LocalDateTime.now())
-                        .setParameter("endTime", LocalDateTime.now().plusDays(7))
+                        .setParameter("endTime", LocalDateTime.now().plusDays(20))
                         .setParameter("showId", showId)
                         .getResultList();
         for (LocalDateTime localDateTime : dateTimeList) {
@@ -143,7 +143,7 @@ public class ShowTimeService implements Serializable {
         return entityManager
                 .createQuery("select s from showTimeEntity s where s.startTime between :startTime and :endTime and s.status = true and s.saloon.id =:saloonId and s.deleted = false ", ShowTime.class)
                 .setParameter("startTime", LocalDateTime.now())
-                .setParameter("endTime", LocalDateTime.now().plusDays(7))
+                .setParameter("endTime", LocalDateTime.now().plusDays(20))
                 .setParameter("saloonId", saloonId)
                 .getResultList();
     }
